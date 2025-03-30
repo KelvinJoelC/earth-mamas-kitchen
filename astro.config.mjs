@@ -6,4 +6,10 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
     vite: {
         plugins: [tailwindcss()],
-  },});
+    },
+    experimental: {
+        svg: {
+            mode: 'sprite'
+        },
+    },
+});

@@ -1,1 +1,8 @@
 @import "tailwindcss";
+@import '@fontsource-variable/dancing-script';
+@import '@fontsource/calistoga';
+
+
+@theme {
+    --font-calistoga: "Calistoga", "sans-serif"; 
+}
