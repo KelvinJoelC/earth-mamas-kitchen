@@ -1,5 +1,8 @@
 ---
 import "../styles/global.css";
+import Footer from '../sections/Footer.astro';
+import { ClientRouter } from "astro:transitions";
+
 ---
 
 <!doctype html>
@@ -7,20 +10,29 @@ import "../styles/global.css";
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<link rel="icon" type="image/svg+xml" href="/favicon.png" />
+		<title>Earth Mamas Kitchen | Specialising in Floral Cupcake Bouquets and Bespoke Cakes 🎂 Scratch Baking 🍄 Edible Blooms and Art for any occasion 🌻 Love in every bite ❤️💋</title>
+		<meta name="description" content="Earth Mamas Kitchen | Specialising in Floral Cupcake Bouquets and Bespoke Cakes 🎂 Scratch Baking 🍄 Edible Blooms and Art for any occasion 🌻 Love in every bite ❤️💋" />
+		<ClientRouter/>
 	</head>
 	<body>
-		<slot />
+		<main>
+			<slot />
+		</main>
+		<Footer/>
 	</body>
 </html>
 
 <style>
 	html,
 	body {
+		font-family: 'Dancing Script Variable', cursive;
 		margin: 0;
 		width: 100%;
 		height: 100%;
+		background-color: #FFF8F8;
+	}
+	main{
+		min-height: 100vh;
 	}
 </style>
