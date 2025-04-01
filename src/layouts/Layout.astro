@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import Footer from '../sections/Footer.astro';
+import Header from '../sections/Header.astro';
 import { ClientRouter } from "astro:transitions";
 
 ---
@@ -15,24 +16,17 @@ import { ClientRouter } from "astro:transitions";
 		<meta name="description" content="Earth Mamas Kitchen | Specialising in Floral Cupcake Bouquets and Bespoke Cakes 🎂 Scratch Baking 🍄 Edible Blooms and Art for any occasion 🌻 Love in every bite ❤️💋" />
 		<ClientRouter/>
 	</head>
-	<body>
+	<body class="m-0 w-full h-full flex flex-col custom-gradient font-dancing text-black">
+		<Header/>
 		<main>
 			<slot />
 		</main>
-		<Footer/>
+		<!-- <Footer/> -->
 	</body>
 </html>
 
 <style>
-	html,
-	body {
-		font-family: 'Dancing Script Variable', cursive;
-		margin: 0;
-		width: 100%;
-		height: 100%;
-		background-color: #FFF8F8;
-	}
-	main{
-		min-height: 100vh;
+	.custom-gradient {
+		background: linear-gradient(10deg, var(--violeta-oscuro) 0%, var(--violeta-medio) 25%, var(--verde-azulado-claro) 50%, var(--verde-claro) 75%, var(--verde-oscuro) 100%);
 	}
 </style>
