@@ -1,12 +1,14 @@
 @import "tailwindcss";
 @import '@fontsource-variable/dancing-script';
+@import '@fontsource-variable/merienda';
 @import '@fontsource/calistoga';
 
 
 @theme {
     --font-calistoga: "Calistoga", "sans-serif"; 
     --font-dancing: "Dancing Script Variable", "sans-serif"; 
-    
+    --font-merienda: "Merienda", "sans-serif"; 
+
     --violeta-oscuro: #78698C;
     --violeta-medio: #7A778C;
     --verde-azulado-claro: #86A688;

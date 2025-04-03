@@ -1,5 +1,5 @@
 ---
-import { CAKES } from "../consts/cakes.ts"
+import { CAKES } from "../consts/cakes.ts";
 ---
 
 <script>
@@ -14,33 +14,32 @@ import { CAKES } from "../consts/cakes.ts"
 
 <div class="embla overflow-hidden w-full">
   <div class="embla__container flex">
-      {
-        CAKES.map(({id, name})=> (
+    {
+      CAKES.map(({ id, name, description, props }) => (
         <div class="embla__slide w-max mx-2 flex-none">
-
-        <div class="card my-4 flex flex-col relative min-w-[250px] min-h-[450px] w-2xs overflow-hidden shadow-2xl text-center items-center justify-end"> 
-          <div class="h-[350px] pb-4 w-full border rounded-2xl bg-red-200 flex flex-col justify-end items-center">
-            <div class="cont-img relative h-full w-[80%] hover:w-full hover:m-0 rounded-2xl bg-red-300 mt-10 flex justify-center transition-all ease-in-out duration-1000 group">
-              <img
-                class="img absolute w-full h-max scale-110 -top-0 group-hover:-top-24 transition-all ease-in-out duration-1000"
-                src={`/images/cakes/${id}.webp`}
-                alt="Mushroom Log Cake"
-              />
-            </div>
-            <div class="card-content p-4 h-2/6 w-auto bg-red-100 mx-5 z-10">
-              <h2 class="text-[16px] text-amber-950 font-semibold mb-2.5">
-                {name}
-              </h2>
-              <p class="text-[14px] l">
-                Vanilla flavoured ice cream with chunks of chocolate chip cookie
-                dough and chocolate flavoured chips...
-              </p>
+          <div style={{ height: `${parseInt(props.h)+100}px` }}
+          class="card my-4 flex flex-col relative min-w-[250px] w-2xs overflow-hidden  text-center items-center justify-end">
+            <div style={{ height: `${props.h}px` }}
+              class="pb-4 w-full border-4 border-gray-300 rounded-2xl bg-red-200 flex flex-col justify-end items-center">
+              <div class="relative h-full w-[80%] hover:w-full hover:m-0 rounded-2xl bg-red-300 mt-6 flex justify-center transition-all ease-in-out duration-1000 group">
+                <img style={{ padding: `${props.padding ?? 0}` }}
+                  class="img absolute w-full h-max scale-110 -top-0 group-hover:-top-24 transition-all ease-in-out duration-1000"
+                  src={`/images/cakes/${id}.webp`}
+                  alt="Mushroom Log Cake"
+                />
+              </div>
+              <div class="card-content p-4 h-max w-auto bg-red-100 mx-5 z-10">
+                <h2 class="text-2xl text-amber-950 font-semibold mb-2.5">
+                  {name}
+                </h2>
+                <p class="text-[14px] l">
+                  {description}
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-        ))
-      }
+      ))
+    }
   </div>
-  
 </div>
