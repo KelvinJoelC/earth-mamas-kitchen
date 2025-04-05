@@ -2,7 +2,7 @@
 import { EXPLORE } from '../consts/explore'
 ---
 
-<section >
+<section>
     <section class="flex flex-col pt-10 p-4 justify-center items-center text-center ">
         <h3 class="text-5xl p-6">Explore our options</h3>
         <p class="text-3xl text-center p-4">Feast your eyes on fantastical cakes, Edible blooms, Flower Cupcakes Bouquet</p>
@@ -12,13 +12,13 @@ import { EXPLORE } from '../consts/explore'
     </section>
     {
         EXPLORE.map(({ title, description, props}, index)=> (
-            <section style={{background: `${props.bg}`, transform: `translateY(20*${index})`}}
+            <section style={{background: `${props.bg}`, transform: `translateY(calc(-40px * ${index}))`}}
             class="flex flex-col p-4 justify-center items-center bg-blue-400 rounded-t-4xl transform">
                 <h3 class="text-5xl p-2">{title}</h3>
                 <p class="text-center">{description}</p>
                 <button>View all</button>
                 <figure>
-                    <img class="" src="/images/cakes/floralCake.webp" alt="Floral Cake" />
+                    <img class="animate-slideIn" src="/images/cakes/floralCake.webp" alt="Floral Cake" />
                 </figure>
             </section>
         ))
@@ -30,3 +30,20 @@ import { EXPLORE } from '../consts/explore'
     <!-- Flower Cupcakes Bouquet  -->
     <!-- Events -->
 </section>
+
+<style>
+
+    @keyframes slideIn {
+        0% {
+            transform: translateY(0);
+        }
+        100% {
+            transform: translateY(50px);
+        }
+    }
+    .animate-slideIn {
+        animation: slideIn 0.5s ease-in-out both;
+        animation-timeline: view(50% 30%);
+        
+    }
+</style>
