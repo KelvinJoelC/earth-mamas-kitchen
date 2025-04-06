@@ -2,28 +2,38 @@ export const EXPLORE = [
     {
         id:'bespokeCakes',
         title:'Bespoke cakes',
-        description:'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo aliquid vero fugit aliquam cum enim asperiores possimus nam deserunt, dolorum architecto,',
-        img:'',        
+        description:'Delicate handmade creations for your most special moments. Unique designs that blend flavor and style.',
+        img:'/images/cakes/floralCake',        
         props:{
-            bg: 'red'
+            bg: 'linear-gradient(135deg, #fcb0b3, #ffdeaa, #c1d3fe)'
+            
         }
     },
     {
-        id:'bespokeCakes',
+        id:'edibleBlooms',
         title:'Edible blooms',
-        description:'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo aliquid vero fugit aliquam cum enim asperiores possimus nam deserunt, dolorum architecto,',
-        img:'',      
+        description:'Blooms you can eat and enjoy. Sweet bouquets crafted with fine pastry techniques to delight all the senses.',
+        img:'/images/cupcake',      
         props:{
-            bg: 'blue'
+            bg: 'linear-gradient(135deg, #ffe3ec, #ffc3a0)'
         }
     },
     {
         id:'flowerCupcakesBouquet',
         title:'Flower Cupcakes Bouquet',
-        description:'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo aliquid vero fugit aliquam cum enim asperiores possimus nam deserunt, dolorum architecto,',
-        img:'',      
+        description:'A different kind of bouquet: flower-shaped cupcakes, as beautiful as they are delicious. Perfect for gifting or celebrating with charm.',
+        img:'/images/flowerCupcakesBouquet',      
         props:{
-            bg: 'green'
+            bg: 'linear-gradient(120deg, #d4fc79, #96e6a1, #d3cce3)'
+        }
+    },
+    {
+        id:'events',
+        title:'Corporate events',
+        description:'Impress your clients and colleagues with sweet creations designed for professional events. Elegance and flavor in every detail.',
+        img:'/images/events',      
+        props:{
+            bg: 'linear-gradient(135deg, #fdfbfb, #ebedee, #c9d6ff, #e2e2e2)'
         }
     },
 ]

@@ -1,30 +1,51 @@
 ---
-import { EXPLORE } from '../consts/explore'
+import { EXPLORE } from "../consts/explore";
 ---
 
-<section>
-    <section class="flex flex-col pt-10 p-4 justify-center items-center text-center ">
+<section class="-mb-70">
+    <section
+        class="flex flex-col pt-10 p-4 justify-center items-center text-center"
+    >
         <h3 class="text-5xl p-6">Explore our options</h3>
-        <p class="text-3xl text-center p-4">Feast your eyes on fantastical cakes, Edible blooms, Flower Cupcakes Bouquet</p>
+        <p class="text-3xl text-center p-4">
+            Feast your eyes on fantastical cakes, Edible blooms, Flower Cupcakes
+            Bouquet
+        </p>
         <figure>
-            <img class="" src="/images/cakes/floralCake.webp" alt="Floral Cake" >
+            <img
+                class=""
+                src="/images/cakes/floralCake.webp"
+                alt="Floral Cake"
+            />
         </figure>
     </section>
     {
-        EXPLORE.map(({ title, description, props}, index)=> (
-            <section style={{background: `${props.bg}`, transform: `translateY(calc(-40px * ${index}))`}}
-            class="flex flex-col p-4 justify-center items-center bg-blue-400 rounded-t-4xl transform">
-                <h3 class="text-5xl p-2">{title}</h3>
-                <p class="text-center">{description}</p>
-                <button>View all</button>
-                <figure>
-                    <img class="animate-slideIn" src="/images/cakes/floralCake.webp" alt="Floral Cake" />
+        EXPLORE.map(({ title,img, description, props }, index) => (
+            <section
+                style={{
+                    background: `${props.bg}`,
+                    transform: `translateY(calc(-100px * ${index}))`,
+                }}
+                class="flex flex-col p-4 justify-center items-center bg-blue-400 rounded-t-4xl transform pb-12 "
+            >
+                <h3 class="text-5xl p-2 text-center font-bold">{title}</h3>
+                <p class="text-center text-[18px] font-merienda">
+                    {description}
+                </p>
+                <buton class="flex w-1/3 m-auto p-2 bg-transparent text-gray-500 border rounded-4xl items-center justify-center">
+                    View All
+                </buton>
+                <figure class="">
+                    <img
+                        class="animate-slideIn"
+                        src={`${img}.webp`}
+                        alt="Floral Cake"
+                    />
                 </figure>
             </section>
         ))
     }
- 
-    
+
     <!-- Bespoke cakes -->
     <!-- Edible blooms-->
     <!-- Flower Cupcakes Bouquet  -->
@@ -32,7 +53,6 @@ import { EXPLORE } from '../consts/explore'
 </section>
 
 <style>
-
     @keyframes slideIn {
         0% {
             transform: translateY(0);
@@ -44,6 +64,5 @@ import { EXPLORE } from '../consts/explore'
     .animate-slideIn {
         animation: slideIn 0.5s ease-in-out both;
         animation-timeline: view(50% 30%);
-        
     }
 </style>
