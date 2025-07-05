@@ -1,5 +1,14 @@
 export const CAKES = [
     {
+        id: 'floralCake',
+        name: 'Floral Cake',
+        description: 'Vanilla flavoured ice cream with chunks of chsaadasdVanilla flavoured ice cream with chunks of chsaadasdVanilla flavoured ice cream with chunks of chsaadasd',
+        props: {
+            h: '400',
+            padding: '20px'
+        }
+    },
+    {
         id: 'mushroomLogCake',
         name: 'Mushroom Log Cake',
         description: 'Vanilla flavoured ice cream with chunks of ch',
@@ -15,15 +24,6 @@ export const CAKES = [
         props: {
             h: '350',
             top: '0'
-        }
-    },
-    {
-        id: 'floralCake',
-        name: 'Floral Cake',
-        description: 'Vanilla flavoured ice cream with chunks of chsaadasdVanilla flavoured ice cream with chunks of chsaadasdVanilla flavoured ice cream with chunks of chsaadasd',
-        props: {
-            h: '400',
-            padding: '20px'
         }
     },
 ];
