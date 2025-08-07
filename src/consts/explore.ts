@@ -3,9 +3,10 @@ export const EXPLORE = [
         id:'flowerCupcakesBouquet',
         title:'Floral Cupcake Bouquets',
         description:'A different kind of bouquet: flower-shaped cupcakes, as beautiful as they are delicious. Perfect for gifting or celebrating with charm.',
-        img:'/images/flowerCupcakesBouquet',      
+        img:'/images/flowerCupcakesBouquet2',      
         props:{
-            bg: 'linear-gradient(120deg, #d4fc79, #96e6a1, #d3cce3)'
+           bg: 'linear-gradient(135deg, white 0%, #a0cb5c 20%, #6ca771 50%, #a89bc0 80%, white 100%)'
+
         }
     },{
         id:'bespokeCakes',
@@ -23,7 +24,8 @@ export const EXPLORE = [
         description:'Blooms you can eat and enjoy. Sweet bouquets crafted with fine pastry techniques to delight all the senses.',
         img:'/images/cupcake',      
         props:{
-            bg: 'linear-gradient(135deg, #ffe3ec, #ffc3a0)'
+            bg: 'linear-gradient(135deg, white 0%, #dba2b1 30%, #d88b6f 70%, white 100%)'
+
         }
     },
     {
@@ -32,7 +34,8 @@ export const EXPLORE = [
         description:'Impress your clients and colleagues with sweet creations designed for professional events. Elegance and flavor in every detail.',
         img:'/images/events',      
         props:{
-            bg: 'linear-gradient(135deg, #fdfbfb, #ebedee, #c9d6ff, #e2e2e2)'
+            bg: 'linear-gradient(135deg, white 0%, #bfc8e6 25%, #c7d0dd 50%, #b3bfd8 75%, white 100%)'
+
         }
     },
 ]
