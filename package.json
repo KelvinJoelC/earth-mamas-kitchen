@@ -13,7 +13,7 @@
     "@fontsource-variable/merienda": "^5.2.5",
     "@fontsource/calistoga": "^5.2.5",
     "@tailwindcss/vite": "^4.0.17",
-    "astro": "^5.5.5",
+    "astro": "^5.12.8",
     "embla-carousel": "^8.5.2",
     "tailwindcss": "^4.0.17"
   }
