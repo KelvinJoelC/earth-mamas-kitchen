@@ -1,0 +1,45 @@
+---
+import { AWARDS } from "../consts/awards.ts";
+---
+
+<script>
+  import EmblaCarousel from "embla-carousel";
+  import Autoplay from 'embla-carousel-autoplay';
+
+  const emblaNode = document.querySelector(".embla");
+  const options = { loop: true };
+  const emblaApi = EmblaCarousel(emblaNode as any, options, [
+    Autoplay({ playOnInit: true, delay: 3000 })
+  ]);
+  EmblaCarousel(emblaNode as any, options);
+</script>
+
+<section class="text-black py-6" style="background: radial-gradient(circle at center, #ffffff, #f6f3e7);">
+<div class="marquee-horizontal w-screen">
+        <div class="h-full overflow-hidden px-0 whitespace-nowrap">
+            <span class="font-dancing marquee-font font-bold  will-change-transform animate-marquee-horizontal inline-flex items-center select-none">
+                {Array(8).fill('Rewards •').join(' ')}
+            </span>
+        </div>
+    </div>
+<div class="embla overflow-hidden w-full">
+  <div class="embla__container flex">
+    {
+      AWARDS.map(({id,event,position,description, title}) => (
+        <div class="embla__slide w-max flex-none">
+          <div class="card flex flex-col relative w-screen h-full ">
+            <div class="p-6  text-center">
+            <h3 class="text-2xl font-bold mb-2">{event}</h3>
+            <img src={`/images/${id}.webp`} alt="Award" class="w-30 h-30 mx-auto " />
+            <h3 class="text-3xl font-bold">{position}</h3>
+            <h3 class="text-lg font-bold mb-1">{title}</h3>
+            <p class="text-sm px-6">{description}</p>
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+</section>
+

@@ -2,21 +2,14 @@
 import { EXPLORE } from "../consts/explore";
 ---
 
-<section class="-mb-70">
-    <section class="flex flex-col pt-30 p-4 justify-center items-center text-center text-white">
-        <h3 class="text-5xl mx-2 px-8 font-bold">Explore the BR Range</h3>
-        <p class="text-xl text-center m-10">
-            Feast your eyes on fantastical cakes, Edible blooms, Flower Cupcakes
-            Bouquet
-        </p>
-        <figure>
-            <img
-                class="m-2"
-                src="/images/cakes/floralCake.webp"
-                alt="Floral Cake"
-            />
-        </figure>
-    </section>
+<section class="-mb-75">
+    <div class="marquee-horizontal w-screen">
+        <div class="h-full overflow-hidden px-0 whitespace-nowrap">
+            <span class="font-dancing text-white marquee-font font-bold  will-change-transform animate-marquee-horizontal inline-flex items-center select-none">
+                {Array(8).fill('Delights •').join(' ')}
+            </span>
+        </div>
+    </div>
     {
         EXPLORE.map(({ title,img, description, props }, index) => (
             <section
@@ -43,11 +36,6 @@ import { EXPLORE } from "../consts/explore";
             </section>
         ))
     }
-
-    <!-- Bespoke cakes -->
-    <!-- Edible blooms-->
-    <!-- Flower Cupcakes Bouquet  -->
-    <!-- Events -->
 </section>
 
 <style>
@@ -58,6 +46,15 @@ import { EXPLORE } from "../consts/explore";
         100% {
             transform: translateY(50px);
         }
+    }
+    @keyframes marqueeHorizontal {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-25%);
+        }
+        
     }
     .animate-slideIn {
         animation: slideIn 0.5s ease-in-out both;

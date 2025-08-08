@@ -51,4 +51,17 @@
     animation: jiggle 1s infinite;
 }
 
+.animate-marquee-horizontal {
+        animation: marqueeHorizontal 10s linear infinite;
+    }
+
+.marquee-horizontal span, .vertical-marquee span {
+        font-size: clamp(4.5rem, 3.64rem + 4.29vw, 9rem);
+    }
+
+.marquee-font {
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke-width: 1.75px;
+}
+
 
