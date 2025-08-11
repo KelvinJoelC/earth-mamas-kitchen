@@ -1,0 +1,16 @@
+---
+import type { OptionKey } from "../models/product.model";
+import Details from "./Details.astro";
+
+const { selection } = Astro.props;
+const allowedKeys: OptionKey[] = ['sizes', 'sponge', 'fillings', 'frostings', 'finishes', 'themes', 'addOns', 'allergens'];
+
+
+---
+{ Object.entries(selection.options ?? {})
+.filter(([key]) => allowedKeys.includes(key as OptionKey)).map(([key, val]) => (
+  <div>
+      <Details selection={{ [key]: val }} />
+  </div>
+))}
+
