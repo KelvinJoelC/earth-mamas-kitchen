@@ -11,41 +11,37 @@ const products = selection as ProductList;
     <h2 class="text-4xl p-5 text-center text-black font-bold">You Might Also Like</h2>
     <p class="text-center text-sm italic text-violet-700 -mb-20 "> ✨ Crafted with Love & Nature ✨  </p>
    <div class="embla overflow-hidden w-full">
-    <div class="embla__container flex gap-3">
+    <div class="embla__container flex">
       {
-        products.map(({ title, description, props: { h, padding }, img }) => (
+        products.map(({ title, description, props: { h, padding, bg }, img }) => (
           <div class="embla__slide mx-2 flex-none w-max">
             <div
-              style={{ height: `${parseInt(h) + 100}px` }}
-              class="slide my-6 flex flex-col relative min-w-[250px] w-2xs overflow-hidden text-center 
-                     items-center justify-end"
-            >
+              style={{ height: `${parseInt(h) + 100}px`}}
+              class="slide my-6 flex flex-col relative min-w-[250px] w-2xs overflow-hidden text-center items-center justify-end group">
               <div
                 style={{ height: `${h}px` }}
-                class="card m-5 w-full rounded-2xl border-4  border-zinc-200 bg-violet-50/70 
-                       flex flex-col justify-end items-center shadow-sm group"
+                class="card m-5  w-[98%] rounded-3xl border border-black flex flex-col justify-end items-center ease-in-out duration-700
+                group-hover:shadow-md
+                group-hover:border-white
+                "
               >
-                <div
-                  class="relative h-full w-[80%] group-hover:w-full group-hover:m-0 rounded-2xl bg-violet-100/70 mt-6 
-                         flex justify-center transition-all ease-in-out duration-700 group select-none"
+                <div 
+                  style={{ background: bg  }}
+                  class="relative h-full w-[90%] rounded-3xl bg-violet-100/70 mt-3 flex justify-center transition-all ease-in-out duration-700 select-none
+                  group-hover:w-full 
+                  group-hover:m-0"
                 >
                   <img
                     style={{ padding: `${padding ?? 0}` }}
-                    class="absolute w-full h-max -top-0 scale-110 
-                           group-hover:-top-15 transition-all ease-in-out duration-700"
+                    class="absolute w-full h-max top-10 scale-110 transition-all ease-in-out duration-700
+                    group-hover:-top-15"
                     src={`${img}.webp`}
                     alt={title}
                   />
                 </div>
-
-                <div class="card-content relative z-10 mx-5 -mb-4 rounded-xl bg-white/80 backdrop-blur 
-                            border border-zinc-200 p-4 shadow-sm">
-                  <h3 class="select-none text-2xl font-semibold text-amber-900 mb-2">
-                    {title}
-                  </h3>
-                  <p class=" select-none text-[14px] text-zinc-700 leading-snug">
-                    {description}
-                  </p>
+                <div class="relative mx-4 rounded-xl bg-white text-black text-left py-4">
+                    <h3 class="select-none text-md font-bold mb-2">  {title}</h3>
+                    <p class=" select-none text-sm text-zinc-700 leading-snug">  {description}</p>
                 </div>
               </div>
             </div>
