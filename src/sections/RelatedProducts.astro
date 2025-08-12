@@ -13,7 +13,7 @@ const products = selection as ProductList;
    <div class="embla overflow-hidden w-full">
     <div class="embla__container flex">
       {
-        products.map(({ title, description, props: { h, padding, bg }, img }) => (
+        products.map(({ id, title, description, props: { h, padding, bg }, img }) => (
           <div class="embla__slide mx-2 flex-none w-max">
             <div
               style={{ height: `${parseInt(h) + 100}px`}}
@@ -42,6 +42,9 @@ const products = selection as ProductList;
                 <div class="relative mx-4 rounded-xl bg-white text-black text-left py-4">
                     <h3 class="select-none text-md font-bold mb-2">  {title}</h3>
                     <p class=" select-none text-sm text-zinc-700 leading-snug">  {description}</p>
+                    <a href={`/products/${id}`} class="flex py-1 mt-5 items-center justify-center border rounded-3xl bg-purple-400 text-white font-bold">
+                      View More
+                    </a>
                 </div>
               </div>
             </div>
