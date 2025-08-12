@@ -26,13 +26,13 @@ const products = selection as ProductList;
                        flex flex-col justify-end items-center shadow-sm group"
               >
                 <div
-                  class="relative h-full w-[80%] group-hover:w-full group-hover:m-0 rounded-2xl bg-violet-100/70 mt-6 
+                  class="relative h-full w-[80%] group-active:w-full group-focus:w-full group-hover:w-full group-active:m-0 group-focus:m-0 group-hover:m-0 rounded-2xl bg-violet-100/70 mt-6 
                          flex justify-center transition-all ease-in-out duration-700 group"
                 >
                   <img
                     style={{ padding: `${padding ?? 0}` }}
                     class="absolute w-full h-max -top-0 scale-110 
-                           group-hover:-top-15 transition-all ease-in-out duration-700"
+                           group-active:-top-15 group-focus:-top-15 group-hover:-top-15 transition-all ease-in-out duration-700"
                     src={`${img}.webp`}
                     alt={title}
                   />
