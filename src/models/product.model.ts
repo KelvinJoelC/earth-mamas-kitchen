@@ -57,6 +57,8 @@ export interface Product {
   logistics?: string;
   props: {
     bg: string;
+    h: string; 
+    padding: string; 
   };
   route?: string;
   cta?: string;

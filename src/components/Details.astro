@@ -9,13 +9,14 @@ const { selection } = Astro.props;
 {selection && (
     Object.entries(selection).map(([k, v]) => (
         <details class="bg-white p-4 rounded-3xl shadow group">
-          <summary class="font-bold text-xl cursor-pointer flex justify-between items-center ">
-            <li class="text-2xl"><strong>{OPTION_LABELS[k as OptionKey] ?? k}</strong>:</li>      
+          <summary class="font-bold text-md cursor-pointer flex justify-between items-center ">
+            <li class="text-xl"><strong>{OPTION_LABELS[k as OptionKey] ?? k}</strong>:</li>      
           </summary>
         <hr class="my-2 border-pink-400" />
-        <ul class="list-inside pl-5 space-y-1 text-xl">
+        <ul class="list-inside pl-5 space-y-1 text-md">
+          {/* TODO: Make it better */}
           {Array.isArray(v) 
-            ? v.map(item => !item.servings ? <li>{item}</li> : <li>{item.label ?? `${item.sizeInch}"`} – {item.servings ?? '—'} servings</li>) 
+            ? v.map(item => !item.servings ? <li>{item}</li> : <li>{item.label ?? `${item.sizeInch}"`} - {item.servings ?? '—'} servings</li>) 
             : typeof v === 'object' 
               ? Object.entries(v as any).map(([subKey, subVal]) => (
                   <li ><strong>{subKey}:</strong> {subVal}</li>

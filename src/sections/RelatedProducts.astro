@@ -1,0 +1,68 @@
+---
+import Carrousel from "../components/carrousel.astro"
+const { selection } = Astro.props ;
+import { EXPLORE } from '../consts/explore';
+import type { ProductList } from "../models/product.model";
+const products = selection as ProductList;
+
+
+---
+<section class="flex flex-col p-4 pb-12 -mt-5 justify-center items-center bg-white rounded-t-4xl transform ">
+    <h2 class="text-4xl p-5 text-center text-black font-bold">You Might Also Like</h2>
+    <p class="text-center text-sm italic text-violet-700 -mb-20 "> ✨ Crafted with Love & Nature ✨  </p>
+   <div class="embla overflow-hidden w-full">
+    <div class="embla__container flex gap-3">
+      {
+        products.map(({ title, description, props: { h, padding }, img }) => (
+          <div class="embla__slide mx-2 flex-none w-max">
+            <div
+              style={{ height: `${parseInt(h) + 100}px` }}
+              class="slide my-6 flex flex-col relative min-w-[250px] w-2xs overflow-hidden text-center 
+                     items-center justify-end"
+            >
+              <div
+                style={{ height: `${h}px` }}
+                class="card m-5 w-full rounded-2xl border-4  border-zinc-200 bg-violet-50/70 
+                       flex flex-col justify-end items-center shadow-sm group"
+              >
+                <div
+                  class="relative h-full w-[80%] group-hover:w-full group-hover:m-0 rounded-2xl bg-violet-100/70 mt-6 
+                         flex justify-center transition-all ease-in-out duration-700 group"
+                >
+                  <img
+                    style={{ padding: `${padding ?? 0}` }}
+                    class="absolute w-full h-max -top-0 scale-110 
+                           group-hover:-top-15 transition-all ease-in-out duration-700"
+                    src={`${img}.webp`}
+                    alt={title}
+                  />
+                </div>
+
+                <div class="card-content relative z-10 mx-5 -mb-4 rounded-xl bg-white/80 backdrop-blur 
+                            border border-zinc-200 p-4 shadow-sm">
+                  <h3 class="text-2xl font-semibold text-amber-900 mb-2">
+                    {title}
+                  </h3>
+                  <p class="text-[14px] text-zinc-700 leading-snug">
+                    {description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+
+<script>
+  import EmblaCarousel from "embla-carousel";
+
+  const emblaNode = document.querySelector(".embla");
+  const options = { loop: false };
+  const emblaApi = EmblaCarousel(emblaNode as any, options);
+
+  console.log(emblaApi.slideNodes()); // Access API
+</script>

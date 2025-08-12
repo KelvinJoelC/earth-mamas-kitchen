@@ -7,6 +7,7 @@ import Cake from '../../components/Cake.astro';
 import EdibleBloom from '../../components/EdibleBloom.astro'; 
 import BussinessEvent from '../../components/BussinessEvent.astro';
 import Details from '../../components/Details.astro';
+import RelatedProducts from '../../sections/RelatedProducts.astro';
 
 
 export async function getStaticPaths() {
@@ -23,14 +24,14 @@ const ProductView = {
   'edible-blooms': EdibleBloom,
   'special-occasions': BussinessEvent
 }[selection.slug] ?? null;
+
+const relatedProducts = EXPLORE.filter(products => products.id  !== selection.id)
+
 ---
 
 <Layout title={selection.title} description={selection.description}>
-<!-- <span class="bg-pink-100 text-pink-800 text-sm font-medium px-2 py-0.5 rounded-full">
-  Chocolate
-</span> -->
   <section class="flex flex-col pt-30 p-4 justify-center items-center text-center text-white pb-20" style={{ background: selection.props.bg }}>
-    <h1 class="text-5xl mx-2 px-8 font-bold">{selection.title}</h1>
+    <h1 class="text-5xl mx-2 px-6 font-bold">{selection.title}</h1>
     <img class="animate-slideIn" src={`${selection.img}.webp`} alt={selection.title} />
 
     <div class="p-4 rounded-xl space-y-6 text-black text-left w-full max-w-3xl">
@@ -41,14 +42,15 @@ const ProductView = {
       <div class="bg-white p-4 rounded-3xl shadow">
         <h2 class="text-2xl pb-3 font-bold">{selection.title}</h2>
         <div class="flex flex-row justify-between font-bold py-1">
-          {selection.priceFrom && <p class="text-xl">From: {selection.priceFrom}€</p>}
-          {selection.leadTimeDays && <p class="text-lg">Lead time: {selection.leadTimeDays} days</p>}
+          {selection.priceFrom && <p class="text-lg">From: {selection.priceFrom}€</p>}
+          {selection.leadTimeDays && <p class="text-md">Lead time: {selection.leadTimeDays} days</p>}
         </div>
         <p class="text-xl text-left">{selection.description}</p>
       </div>
 
       {ProductView ? <ProductView selection={selection} /> : null}
-      
     </div>
   </section>
+  <RelatedProducts selection={relatedProducts}  />
+
 </Layout>
