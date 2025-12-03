@@ -21,7 +21,10 @@ const { selection } = Astro.props;
               ? Object.entries(v as any).map(([subKey, subVal]) => (
                   <li ><strong>{subKey}:</strong> {subVal}</li>
                 ))
-              : <li class="">{String(v)}</li>
+              // : <li class="">{String(v)}</li>
+              : <label>{String(v)}</label>
+
+              
           }
           </ul>
         </details>

@@ -2,10 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import { EXPLORE } from '../../consts/explore';
 import type { Product } from '../../models/product.model';
-import Bouquet from '../../components/Bouquet.astro';
 import Cake from '../../components/Cake.astro';
-import EdibleBloom from '../../components/EdibleBloom.astro'; 
-import BussinessEvent from '../../components/BussinessEvent.astro';
 import Details from '../../components/Details.astro';
 import RelatedProducts from '../../sections/RelatedProducts.astro';
 
@@ -19,10 +16,7 @@ export async function getStaticPaths() {
 const { selection } = Astro.props as { selection: Product };
 
 const ProductView = {
-  'floral-cupcake-bouquets': Bouquet,
   'bespoke-cakes': Cake,
-  'edible-blooms': EdibleBloom,
-  'special-occasions': BussinessEvent
 }[selection.slug] ?? null;
 
 const relatedProducts = EXPLORE.filter(products => products.id  !== selection.id)
