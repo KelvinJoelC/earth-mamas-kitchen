@@ -1,21 +1,58 @@
 ---
-import type { OptionKey } from "../models/product.model";
+import { OPTION_LABELS, type OptionKey, type Product } from "../models/product.model";
 import Details from "./Details.astro";
 
+
 const { selection } = Astro.props;
-const allowedKeys: OptionKey[] = ['sizes', 'sponge', 'fillings', 'frostings', 'finishes', 'themes', 'addOns', 'allergens'];
+const allowedKeys: OptionKey[] = ['sizes', 'sponge', 'fillings', 'frostings', 'finishes', 'themes', 'addOns'];
 
 
 ---
 { Object.entries(selection.options ?? {})
-.filter(([key]) => allowedKeys.includes(key as OptionKey)).map(([key, val]) => (
-  <div>
-      <Details selection={{ [key]: val }} />
-  </div>
+.filter(([key]) => allowedKeys.includes(key as OptionKey))
+.map(([options, val]:[string, any]) => (
+  <div class="bg-white p-4 rounded-3xl shadow group">
+    <label class="text-xl font-medium">{OPTION_LABELS[options as OptionKey] ?? options}:</label>      
+    <hr class="my-2 border-pink-400" />
+    { (() => {
+    switch (options) {
+      case 'sizes':
+        return (
+          <select
+            class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
+                       focus:outline-none focus:ring-2 focus:ring-violeta-medio">
+            {val.map((features: any, index: number) => (
+              <option value={features.servings}>
+                {features.label ?? `${features.sizeInch}"`} - {features.servings ?? '—'} servings
+              </option>
+            ))}
+          </select>
+        );
+      case 'addOns':
+        return (
+          val.map((extra:any) => (
+          <label class="inline-flex items-center gap-2 text-xs text-slate-700">
+            <input type="checkbox" name="extras" value={extra} class="rounded border-slate-300" />
+            <span>{extra}</span>
+          </label><br/>
+        ))
+        );
+
+      default:
+        return (
+          <select
+            class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
+                       focus:outline-none focus:ring-2 focus:ring-violeta-medio">
+            {val.map((item: any) => (
+              <option value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        );
+    }
+  })()
+  }
+</div>
 ))}
 
-<select id="fruit" name="fruit">
-  <option value="manzana">Manzana</option>
-  <option value="pera">Pera</option>
-  <option value="naranja">Naranja</option>
-</select>

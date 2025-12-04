@@ -29,10 +29,6 @@ const relatedProducts = EXPLORE.filter(products => products.id  !== selection.id
     <img class="animate-slideIn" src={`${selection.img}.webp`} alt={selection.title} />
 
     <div class="p-4 rounded-xl space-y-6 text-black text-left w-full max-w-3xl">
-      <div class="flex gap-2">
-        <a href="/order" class="flex items-center bg-white text-black font-bold px-8 py-3 rounded-full">Order Now</a>
-      </div>
-
       <div class="bg-white p-4 rounded-3xl shadow">
         <h2 class="text-2xl pb-3 font-bold">{selection.title}</h2>
         <div class="flex flex-row justify-between font-bold py-1">
@@ -41,8 +37,36 @@ const relatedProducts = EXPLORE.filter(products => products.id  !== selection.id
         </div>
         <p class="text-xl text-left">{selection.description}</p>
       </div>
+      <details class="  ">
+        <summary class="inline-flex items-center bg-white  gap-2 rounded-full px-4 py-2 text-sm font-medium
+           bg-violeta-oscuro text-black cursor-pointer shadow-md hover:bg-violeta-medio transition" >
+                Order Now
+        </summary>
+        <form class=" p-2 group mt-2 rounded-2xl bg-white/80  shadow-xl border border-slate-100
+          flex flex-col gap-2 z-20" >
+          {ProductView ? <ProductView selection={selection} /> : null}        
+         
+          <div class="bg-white p-4 rounded-3xl shadow group">
+          <label class="text-xl font-medium">Notes</label>
+          <textarea
+            name="notes"
+            rows="2"
+            placeholder="Ej: Mensaje en la tarta, alergias, etc."
+            class="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs
+                   focus:outline-none focus:ring-2 focus:ring-violeta-medio resize-none"
+          ></textarea>
+          </div>
 
-      {ProductView ? <ProductView selection={selection} /> : null}
+          <div class="flex gap-2 justify-end pt-2">
+            <button type="reset"  class="text-xs px-3 py-2 rounded-full border border-slate-200 text-slate-500 hover:bg-slate-50" >
+              Clean
+            </button>
+            <button type="submit" class="text-xs px-4 py-2 rounded-full bg-green-500 text-white font-semibold hover:bg-verde-medio shadow-sm" >
+              Confirm
+            </button>
+          </div>
+        </form>
+      </details>
     </div>
   </section>
   <RelatedProducts selection={relatedProducts}  />
