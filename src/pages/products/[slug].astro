@@ -1,9 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { EXPLORE } from '../../consts/explore';
-import type { Product } from '../../models/product.model';
-import Cake from '../../components/Cake.astro';
-import Details from '../../components/Details.astro';
+import { OPTION_LABELS, type Product } from '../../models/product.model';
+import PreOrderFeaturesSelector from '../../components/PreOrderFeaturesSelector.astro';
 import RelatedProducts from '../../sections/RelatedProducts.astro';
 
 
@@ -15,9 +14,6 @@ export async function getStaticPaths() {
 }
 const { selection } = Astro.props as { selection: Product };
 
-const ProductView = {
-  'bespoke-cakes': Cake,
-}[selection.slug] ?? null;
 
 const relatedProducts = EXPLORE.filter(products => products.id  !== selection.id)
 
@@ -37,6 +33,17 @@ const relatedProducts = EXPLORE.filter(products => products.id  !== selection.id
         </div>
         <p class="text-xl text-left">{selection.description}</p>
       </div>
+      <details class="bg-white p-4 rounded-3xl shadow">
+        <summary class="flex items-center bg-white text-2xl pb-2 font-bold
+        text-black cursor-pointer hover:bg-violeta-medio transition">
+          {OPTION_LABELS['allergens']}   
+          <hr class="my-2 border-pink-400" />
+        </summary>
+        <div class="text-sm text-slate-700">
+          {selection.options.allergens ? selection.options.allergens.join(', ') : 'No allergens information available.'}
+        </div>
+
+      </details>
       <details class="  ">
         <summary class="inline-flex items-center bg-white  gap-2 rounded-full px-4 py-2 text-sm font-medium
            bg-violeta-oscuro text-black cursor-pointer shadow-md hover:bg-violeta-medio transition" >
@@ -44,7 +51,7 @@ const relatedProducts = EXPLORE.filter(products => products.id  !== selection.id
         </summary>
         <form class=" p-2 group mt-2 rounded-2xl bg-white/80  shadow-xl border border-slate-100
           flex flex-col gap-2 z-20" >
-          {ProductView ? <ProductView selection={selection} /> : null}        
+            <PreOrderFeaturesSelector selection={selection} />      
          
           <div class="bg-white p-4 rounded-3xl shadow group">
           <label class="text-xl font-medium">Notes</label>

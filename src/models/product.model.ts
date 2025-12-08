@@ -51,7 +51,7 @@ export interface Product {
   tags?: string[];
   leadTimeDays?: number;
   dietary?: string[];
-  options?: ProductOptions;
+  options: ProductOptions;
   notes?: string;
   storage?: string;
   logistics?: string;

@@ -19,7 +19,6 @@ export const EXPLORE: ProductList = [
       colorPalettes: ['Pastel mix', 'Blush & ivory', 'Lilac & sage', 'Bold brights', 'Custom'],
       fillings: ['No filling', 'Raspberry jam', 'Chocolate ganache', 'Lemon curd'],
       presentation: ['Bouquet wrap', 'Hatbox', 'Basket'],
-      messageCard: true,
       addOns: [
         'Mini topper “Happy Birthday”',
         'Printed ribbon',
@@ -76,7 +75,6 @@ export const EXPLORE: ProductList = [
         'Fresh florals'
       ],
       themes: ['Floral', 'Minimalist', 'Rustic', 'Whimsical', 'Brand colors', 'Custom illustration'],
-      inscriptions: true,
       addOns: [
         'Sugar flowers',
         'Macarons (12)',
@@ -122,10 +120,8 @@ export const EXPLORE: ProductList = [
       ],
       allergens: ['gluten', 'eggs', 'milk', 'soy'],
       colorPalettes: ['Pastel garden', 'Sunset tones', 'Green & white', 'Custom'],
-      flavorSets: [['Vanilla', 'Chocolate', 'Lemon', 'Strawberry milk', 'Cookies & cream']],
       container: ['Box', 'Basket', 'Hatbox', 'Reusable vase'],
-      addOns: ['Message card', 'Ribbon branding', 'Edible shimmer', 'Mini topper'],
-      noteOnTransport: 'Se entrega montado; frágil al calor.'
+      addOns: ['Message card', 'Ribbon branding', 'Edible shimmer', 'Mini topper']
     },
     props: {
       bg: 'linear-gradient(135deg, white 0%, #dba2b1 30%, #d88b6f 70%, white 100%)',
@@ -161,11 +157,6 @@ export const EXPLORE: ProductList = [
         standardCupcakes: 12,
         brandedCookies: 20
       },
-      flavorSets: [
-        ['Vanilla', 'Chocolate', 'Red velvet'],
-        ['Lemon', 'Raspberry', 'Pistachio'],
-        ['Custom to brand colors']
-      ],
       branding: ['Edible logo prints', 'Pantone-matched buttercream', 'Ribbon/logo tags'],
       service: ['Pickup', 'Delivery', 'On-site setup (dessert table)'],
       packages: [
