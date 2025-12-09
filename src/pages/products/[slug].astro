@@ -44,15 +44,14 @@ const relatedProducts = EXPLORE.filter(products => products.id  !== selection.id
         </div>
 
       </details>
-      <details class="  ">
+      <details  id='preOrderDetail' class="  ">
         <summary class="inline-flex items-center bg-white  gap-2 rounded-full px-4 py-2 text-sm font-medium
            bg-violeta-oscuro text-black cursor-pointer shadow-md hover:bg-violeta-medio transition" >
                 Order Now
         </summary>
-        <form class=" p-2 group mt-2 rounded-2xl bg-white/80  shadow-xl border border-slate-100
+        <form id="preOrderForm" method="POST" class=" p-2 group mt-2 rounded-2xl bg-white/80  shadow-xl border border-slate-100
           flex flex-col gap-2 z-20" >
-            <PreOrderFeaturesSelector selection={selection} />      
-         
+          <PreOrderFeaturesSelector selection={selection} />      
           <div class="bg-white p-4 rounded-3xl shadow group">
           <label class="text-xl font-medium">Notes</label>
           <textarea
@@ -79,3 +78,4 @@ const relatedProducts = EXPLORE.filter(products => products.id  !== selection.id
   <RelatedProducts selection={relatedProducts}  />
 
 </Layout>
+

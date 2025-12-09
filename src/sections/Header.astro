@@ -4,7 +4,7 @@
             <a href="/"> <img src="favicon.png" alt="Earth mama's kitchen" class="size-10"> </a>
         </div>
         <div class="flex flex-row justify-end">
-            <a href="/" class="inline-block">Order Cake</a>
+      <a href="/order" class="inline-block">Items: <span id="cartCount">0</span></a>
         </div>
     </nav>
 <header>
@@ -29,3 +29,34 @@
         }
     }
 </style>
+
+<script type="module">
+
+  import { itemCount } from '../utils/cart.js';
+
+  const cartCountEl = document.getElementById('cartCount');
+
+  function renderInitialCount() {
+    try {
+      cartCountEl.textContent = String(itemCount());
+    } catch (e) {
+      console.error('render cart count error', e);
+    }
+  }
+
+  renderInitialCount();
+
+  // Escucha eventos de actualización del carrito
+  window.addEventListener('cart:update', (e) => {
+    const cart = e.detail ?? { items: [] };
+    const count = (cart.items || []).reduce((s, i) => s + (i.qty || 1), 0);
+    cartCountEl.textContent = String(count);
+  });
+
+  // También escucha storage para cambios desde otras pestañas (fallback)
+  window.addEventListener('storage', (ev) => {
+    if (ev.key === 'kerubin_cart_v1') {
+      renderInitialCount();
+    }
+  });
+</script>

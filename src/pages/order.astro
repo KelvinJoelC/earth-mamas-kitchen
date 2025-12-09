@@ -6,9 +6,14 @@ import Layout from "../layouts/Layout.astro";
 
 
 <Layout title="Order" description="Place your order with Earth Mama's Kitchen">
-    <section
+    
+
+<section
     class="flex flex-col items-center pt-20 rounded-b-4xl rounded-t-2xl transform -translate-y-15 min-h-screen bg-gradient-to-b from-[#1E3A8A] to-[#1E40AF] text-white p-4 mt-15"
 >
+<h1>Carrito</h1>
+<div id="cartRoot">Cargando carrito...</div>
+<button id="clearBtn">Vaciar carrito</button>
     <div class="flex gap-1 p-2 bg-amber-50 rounded-full shadow-lg">
         <a
             href="https://www.instagram.com/earthmamaskitchen"
@@ -59,4 +64,35 @@ import Layout from "../layouts/Layout.astro";
     </form>
 </section>
 </Layout>   
+
+<script type="module">
+    //   const root = document.getElementById('cartRoot');
+    //   const cartJson = localStorage.getItem('cart');
+    //   const cart = cartJson ? JSON.parse(cartJson) : [];
+
+    //   if (!cart.length) {
+    //     root.innerHTML = '<p>Carrito vacío</p>';
+    //   } else {
+    //     root.innerHTML = '<p>Klok Carrito</p>';
+
+    //     const ul = document.createElement('ul');
+    //     let total = 0;
+    //     cart.forEach(i => {
+    //       const li = document.createElement('li');
+    //       li.textContent = `KLOKO :${i.notes} `;
+    //       ul.appendChild(li);
+    //     });
+    //     root.innerHTML = '';
+    //     root.appendChild(ul);
+
+    //     const p = document.createElement('p');
+    //     p.textContent = `Total: $${total.toFixed(2)}`;
+    //     root.appendChild(p);
+    //   }
+
+    //   document.getElementById('clearBtn').addEventListener('click', () => {
+    //     localStorage.removeItem('cart');
+    //     location.reload();
+    //   });
+    </script>
 
