@@ -24,6 +24,11 @@ import StickyOrderButton from "../components/StickyOrderButton.astro";
 		</main>
 		<StickyOrderButton/>
 		<Footer/>
+
+<script type="module">
+  	import { initSync } from '../utils/cart.js';
+  	initSync();
+</script>
 	</body>
 </html>
 
@@ -32,9 +37,4 @@ import StickyOrderButton from "../components/StickyOrderButton.astro";
 		background: linear-gradient(10deg, var(--violeta-oscuro) 0%, var(--violeta-medio) 25%, var(--verde-azulado-claro) 50%, var(--verde-claro) 75%, var(--verde-oscuro) 100%);
 	}
 </style>
-
-<script type="module">
-  	import { initSync } from '/src/utils/cart.js';
-  	initSync();
-</script>
 
