@@ -44,7 +44,7 @@ const relatedProducts = EXPLORE.filter(products => products.id  !== selection.id
         </div>
 
       </details>
-      <details  id='preOrderDetail' class="  ">
+      <details id='preOrderDetail' class="  ">
         <summary class="inline-flex items-center bg-white  gap-2 rounded-full px-4 py-2 text-sm font-medium
            bg-violeta-oscuro text-black cursor-pointer shadow-md hover:bg-violeta-medio transition" >
                 Order Now
@@ -67,7 +67,7 @@ const relatedProducts = EXPLORE.filter(products => products.id  !== selection.id
             <button type="reset"  class="text-xs px-3 py-2 rounded-full border border-slate-200 text-slate-500 hover:bg-slate-50" >
               Clean
             </button>
-            <button type="submit" class="text-xs px-4 py-2 rounded-full bg-green-500 text-white font-semibold hover:bg-verde-medio shadow-sm" >
+            <button type="submit"  class="text-xs px-4 py-2 rounded-full bg-green-500 text-white font-semibold hover:bg-verde-medio shadow-sm" >
               Confirm
             </button>
           </div>
@@ -78,4 +78,30 @@ const relatedProducts = EXPLORE.filter(products => products.id  !== selection.id
   <RelatedProducts selection={relatedProducts}  />
 
 </Layout>
+
+<script type="module">
+  import { addItem } from '/js/cart.js';
+  
+  const form = document.getElementById('preOrderForm');
+  console.log('form:', form);
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const item = {
+      id: 'cake-' + Date.now(),   
+      name: 'Tarta de chocolate',
+      price: 20,
+      qty: 1
+    };
+    addItem(item);
+    alert('Añadido al carrito');
+
+    const details = document.getElementById('preOrderDetail');
+    if (details) {
+      details.open = false;
+      details.removeAttribute('open');
+    }
+  });
+</script>
 
