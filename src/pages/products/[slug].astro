@@ -49,8 +49,8 @@ const relatedProducts = EXPLORE.filter(products => products.id  !== selection.id
            bg-violeta-oscuro text-black cursor-pointer shadow-md hover:bg-violeta-medio transition" >
                 Order Now
         </summary>
-        <form id="preOrderForm" method="POST" class=" p-2 group mt-2 rounded-2xl bg-white/80  shadow-xl border border-slate-100
-          flex flex-col gap-2 z-20" >
+        <form id="preOrderForm" method="POST" data-product-title={selection.title}
+        class=" p-2 group mt-2 rounded-2xl bg-white/80  shadow-xl border border-slate-100 flex flex-col gap-2 z-20" >
           <PreOrderFeaturesSelector selection={selection} />      
           <div class="bg-white p-4 rounded-3xl shadow group">
           <label class="text-xl font-medium">Notes</label>
@@ -79,29 +79,5 @@ const relatedProducts = EXPLORE.filter(products => products.id  !== selection.id
 
 </Layout>
 
-<script type="module">
-  import { addItem } from '/js/cart.js';
-  
-  const form = document.getElementById('preOrderForm');
-  console.log('form:', form);
 
-  form?.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const item = {
-      id: 'cake-' + Date.now(),   
-      name: 'Tarta de chocolate',
-      price: 20,
-      qty: 1
-    };
-    addItem(item);
-    alert('Añadido al carrito');
-
-    const details = document.getElementById('preOrderDetail');
-    if (details) {
-      details.open = false;
-      details.removeAttribute('open');
-    }
-  });
-</script>
 

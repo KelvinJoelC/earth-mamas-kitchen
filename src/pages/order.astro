@@ -2,6 +2,7 @@
 import InstagramIcon from "../assets/instagram.svg";
 import FacebookIcon from "../assets/facebook.svg";
 import Layout from "../layouts/Layout.astro";
+import '../styles/cart.css';
 ---
 
 
@@ -35,9 +36,9 @@ import Layout from "../layouts/Layout.astro";
         <h2 class="text-3xl font-bold ">Earth mama`s Kitchen</h2>
     </div>
     <h3 class="font-merienda text-3xl">Bake like you mean it.</h3>
-    <section class="flex flex-col items-center ">
-        <h1 class="text-2xl">Carrito</h1>
-            <div id="cartRoot">Empty</div>
+    <section id="cart-resumen" class="flex flex-col items-center ">
+        <h1 class="text-2xl ">Carrito</h1>
+            <div id="cartRoot" class="p-2 group mt-2 rounded-2xl bg-white/80  shadow-xl border border-slate-100 flex flex-col gap-2 z-20">Empty</div>
         <button id="clearBtn" type="reset" class="">Vaciar carrito</button>
     </section>
     <form class="w-full">
@@ -65,13 +66,17 @@ import Layout from "../layouts/Layout.astro";
 </Layout>
 
 <script type="module">
-    import { clearCart } from '/js/cart.js';
+    import { clearCart, updateCartResumen } from '/js/cart.js';
 
 
     document.getElementById('clearBtn').addEventListener('click', () => {
-        console.log('Clearing cart');
         clearCart();
       window.location.reload();
+    });
+
+    document.addEventListener('astro:page-load', () => {
+      if (!document.querySelector('#cart-resumen')) return;
+      updateCartResumen();
     });
 
 </script>

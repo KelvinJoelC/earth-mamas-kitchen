@@ -3,6 +3,7 @@ export const CART_KEY = 'myapp_cart';
 function readStorage() {
   try {
     const raw = localStorage.getItem(CART_KEY);
+
     return raw ? JSON.parse(raw) : { items: [] };
   } catch (err) {
     console.error('cart read error', err);
@@ -16,6 +17,7 @@ function writeStorage(cart) {
       // Emitir evento global para que listeners sepan del cambio
       window.dispatchEvent(new CustomEvent('cart:update', { detail: cart }));
     // Si quieres compatibilidad multi-pestaña:
+
     if (window.bc) window.bc.postMessage({ type: 'cart:update', cart });
   } catch (err) {
     console.error('cart write error', err);
@@ -28,13 +30,9 @@ export function getCart() {
 
 export function addItem(item) {
   const cart = readStorage();
-  // ejemplo simple: buscar por id y aumentar cantidad
+
   const idx = cart.items.findIndex(i => i.id === item.id);
-  if (idx >= 0) {
-    cart.items[idx].qty = (cart.items[idx].qty || 1) + (item.qty || 1);
-  } else {
-    cart.items.push({ ...item, qty: item.qty || 1 });
-  }
+  if (idx === -1) cart.items.push(item);
   writeStorage(cart);
   return cart;
 }
@@ -54,10 +52,11 @@ export function clearCart() {
 
 export function itemCount() {
   const cart = readStorage();
-  return cart.items.reduce((s, i) => s + (i.qty || 1), 0);
+  return cart.items.length;
 }
 
 export function initSync() {
+
   if ('BroadcastChannel' in window) {
     window.bc = new BroadcastChannel('myapp_cart');
     window.bc.addEventListener('message', (ev) => {
@@ -73,29 +72,78 @@ export function updateCartResumen() {
   const cartRoot = document.getElementById('cartRoot');
   if(cartRoot){
     const cartJson = getCart().items;
-    
+    cartRoot.innerHTML = '';
     if (!cartJson.length) {
         cartRoot.innerHTML = '<p>Carrito vacío</p>';
     } 
-    else {
-      const ul = document.createElement('ul');
-      let total = 0;
-      cartJson.forEach(i => {
-        const li = document.createElement('li');
-        li.textContent = `
-        ${i.name} 
-        Price: $${i.price.toFixed(2)}
-        `;
-        ul.appendChild(li);
+    else {      
+      cartJson.forEach(item => {
+        cartRoot.appendChild(renderCartItems(item));
       });
-      cartRoot.innerHTML = '';
-      cartRoot.appendChild(ul);
-      const p = document.createElement('p');
-      p.textContent = `Total: $${total.toFixed(2)}`;
-      cartRoot.appendChild(p);
     }
   }
 }
+
+export  function renderCartItems(item) {
+  const card = document.createElement('div');
+  card.className = 'order-card group';
+  card.dataset.id = item.id;
+
+  /* HEADER */
+  const header = document.createElement('div');
+  header.className = 'order-header';
+
+  const title = document.createElement('h3');
+  title.className = 'title';
+  title.textContent = item.title;
+
+  const btn = document.createElement('button');
+  btn.className = 'delete-btn';
+  btn.setAttribute('aria-label', 'Delete order');
+  btn.textContent = '✕';
+
+  btn.addEventListener('click', () => {
+    handleDelete(item.id);
+  });
+
+  header.append(title, btn);
+
+  /* OPTIONS */
+  const optionsList = document.createElement('ul');
+  optionsList.className = 'options';
+
+  addOption(optionsList, 'Type', item.options.cupcakeType);
+  addOption(optionsList, 'Buttercream', item.options.buttercreamStyle);
+  addOption(optionsList, 'Qty', item.options.quantities);
+  addOption(optionsList, 'Colors', item.options.colorPalettes);
+  addOption(optionsList, 'Filling', item.options.fillings);
+  addOption(optionsList, 'Presentation', item.options.presentation);
+
+  card.append(header, optionsList);
+
+  return card;
+}
+
+/* Helpers */
+function addOption(list, label, value) {
+  if (!value || value.length === 0) return;
+
+  const li = document.createElement('li');
+
+  const span = document.createElement('span');
+  span.textContent = `${label}:`;
+
+  li.append(span, ` ${value}`);
+  list.appendChild(li);
+}
+
+function handleDelete(id) {
+  console.log('Delete', id);
+  // aquí:
+  // removeFromCart(id);
+  // updateCartResumen();
+}
+  
 
 
 

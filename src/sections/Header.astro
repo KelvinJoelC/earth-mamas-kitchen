@@ -32,7 +32,7 @@
 </style>
 
 <script type="module">
-    import { initSync,itemCount,updateCartResumen } from '/js/cart.js';
+    import { initSync,itemCount } from '/js/cart.js';
 
         const cartCountEl = document.getElementById('cartCount');
         cartCountEl.textContent = itemCount();
@@ -51,7 +51,6 @@
         document.addEventListener('astro:after-swap', (e) => {
         const cartCountEl = document.getElementById('cartCount');
         cartCountEl.textContent = itemCount();
-        updateCartResumen();
         });
 
         

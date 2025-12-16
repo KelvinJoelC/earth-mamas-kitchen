@@ -15,6 +15,7 @@ const { selection } = Astro.props;
       case 'sizes':
         return (
           <select
+            name="size"
             class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
                        focus:outline-none focus:ring-2 focus:ring-violeta-medio">
             {val.map((features: any) => (
@@ -34,7 +35,7 @@ const { selection } = Astro.props;
         return (
           val.map((extra:any) => (
           <label class="inline-flex items-center gap-2 text-xs text-slate-700">
-            <input type="checkbox" name="extras" value={extra} class="rounded border-slate-300" />
+            <input type="checkbox" name="addOns" value={extra} class="rounded border-slate-300" />
             <span>{extra}</span>
           </label><br/>
         ))
@@ -44,6 +45,7 @@ const { selection } = Astro.props;
         const value: string[] = Array.isArray(val) ? val : [] ;
         return (
           <select
+            name={options}
             class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
                        focus:outline-none focus:ring-2 focus:ring-violeta-medio">
             {value.map((item: any) => (
