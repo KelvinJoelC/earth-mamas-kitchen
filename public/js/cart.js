@@ -95,7 +95,7 @@ export  function renderCartItems(item) {
 
   const title = document.createElement('h3');
   title.className = 'title';
-  title.textContent = item.title;
+  title.textContent = item.product;
 
   const btn = document.createElement('button');
   btn.className = 'delete-btn';

@@ -21,7 +21,7 @@ function initPreOrderForm() {
       }
     };
     addItem(item);
-    // alert('Añadido al carrito');
+    alert('Item added to cart!');
 
     document.getElementById('preOrderDetail')?.removeAttribute('open');
   });

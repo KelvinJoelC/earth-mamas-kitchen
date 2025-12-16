@@ -7,6 +7,7 @@
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   position: relative;
+  width: 100% ;
 }
 
 .order-card:hover {
@@ -60,11 +61,12 @@
 
 .options li {
   display: flex;
+  font-weight: bold;
   gap: 0.25rem;
   white-space: nowrap;
 }
 
 .options span {
-  font-weight: 500;
+  font-weight: bold;
   color: #334155;
 }

@@ -36,10 +36,12 @@ import '../styles/cart.css';
         <h2 class="text-3xl font-bold ">Earth mama`s Kitchen</h2>
     </div>
     <h3 class="font-merienda text-3xl">Bake like you mean it.</h3>
-    <section id="cart-resumen" class="flex flex-col items-center ">
-        <h1 class="text-2xl ">Carrito</h1>
-            <div id="cartRoot" class="p-2 group mt-2 rounded-2xl bg-white/80  shadow-xl border border-slate-100 flex flex-col gap-2 z-20">Empty</div>
-        <button id="clearBtn" type="reset" class="">Vaciar carrito</button>
+    <section id="cart-resumen" class="flex flex-col items-end gap-1 w-full max-w-md mt-6 mb-4 p-1 bg-white/10 rounded-2xl shadow-lg">
+        <div class="flex flex-col items-center w-full">
+            <h1 class="text-2xl ">Resume</h1>
+            <div id="cartRoot" class="flex flex-col w-full gap-2 p-2 group mt-2 rounded-2xl bg-white/80 shadow-xl border border-slate-100">Empty</div>
+        </div>
+        <button id="clearBtn" type="reset" class="p-2 cursor-pointer text-black hover:text-red-600">Delete Cart</button>
     </section>
     <form class="w-full">
         <div class="flex flex-col gap-2 p-4 rounded-lg shadow-lg w-full max-w-md">
