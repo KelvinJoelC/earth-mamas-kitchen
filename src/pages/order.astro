@@ -77,7 +77,23 @@ import '../styles/cart.css';
 
 <script type="module">
     import { clearCart, updateCartResumen } from '/js/cart.js';
-    import { initPreOrderForm } from '/js/preOrderForm.js';
+
+    export function initConfirmOrderForm() {
+    const form = document.getElementById('contactForm');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); 
+
+      const formData = new FormData(form);
+      const name = formData.get('name');
+      const phone = formData.get('phone');
+
+      const subject = encodeURIComponent(`${name} - New Order`);
+      const body = encodeURIComponent(`G'day, My name is ${name}.\nMi phone number is ${phone}.\n I would like to order a cake...`);
+
+      window.location.href = `mailto:earthmamaskitchen@gmail.com?subject=${subject}&body=${body}`;
+    });
+}
 
     document.getElementById('clearBtn').addEventListener('click', () => {
         clearCart();
@@ -87,13 +103,10 @@ import '../styles/cart.css';
     document.addEventListener('astro:page-load', () => {
         if (!document.querySelector('#cart-resumen')) return;
         updateCartResumen();
-        initPreOrderForm();
-
+        initConfirmOrderForm();
     });
 
     
-
-
 </script>
 
 
