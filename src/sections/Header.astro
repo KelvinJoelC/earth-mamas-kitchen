@@ -44,7 +44,7 @@
         
         window.addEventListener('cart:update', (e) => {
         const cartCountEl = document.getElementById('cartCount');
-        const cart = e.detail.items || [];
+        const cart = e.detail || [];
         cartCountEl.textContent = cart.length;
         });
 

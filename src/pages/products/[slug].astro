@@ -28,7 +28,7 @@ const relatedProducts = EXPLORE.filter(products => products.id  !== selection.id
       <div class="bg-white p-4 rounded-3xl shadow">
         <h2 class="text-2xl pb-3 font-bold">{selection.title}</h2>
         <div class="flex flex-row justify-between font-bold py-1">
-          {selection.priceFrom && <p class="text-lg">From: {selection.priceFrom}€</p>}
+          {selection.priceFrom && <p class="text-lg">From: {selection.priceFrom}$</p>}
           {selection.leadTimeDays && <p class="text-md">Lead time: {selection.leadTimeDays} days</p>}
         </div>
         <p class="text-xl text-left">{selection.description}</p>
