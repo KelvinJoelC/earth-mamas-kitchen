@@ -3,16 +3,17 @@ export const CART_KEY = 'myapp_cart';
 function readStorage() {
   try {
     const raw = localStorage.getItem(CART_KEY);
-
-    return raw ? JSON.parse(raw) : { items: [] };
+    console.log('Reading cart from storage', raw);
+    return raw ? JSON.parse(raw) : [];
   } catch (err) {
     console.error('cart read error', err);
-    return { items: [] };
+    return [];
   }
 }
 
 function writeStorage(cart) {
   try {
+    console.log('Writing cart to storage', cart);
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
       // Emitir evento global para que listeners sepan del cambio
       window.dispatchEvent(new CustomEvent('cart:update', { detail: cart }));
@@ -31,28 +32,29 @@ export function getCart() {
 export function addItem(item) {
   const cart = readStorage();
 
-  const idx = cart.items.findIndex(i => i.id === item.id);
-  if (idx === -1) cart.items.push(item);
+  const idx = cart.findIndex(i => i.id === item.id);
+  if (idx === -1) cart.push(item);
   writeStorage(cart);
   return cart;
 }
 
 export function removeItem(id) {
   const cart = readStorage();
-  cart.items = cart.items.filter(i => i.id !== id);
+  cart.items = cart.filter(i => i.id !== id);
   writeStorage(cart);
   return cart;
 }
 
 export function clearCart() {
-  const cart = { items: [] };
+  const cart = [];
   writeStorage(cart);
   return cart;
 }
 
 export function itemCount() {
   const cart = readStorage();
-  return cart.items.length;
+  console.log('Cart items count:', cart.length);
+  return cart.length;
 }
 
 export function initSync() {
@@ -71,7 +73,7 @@ export function initSync() {
 export function updateCartResumen() {
   const cartRoot = document.getElementById('cartRoot');
   if(cartRoot){
-    const cartJson = getCart().items;
+    const cartJson = getCart();
     cartRoot.innerHTML = '';
     if (!cartJson.length) {
         cartRoot.innerHTML = '<p>Carrito vacío</p>';

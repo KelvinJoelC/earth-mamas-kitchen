@@ -64,19 +64,21 @@ import '../styles/cart.css';
             </button>
         </div>
     </form> -->
-    <form id="contactForm" class="p-2 flex flex-col gap-2">
-    <input  required type="text" name="name" maxlength="10" 
-            placeholder="Monkey D Luffy"/>
+    <form id="contactForm" class="w-full p-2 flex flex-col gap-2">
+    <input  required type="text" name="name" maxlength="20" 
+            placeholder="Type your name here"
+            class="p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"/>
     <input  required  type="tel" name="phone" maxlength="10" 
-           placeholder="Ej: 0412345678 o 0212345678" />
-    <button type="submit">Enviar Email</button> 
+           placeholder="e.g.: 0412345678 o 0212345678" 
+           class="p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"/>
+    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300">Send Email</button> 
     <!-- 0424973620 -->
 </form>
 </section>
 </Layout>
 
 <script type="module">
-    import { clearCart, updateCartResumen } from '/js/cart.js';
+    import { clearCart, updateCartResumen, getCart } from '/js/cart.js';
 
     export function initConfirmOrderForm() {
     const form = document.getElementById('contactForm');
@@ -88,12 +90,42 @@ import '../styles/cart.css';
       const name = formData.get('name');
       const phone = formData.get('phone');
 
+      const emailText = jsonToEmailText();
+
       const subject = encodeURIComponent(`${name} - New Order`);
-      const body = encodeURIComponent(`G'day, My name is ${name}.\nMi phone number is ${phone}.\n I would like to order a cake...`);
+      console.log(emailText);
+      const body = encodeURIComponent(`G'day, My name is ${name}.\nMy phone number is ${phone}.\n I would like to order a cake... \n\n${emailText}`);
 
       window.location.href = `mailto:earthmamaskitchen@gmail.com?subject=${subject}&body=${body}`;
     });
-}
+    }
+
+    function jsonToEmailText() {
+      let text = "ORDER DETAILS\n------------------------\n\n";
+
+        const data = getCart();
+        Object.entries(data).forEach(([key, value]) => {
+          if (value) {
+            Object.entries(value).forEach(([subKey, subValue]) => {
+                if(subKey === 'options' && typeof subValue === 'object' ) {
+                    text += `${subKey}:\n`;
+                    Object.entries(subValue).forEach(([optionKey, optionValue]) => {
+                        if(optionValue.length > 0) {
+                            text += `  - ${optionKey}: ${optionValue}\n`;
+
+                        }   
+                    });
+                } else if (subKey !== 'id') {
+                    text += `${subKey}: ${subValue}\n`;
+                }
+            });
+          }
+                  text += `\n------------------------\n`;
+
+        });
+      return text;
+    }
+
 
     document.getElementById('clearBtn').addEventListener('click', () => {
         clearCart();
