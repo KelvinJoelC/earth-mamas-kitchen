@@ -1,31 +1,19 @@
-import { addItem } from './cart.js';
+export function initPreOrderForm() {
+  console.log('Initializing Pre-Order Form');
+  const form = document.getElementById('contactForm');
 
-function initPreOrderForm() {
-  const form = document.getElementById('preOrderForm');
-  if (!form || form.dataset.bound) return;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); 
 
-  form.dataset.bound = 'true';
+      const formData = new FormData(form);
+      const name = formData.get('name');
+      const phone = formData.get('phone');
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
+      const subject = encodeURIComponent(`${name} - New Order`);
+      const body = encodeURIComponent(`G'day, My name is ${name}.\nMi phone number is ${phone}.\n I would like to order a cake...`);
 
-    const data = new FormData(form);
-    const values = Object.fromEntries(data.entries());
-    
-    const item = {
-      id: Date.now().toString(),
-      product: form.dataset.productTitle,
-      options: {
-        ...values,
-        addOns: data.getAll('addOns'),
-      }
-    };
-    addItem(item);
-    alert('Item added to cart!');
-
-    document.getElementById('preOrderDetail')?.removeAttribute('open');
-  });
+      window.location.href = `mailto:earthmamaskitchen@gmail.com?subject=${subject}&body=${body}`;
+    });
 }
 
-document.addEventListener('astro:page-load', initPreOrderForm);
 
