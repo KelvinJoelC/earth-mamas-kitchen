@@ -53,6 +53,7 @@ export function clearCart() {
 
 export function itemCount() {
   const cart = readStorage();
+  console.log('Cart items:', cart);
   console.log('Cart items count:', cart.length);
   return cart.length;
 }
