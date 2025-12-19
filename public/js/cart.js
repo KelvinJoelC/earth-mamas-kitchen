@@ -1,9 +1,10 @@
 export const CART_KEY = 'myapp_cart';
+import { OPTION_LABELS } from '../../src/models/product.model.ts';
+
 
 function readStorage() {
   try {
     const raw = localStorage.getItem(CART_KEY);
-    console.log('Reading cart from storage', raw);
     return raw ? JSON.parse(raw) : [];
   } catch (err) {
     console.error('cart read error', err);
@@ -40,9 +41,10 @@ export function addItem(item) {
 
 export function removeItem(id) {
   const cart = readStorage();
-  cart.items = cart.filter(i => i.id !== id);
-  writeStorage(cart);
-  return cart;
+  const newCart = cart.filter(i => i.id !== id);
+  writeStorage(newCart);
+  updateCartResumen();
+  return newCart;
 }
 
 export function clearCart() {
@@ -81,13 +83,13 @@ export function updateCartResumen() {
     } 
     else {      
       cartJson.forEach(item => {
-        cartRoot.appendChild(renderCartItems(item));
+        cartRoot.appendChild(renderCartItem(item));
       });
     }
   }
 }
 
-export  function renderCartItems(item) {
+export  function renderCartItem(item) {
   const card = document.createElement('div');
   card.className = 'order-card group';
   card.dataset.id = item.id;
@@ -106,7 +108,7 @@ export  function renderCartItems(item) {
   btn.textContent = '✕';
 
   btn.addEventListener('click', () => {
-    handleDelete(item.id);
+    removeItem(item.id);
   });
 
   header.append(title, btn);
@@ -115,12 +117,34 @@ export  function renderCartItems(item) {
   const optionsList = document.createElement('ul');
   optionsList.className = 'options';
 
-  addOption(optionsList, 'Type', item.options.cupcakeType);
-  addOption(optionsList, 'Buttercream', item.options.buttercreamStyle);
-  addOption(optionsList, 'Qty', item.options.quantities);
-  addOption(optionsList, 'Colors', item.options.colorPalettes);
-  addOption(optionsList, 'Filling', item.options.fillings);
-  addOption(optionsList, 'Presentation', item.options.presentation);
+  Object.entries(item.options).forEach(([key, value]) => {
+    if (value) {
+      if (key != 'addOns') {
+           addOption(optionsList, key, value);
+      }
+      else if(key.length > 0) {
+
+        const div = document.createElement('div');
+        div.className = 'add-ons-container';
+        const addOnsList = document.createElement('ul');
+        addOnsList.className = 'add-ons';
+        Object.entries(value).forEach(([optionKey, optionValue]) => {
+            const span = document.createElement('span');
+            const li = document.createElement('li');
+            li.append(span, ` ${optionValue}`);
+            addOnsList.appendChild(li);
+            }  
+        );
+        console.log('addOnsList',addOnsList);
+        const span = document.createElement('span');
+          span.textContent = `${key}:`;
+        div.appendChild(span, addOnsList);
+        div.appendChild(addOnsList);
+        optionsList.appendChild(div); 
+
+      }
+    }
+  });
 
   card.append(header, optionsList);
 
@@ -133,18 +157,14 @@ function addOption(list, label, value) {
 
   const li = document.createElement('li');
 
-  const span = document.createElement('span');
-  span.textContent = `${label}:`;
+  const spanLabel = document.createElement('span');
+  const spanValue = document.createElement('span');
+  const br = document.createElement('br');
+  spanLabel.textContent = `${OPTION_LABELS[label]}:`;
+  spanValue.textContent = ` ${value}`;
 
-  li.append(span, ` ${value}`);
+  li.append(spanLabel, spanValue);
   list.appendChild(li);
-}
-
-function handleDelete(id) {
-  console.log('Delete', id);
-  // aquí:
-  // removeFromCart(id);
-  // updateCartResumen();
 }
   
 

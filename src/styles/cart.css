@@ -55,18 +55,29 @@
   font-size: 0.75rem;
   color: #64748b;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.25rem 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap:  0.75rem 0.5rem;
 }
 
 .options li {
   display: flex;
+  flex-direction: column;
   font-weight: bold;
   gap: 0.25rem;
-  white-space: nowrap;
 }
 
-.options span {
+.options div:nth-last-child(2), .options>li:last-child {
+  grid-column: 1 / -1;
+}
+
+
+.options span:first-child {
   font-weight: bold;
   color: #334155;
+}
+
+
+.add-ons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(35%, 1fr));
 }

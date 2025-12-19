@@ -71,7 +71,8 @@ export type OptionKey =
   | 'cupcakeType' | 'buttercreamStyle' | 'flavors' | 'colorPalettes'
   | 'quantities' | 'arrangementType' | 'presentation' | 'container'
   | 'addOns' | 'minimumOrder' | 'flavorSets' | 'branding' | 'service'
-  | 'packages' | 'messageCard' | 'inscriptions' | 'servingGuideIncluded' | 'noteOnTransport' | 'allergens';
+  | 'packages' | 'messageCard' | 'inscriptions' | 'servingGuideIncluded' 
+  | 'noteOnTransport' | 'allergens' | 'notes';
 
 export const OPTION_LABELS: Record<OptionKey, string> = {
   sizes: 'Sizes & servings',
@@ -99,5 +100,6 @@ export const OPTION_LABELS: Record<OptionKey, string> = {
   servingGuideIncluded: 'Serving guide included',
   noteOnTransport: 'Transport note',
   allergens: 'Allergens',
+  notes: 'Note'
 };
 
