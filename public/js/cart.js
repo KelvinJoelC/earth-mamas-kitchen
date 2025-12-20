@@ -1,5 +1,5 @@
 export const CART_KEY = 'myapp_cart';
-import { OPTION_LABELS } from '../../src/models/product.model.ts';
+// import { OPTION_LABELS } from '../../src/models/product.model.ts';
 
 
 function readStorage() {
@@ -157,7 +157,7 @@ function addOption(list, label, value) {
   const spanLabel = document.createElement('span');
   const spanValue = document.createElement('span');
   const br = document.createElement('br');
-  spanLabel.textContent = `${OPTION_LABELS[label]}:`;
+  spanLabel.textContent = `${label}:`;
   spanValue.textContent = ` ${value}`;
 
   li.append(spanLabel, spanValue);
