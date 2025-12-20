@@ -151,12 +151,7 @@ export const EXPLORE: ProductList = [
         'Macaron towers',
         'Corporate-branded cookies'
       ],
-    allergens: ['gluten', 'eggs', 'milk', 'nuts', 'soy'],
-      minimumOrder: {
-        miniCupcakes: 24,
-        standardCupcakes: 12,
-        brandedCookies: 20
-      },
+      allergens: ['gluten', 'eggs', 'milk', 'nuts', 'soy'],
       branding: ['Edible logo prints', 'Pantone-matched buttercream', 'Ribbon/logo tags'],
       service: ['Pickup', 'Delivery', 'On-site setup (dessert table)'],
       packages: [

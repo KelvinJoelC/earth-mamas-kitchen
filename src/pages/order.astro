@@ -34,10 +34,12 @@ import '../styles/cart.css';
     </section>
     <section id="cart-resumen" class="w-full p-3 ">
         <div class="flex flex-col items-start w-full">
-            <h1 class="text-2xl text-black">Summary</h1>
-            <div id="cartRoot" class="flex flex-col w-full gap-2 group mt-2 rounded-xs  bg-white shadow-xl border border-slate-100">Empty</div>
+            <div class="flex w-full justify-between">
+                <h1 class="text-3xl text-black">Summary</h1>
+                <button id="clearBtn" type="reset" class="text-xs p-2 cursor-pointer text-black hover:text-red-600">Delete Cart</button>    
+            </div>
+            <div id="cartRoot" class="flex flex-col w-full gap-2 mt-2">Empty</div>
         </div>
-        <button id="clearBtn" type="reset" class="p-2 cursor-pointer text-black hover:text-red-600">Delete Cart</button>
     </section>
 
 <section
@@ -60,6 +62,7 @@ import '../styles/cart.css';
 </Layout>
 
 <script type="module">
+    import { OPTION_LABELS } from '../../src/models/product.model.ts';
     import { clearCart, updateCartResumen, getCart } from '/js/cart.js';
 
     export function initConfirmOrderForm() {
@@ -93,7 +96,7 @@ import '../styles/cart.css';
                     text += `${subKey}:\n`;
                     Object.entries(subValue).forEach(([optionKey, optionValue]) => {
                         if(optionValue.length > 0) {
-                            text += `  - ${optionKey}: ${optionValue}\n`;
+                            text += `  - ${OPTION_LABELS[optionKey]}: ${optionValue}\n`;
 
                         }   
                     });

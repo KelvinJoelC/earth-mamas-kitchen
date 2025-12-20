@@ -31,6 +31,20 @@ const { selection } = Astro.props;
             ))}
           </select>
         );
+
+      case 'packages':
+        return (
+          <select
+            name="package"
+            class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
+                       focus:outline-none focus:ring-2 focus:ring-violeta-medio">
+            {val.map((pkg: any) => (
+              <option value={pkg.name}>
+                {pkg.name}
+              </option>
+            ))}
+          </select>
+        );
       case 'addOns':
         return (
           val.map((extra:any) => (

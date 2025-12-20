@@ -122,20 +122,17 @@ export  function renderCartItem(item) {
       if (key != 'addOns') {
            addOption(optionsList, key, value);
       }
-      else if(key.length > 0) {
-
+      else if(value.length > 0) {
         const div = document.createElement('div');
-        div.className = 'add-ons-container';
         const addOnsList = document.createElement('ul');
         addOnsList.className = 'add-ons';
         Object.entries(value).forEach(([optionKey, optionValue]) => {
             const span = document.createElement('span');
             const li = document.createElement('li');
-            li.append(span, ` ${optionValue}`);
+            li.append(span, `- ${optionValue}`);
             addOnsList.appendChild(li);
             }  
         );
-        console.log('addOnsList',addOnsList);
         const span = document.createElement('span');
           span.textContent = `${key}:`;
         div.appendChild(span, addOnsList);
