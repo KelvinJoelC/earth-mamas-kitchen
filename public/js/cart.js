@@ -1,5 +1,4 @@
 export const CART_KEY = 'myapp_cart';
-// import { OPTION_LABELS } from '../../src/models/product.model.ts';
 
 
 function readStorage() {
@@ -14,7 +13,6 @@ function readStorage() {
 
 function writeStorage(cart) {
   try {
-    console.log('Writing cart to storage', cart);
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
       // Emitir evento global para que listeners sepan del cambio
       window.dispatchEvent(new CustomEvent('cart:update', { detail: cart }));
@@ -55,8 +53,6 @@ export function clearCart() {
 
 export function itemCount() {
   const cart = readStorage();
-  console.log('Cart items:', cart);
-  console.log('Cart items count:', cart.length);
   return cart.length;
 }
 

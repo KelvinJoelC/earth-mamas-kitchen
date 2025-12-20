@@ -62,7 +62,6 @@ import '../styles/cart.css';
 </Layout>
 
 <script type="module">
-    import { OPTION_LABELS } from '../../src/models/product.model.ts';
     import { clearCart, updateCartResumen, getCart } from '/js/cart.js';
 
     export function initConfirmOrderForm() {
@@ -96,7 +95,7 @@ import '../styles/cart.css';
                     text += `${subKey}:\n`;
                     Object.entries(subValue).forEach(([optionKey, optionValue]) => {
                         if(optionValue.length > 0) {
-                            text += `  - ${OPTION_LABELS[optionKey]}: ${optionValue}\n`;
+                            text += `  - ${optionKey}: ${optionValue}\n`;
 
                         }   
                     });
