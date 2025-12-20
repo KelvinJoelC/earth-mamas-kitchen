@@ -1,5 +1,4 @@
 ---
-import Carrousel from "../components/carrousel.astro"
 const { selection } = Astro.props ;
 import { EXPLORE } from '../consts/explore';
 import type { ProductList } from "../models/product.model";
@@ -54,14 +53,3 @@ const products = selection as ProductList;
     </div>
   </div>
 </section>
-
-
-<script>
-  import EmblaCarousel from "embla-carousel";
-
-  const emblaNode = document.querySelector(".embla");
-  const options = { loop: false };
-  const emblaApi = EmblaCarousel(emblaNode as any, options);
-
-  // console.log(emblaApi.slideNodes()); // Access API
-</script>

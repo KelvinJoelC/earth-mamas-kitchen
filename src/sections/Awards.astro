@@ -2,18 +2,6 @@
 import { AWARDS } from "../consts/awards.ts";
 ---
 
-<script>
-  import EmblaCarousel from "embla-carousel";
-  import Autoplay from 'embla-carousel-autoplay';
-
-  const emblaNode = document.querySelector(".embla");
-  const options = { loop: true };
-  const emblaApi = EmblaCarousel(emblaNode as any, options, [
-    Autoplay({ playOnInit: true, delay: 3000 })
-  ]);
-  EmblaCarousel(emblaNode as any, options);
-</script>
-
 <section class="text-black py-6" style="background: radial-gradient(circle at center, #ffffff, #f6f3e7);">
 <div class="marquee-horizontal w-screen">
         <div class="h-full overflow-hidden px-0 whitespace-nowrap">
@@ -22,7 +10,7 @@ import { AWARDS } from "../consts/awards.ts";
             </span>
         </div>
     </div>
-<div class="embla overflow-hidden w-full">
+<div class="embla autoplayCarousel overflow-hidden w-full">
   <div class="embla__container flex">
     {
       AWARDS.map(({id,event,position,description, title}) => (

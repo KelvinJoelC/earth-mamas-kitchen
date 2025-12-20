@@ -34,3 +34,25 @@ import StickyOrderButton from "../components/StickyOrderButton.astro";
 	}
 </style>
 
+<script>
+	import EmblaCarousel from "embla-carousel";
+	import Autoplay from 'embla-carousel-autoplay';
+
+
+	function initCarousel() {   
+		const emblaNode = document.querySelector(".embla");
+		let options = { loop: false };
+		
+		if (emblaNode?.classList.contains("autoplayCarousel")) {
+			options = { loop: true };
+			EmblaCarousel(emblaNode as any, options, [
+    		Autoplay({ playOnInit: true, delay: 3000 })
+  		]);
+		}else EmblaCarousel(emblaNode as any, options);
+
+		
+
+	}
+	document.addEventListener('astro:page-load', initCarousel);
+</script>
+
