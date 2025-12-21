@@ -75,3 +75,23 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(35%, 1fr));
 }
+
+.order-card-empty{
+  position: relative;
+  background: #ffffff87;
+  color: #64748b;
+  border-radius: .3rem;
+  padding: 1rem;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100% ;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+.order-card-empty span{
+  font-size: 2rem;
+  font-weight: bold;
+  color: #334155;
+}

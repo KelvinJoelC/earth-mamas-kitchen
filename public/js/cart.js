@@ -14,10 +14,7 @@ function readStorage() {
 function writeStorage(cart) {
   try {
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
-      // Emitir evento global para que listeners sepan del cambio
       window.dispatchEvent(new CustomEvent('cart:update', { detail: cart }));
-    // Si quieres compatibilidad multi-pestaña:
-
     if (window.bc) window.bc.postMessage({ type: 'cart:update', cart });
   } catch (err) {
     console.error('cart write error', err);
@@ -71,13 +68,20 @@ export function initSync() {
 
 export function updateCartResumen() {
   const cartRoot = document.getElementById('cartRoot');
+  const cartDeleteButon = document.getElementById('clearBtn');
+
   if(cartRoot){
     const cartJson = getCart();
     cartRoot.innerHTML = '';
     if (!cartJson.length) {
-        cartRoot.innerHTML = '<p>Carrito vacío</p>';
+        cartDeleteButon.style.display = 'none';
+        const card = document.createElement('div');
+        card.className = 'order-card-empty';
+        card.innerHTML = '<span>Your cart is empty.</span>'
+        cartRoot.appendChild(card);
     } 
     else {      
+      cartDeleteButon.style.display = 'block';
       cartJson.forEach(item => {
         cartRoot.appendChild(renderCartItem(item));
       });
@@ -90,7 +94,6 @@ export  function renderCartItem(item) {
   card.className = 'order-card group';
   card.dataset.id = item.id;
 
-  /* HEADER */
   const header = document.createElement('div');
   header.className = 'order-header';
 
@@ -109,7 +112,6 @@ export  function renderCartItem(item) {
 
   header.append(title, btn);
 
-  /* OPTIONS */
   const optionsList = document.createElement('ul');
   optionsList.className = 'options';
 
@@ -144,7 +146,6 @@ export  function renderCartItem(item) {
   return card;
 }
 
-/* Helpers */
 function addOption(list, label, value) {
   if (!value || value.length === 0) return;
 

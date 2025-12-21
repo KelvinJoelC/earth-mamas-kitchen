@@ -3,6 +3,9 @@ import InstagramIcon from "../assets/instagram.svg";
 import FacebookIcon from "../assets/facebook.svg";
 import Layout from "../layouts/Layout.astro";
 import '../styles/cart.css';
+import RelatedProducts from "../sections/RelatedProducts.astro";
+import { EXPLORE } from "../consts/explore";
+
 ---
 
 
@@ -32,22 +35,25 @@ import '../styles/cart.css';
             <h3 class="font-merienda text-3xl">Bake like you mean it.</h3>
         </div>
     </section>
-    <section id="cart-resumen" class="w-full p-3 ">
-        <div class="flex flex-col items-start w-full">
-            <div class="flex w-full justify-between">
-                <h1 class="text-3xl text-black">Summary</h1>
-                <button id="clearBtn" type="reset" class="text-xs p-2 cursor-pointer text-black hover:text-red-600">Delete Cart</button>    
+    <section id="cart-resumen" class="w-full p-3 mb-5">
+        <div class="flex flex-col items-start w-full bg-white p-4 shadow-lg">
+            <div class="flex flex-col items-start w-full">
+                <h1 class="text-3xl text-black font-medium ">Summary</h1>
+                <button id="clearBtn" type="reset" class="text-xs font-medium cursor-pointer text-blue-500 hover:text-indigo-700 hover:underline rounded-2xl h-max">Delete all items</button>    
             </div>
-            <div id="cartRoot" class="flex flex-col w-full gap-2 mt-2">Empty</div>
+            <div id="cartRoot" class="flex flex-col w-full gap-2 mt-2">
+                
+            </div>
         </div>
     </section>
+    <RelatedProducts selection={EXPLORE}  />
 
 <section
-    class="flex flex-col items-center  rounded-b-4xl rounded-t-2xl transform -translate-y-15 min-h-screen bg-gradient-to-b from-[#1E3A8A] to-[#1E40AF] text-white p-4 mt-15"
+    class="flex flex-col items-center rounded-4xl transform -translate-y-10 bg-gradient-to-b from-[#1E3A8A] to-[#1E40AF] text-white p-4"
 >
-    <!-- <section  class="flex flex-col items-end gap-1 w-full max-w-md mt-6 mb-4 p-1 bg-white/10 rounded-2xl shadow-lg">
-        
-    </section> -->
+    <img src="/favicon.png" alt="Earth mama's kitchen" class="size-30 p-2 m-2 rounded-full border-4 border-[#78698C] bg-white/10">
+    <h2 class="text-2xl font-bold mb-2">Confirm Your Order</h2>
+    <p class="mb-4 text-center">Complete the order providing your name and phone number. An email with all the details will be sent. We will contact you as soon as possible.</p>
     <form id="contactForm" class="w-full p-2 flex flex-col gap-2">
         <input  required type="text" name="name" maxlength="20" 
                 placeholder="Type your name here"
@@ -56,7 +62,6 @@ import '../styles/cart.css';
                placeholder="e.g.: 0412345678 o 0212345678" 
                class="p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"/>
         <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300">Send Email</button> 
-    <!-- 0424973620 -->
     </form>
     </section>
 </Layout>
@@ -110,17 +115,21 @@ import '../styles/cart.css';
       return text;
     }
 
+   
 
-    document.getElementById('clearBtn').addEventListener('click', () => {
-        clearCart();
-      window.location.reload();
-    });
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('#clearBtn')
+      if (!btn) return
+      clearCart()
+    })
 
     document.addEventListener('astro:page-load', () => {
         if (!document.querySelector('#cart-resumen')) return;
         updateCartResumen();
         initConfirmOrderForm();
     });
+
+    window.addEventListener('cart:update', () => updateCartResumen());
 
     
 </script>
