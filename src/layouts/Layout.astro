@@ -40,7 +40,9 @@ import StickyOrderButton from "../components/StickyOrderButton.astro";
 
 
 	function initCarousel() {   
+		
 		const emblaNode = document.querySelector(".embla");
+		if (!emblaNode) return;
 		let options = { loop: false };
 		
 		if (emblaNode?.classList.contains("autoplayCarousel")) {
