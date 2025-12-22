@@ -67,6 +67,8 @@ export function initSync() {
 }
 
 export function updateCartResumen() {
+        console.log('updateCartResumen')
+
   const cartRoot = document.getElementById('cartRoot');
   const cartDeleteButon = document.getElementById('clearBtn');
 

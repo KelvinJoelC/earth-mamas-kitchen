@@ -124,6 +124,7 @@ import { EXPLORE } from "../consts/explore";
     })
 
     document.addEventListener('astro:page-load', () => {
+        console.log('Order astro:page-load')
         if (!document.querySelector('#cart-resumen')) return;
         updateCartResumen();
         initConfirmOrderForm();
