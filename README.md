@@ -1,36 +1,64 @@
-# Astro Starter Kit: Basics
+# 🍰 Earth Mama’s Kitchen
 
-```sh
-npm create astro@latest -- --template basics
-```
+**Earth Mama’s Kitchen** is a web project built with **Astro, TailwindCSS** for an entrepreneur who runs an artisanal cake business.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+This repository represents the **first version of the project**, focused on creating a clean, modern, and high-performance website as a foundation for future development.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+The project is currently **mobile-first**, with responsive layouts for tablet and desktop planned for later iterations.
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+---
 
-## 🚀 Project Structure
+## 🚀 Tech Stack
 
-Inside of your Astro project, you'll see the following folders and files:
+- ⚡ **Astro** – Static Site Generation for high performance
+- 🎨 **TailwindCSS** – Utility-first styling
+- 🧠 **TypeScript** – Type safety and scalability
+- 🧩 Component-based architecture
 
-```text
+---
+
+## 🎯 Project Goal
+
+The main objectives of this project are:
+
+- Provide an online presence for a small cake business
+- Showcase products in a simple and visual way
+- Build a modern and scalable frontend foundation
+- Practice and consolidate frontend architecture for real clients
+
+This version focuses on **presentation and structure**, not yet on full e-commerce functionality.
+
+---
+
+## 📱 Current Status
+
+✅ Mobile-first design  
+✅ Clean UI and layout  
+✅ Static product presentation  
+❌ Tablet & desktop responsiveness (planned)  
+❌ Fully functional shopping system (planned)
+
+---
+
+## 📁 Project Structure
 /
-├── public/
-│   └── favicon.svg
+├── public/ → Static assets (images, icons, favicon)
 ├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+│ ├── layouts/ → Page layouts
+│ └── pages/ → Main pages
+├── astro.config.mjs → Astro configuration
+├── package.json → Dependencies & scripts
+└── tsconfig.json → TypeScript configuration
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+---
 
-## 🧞 Commands
+## 🛠 Installation & Usage
+
+Clone the repository:
+
+git clone https://github.com/KelvinJoelC/earth-mamas-kitchen.git
+
+cd earth-mamas-kitchen
 
 All commands are run from the root of the project, from a terminal:
 
@@ -43,6 +71,25 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
+## 🧞 Commands
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+---
+
+## 🌍 Live Demo
+
+🔗 https://earth-mamas-kitchen.vercel.app
+
+
+## 👨‍💻 About the Developer
+
+Developed by Kelvin Carreño Espin
+Frontend / Web Developer
+
+This project is part of my professional portfolio, focused on real-world use cases and scalable frontend architecture.
+
+## Notes
+
+This is a real project for a small business, not a tutorial or template.
+Development is paused intentionally to focus on other projects.
+The codebase is prepared for future expansion.
