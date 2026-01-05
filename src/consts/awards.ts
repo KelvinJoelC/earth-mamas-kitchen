@@ -17,7 +17,7 @@ export const AWARDS = [
   },
   {
     id: 'award',
-    position: '2st',
+    position: '2nd',
     event: '2024 Cairns Show',
     title: "Decorated cupcakes",
     description: "Sunflower chai carrot cupcakes with vanilla buttercream",

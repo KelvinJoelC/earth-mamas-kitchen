@@ -90,3 +90,5 @@ This project is part of my professional portfolio, focused on real-world use cas
 This is a real project for a small business, not a tutorial or template.
 Development is paused intentionally to focus on other projects.
 The codebase is prepared for future expansion.
+
+Include a more cakes examples

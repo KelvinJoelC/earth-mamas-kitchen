@@ -6,26 +6,28 @@ export const EXPLORE: ProductList = [
     slug: 'floral-cupcake-bouquets',
     title: 'Floral Cupcake Bouquets',
     description:
-      'A different kind of bouquet: flower-shaped cupcakes, as beautiful as they are delicious. Perfect for gifting or celebrating with charm.',
+      'Flowers you can eat. Edible Blooms. The perfect gift for a special occasion',
     img: '/images/flowerCupcakesBouquet2',
     priceFrom: 35,
     tags: ['gift', 'flowers', 'cupcakes'],
     leadTimeDays: 2,
     dietary: ['vegetarian'],
     options: {
-      cupcakeType: ['Vanilla butter sponge', 'Chocolate sponge', 'Lemon', 'Red velvet'],
-      buttercreamStyle: ['Roses', 'Peonies', 'Dahlias', 'Mixed garden'],
-      quantities: [7, 12, 19, 24],
-      colorPalettes: ['Pastel mix', 'Blush & ivory', 'Lilac & sage', 'Bold brights', 'Custom'],
-      fillings: ['No filling', 'Raspberry jam', 'Chocolate ganache', 'Lemon curd'],
-      presentation: ['Bouquet wrap', 'Hatbox', 'Basket'],
-      addOns: [
-        'Mini topper “Happy Birthday”',
-        'Printed ribbon',
-        'Macaron accents (6 pcs)',
-        'Sparkle dust finish'
-      ],
-      allergens: ['gluten', 'eggs', 'milk'],
+      cupcakeType: ['Vanilla sponge', 'Chocolate sponge'],
+      // Extra cost 
+      buttercreamStyle: ['Simple range', 'Deluxe range'], 
+      quantities: [7],
+      // colorPalettes: ['Pastel mix', 'Blush & ivory', 'Lilac & sage', 'Bold brights', 'Custom'],
+      // Color in notes
+      // fillings: ['No filling', 'Raspberry jam', 'Chocolate ganache', 'Lemon curd'],
+      presentation: ['Bouquet wrap'],
+      // addOns: [
+      //   'Mini topper “Happy Birthday”',
+      //   'Printed ribbon',
+      //   'Macaron accents (6 pcs)',
+      //   'Sparkle dust finish'
+      // ],
+      // allergens: ['gluten', 'eggs', 'milk'], Add in notes
     },
     notes: 'Ideal para regalos; transporte en vertical. Mejor consumir el mismo día.',
     props: {
@@ -41,7 +43,7 @@ export const EXPLORE: ProductList = [
     slug: 'bespoke-cakes',
     title: 'Bespoke cakes',
     description:
-      'Delicate handmade creations for your most special moments. Unique designs that blend flavor and style.',
+      'Earth Mama cakes are born from nature and touched by magic. Inspired by earthy textures, blooming florals, and a sense of quiet enchantment',
     img: '/images/cakes/mushroomLogCake',
     priceFrom: 55,
     tags: ['birthday', 'wedding', 'celebration'],
@@ -50,39 +52,36 @@ export const EXPLORE: ProductList = [
     
     options: {
       sizes: [
-        { sizeInch: 6, shape: 'Round', servings: 10 },
-        { sizeInch: 8, shape: 'Round', servings: 20 },
-        { sizeInch: 10, shape: 'Round', servings: 30 },
-        { label: '2-tier 6\"+8\"', servings: 35 },
-        { label: '3-tier 6\"+8\"+10\"', servings: 60 }
+        { sizeInch: 6, shape: 'Round', servings: 15 },//15 20
+        { sizeInch: 8, shape: 'Round', servings: 40 },// 40-50
+        { label: '2-tier 6\"+8\"', servings: 55 },
       ],
-      sponge: ['Vanilla', 'Chocolate', 'Lemon', 'Carrot walnut', 'Red velvet', 'Pistachio'],
+      sponge: ['Vanilla', 'Chocolate', 'Chai spiced carrot','Hummingbird', 'Chocolate vegan', 'Orange Almond (GF)'],
       fillings: [
-        'Vanilla bean buttercream',
-        'Dark chocolate ganache',
-        'Raspberry compote',
-        'Salted caramel',
-        'Lemon curd',
-        'Cream cheese (for carrot/red velvet)'
+        'Raspberry jam',
+        'Biscoff',
+        'Nutella'
       ],
-      frostings: ['Swiss meringue buttercream', 'Ganache', 'Cream cheese (select sponges)'],
-      finishes: [
-        'Smooth buttercream',
-        'Textured buttercream',
-        'Semi-naked',
-        'Fondant accents',
-        'Painted buttercream',
-        'Fresh florals'
-      ],
-      themes: ['Floral', 'Minimalist', 'Rustic', 'Whimsical', 'Brand colors', 'Custom illustration'],
-      addOns: [
-        'Sugar flowers',
-        'Macarons (12)',
-        'Chocolate drip',
-        'Edible gold leaf',
-        'Custom acrylic topper',
-        'Edible image print'
-      ],
+      frostings: ['buttercream', 'Vegan buttercream'],
+      // finishes: [
+      //   'Smooth buttercream',
+      //   'Textured buttercream',
+      //   'Semi-naked',
+      //   'Fondant accents',
+      //   'Painted buttercream',
+      //   'Fresh florals'
+      // ],
+      // themes: ['Floral', 'Minimalist', 'Rustic', 'Whimsical', 'Brand colors', 'Custom illustration'],
+      // Event, theme color
+      // 
+      // addOns: [
+      //   'Sugar flowers',
+      //   'Macarons (12)',
+      //   'Chocolate drip',
+      //   'Edible gold leaf',
+      //   'Custom acrylic topper',
+      //   'Edible image print'
+      // ],
       allergens: ['gluten', 'eggs', 'milk', 'soy', 'nuts (on request)'],
     },
     storage: 'Mantener refrigerado si >25°C. Sacar 1 h antes de servir.',
@@ -100,28 +99,29 @@ export const EXPLORE: ProductList = [
     slug: 'edible-blooms',
     title: 'Edible blooms',
     description:
-      'Blooms you can eat and enjoy. Sweet bouquets crafted with fine pastry techniques to delight all the senses.',
+      'Handcrafted edible blooms inspired by nature and enchantment.',
     img: '/images/cupcake',
     priceFrom: 42,
     tags: ['arrangement', 'gift', 'centerpiece'],
     leadTimeDays: 3,
     dietary: ['vegetarian'],
     options: {
-      arrangementType: [
-        'Cupcake-only',
-        'Mixed treats (cupcakes + macarons)',
-        'Cupcakes + cake pops',
-        'Cupcakes + cookies'
-      ],
-      sizes: [
-        { label: 'S', pieces: 9 },
-        { label: 'M', pieces: 16 },
-        { label: 'L', pieces: 25 }
-      ],
+      // arrangementType: [
+      //   'Cupcake-only',
+      //   'Mixed treats (cupcakes + macarons)',
+      //   'Cupcakes + cake pops',
+      //   'Cupcakes + cookies'
+      // ],
+      // sizes: [   6xn
+      //   { label: 'S', pieces: 9 },
+      //   { label: 'M', pieces: 16 },
+      //   { label: 'L', pieces: 25 }
+      // ],
+      // ,'Red velvet', 'Chai spiced carrot','Hummingbird'
       allergens: ['gluten', 'eggs', 'milk', 'soy'],
-      colorPalettes: ['Pastel garden', 'Sunset tones', 'Green & white', 'Custom'],
+      // colorPalettes: ['Pastel garden', 'Sunset tones', 'Green & white', 'Custom'],
       container: ['Box', 'Basket', 'Hatbox', 'Reusable vase'],
-      addOns: ['Message card', 'Ribbon branding', 'Edible shimmer', 'Mini topper']
+      // addOns: ['Message card', 'Ribbon branding', 'Edible shimmer', 'Mini topper']
     },
     props: {
       bg: 'linear-gradient(135deg, white 0%, #dba2b1 30%, #d88b6f 70%, white 100%)',
@@ -134,7 +134,7 @@ export const EXPLORE: ProductList = [
   {
     id: 'orderEvent',
     slug: 'special-occasions',
-    title: 'Special occassions',
+    title: 'Wedding Cakes',
     description:
       'Impress your clients and colleagues with sweet creations designed for professional events. Elegance and flavor in every detail.',
     img: '/images/events',
