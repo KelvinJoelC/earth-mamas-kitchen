@@ -2,14 +2,7 @@
 import { EXPLORE } from "../consts/explore";
 ---
 
-<section class="-mb-75">
-    <div class="marquee-horizontal w-screen">
-        <div class="h-full overflow-hidden px-0 whitespace-nowrap">
-            <span class="font-dancing text-white marquee-font font-bold  will-change-transform animate-marquee-horizontal inline-flex items-center select-none">
-                {Array(8).fill('Delights •').join(' ')}
-            </span>
-        </div>
-    </div>
+<section class="-mb-55">
     {
         EXPLORE.map(({ id,title,img, description, props }, index) => (
             <section
@@ -19,7 +12,7 @@ import { EXPLORE } from "../consts/explore";
                 }}
                 class="flex flex-col p-4 justify-center items-center bg-blue-400 rounded-t-4xl transform pb-12 "
             >
-                <h3 class="text-5xl p-2  mt-6 text-center font-bold">{title}</h3>
+                <h3 class="font-calistoga text-5xl p-2  mt-6 text-center ">{title}</h3>
                 <p class="text-4xl font-dancing text-center py-6 px-2">
                     {description}
                 </p>

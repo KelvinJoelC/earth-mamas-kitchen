@@ -1,14 +1,28 @@
+---
+
+    import CartIcon from "../assets/cart.svg";
+---
 
 <header class="fixed top-0 w-full text-white mx-auto z-50">
-    <nav class="flex justify-between items-center py-2 px-6 m-6 max-w-[80%] rounded-full mx-auto text-sm">
+    <nav class="flex justify-between items-center py-2 px-6 m-6 max-w-[80%] rounded-full mx-auto text-sm" >
         <div class="flex flex-row justify-start">
-            <a href="/"> <img src="/favicon.png" alt="Earth mama's kitchen" class="size-10"> </a>
+            <a href="/">
+                <img src="/favicon.png" alt="Earth mama's kitchen" class="size-10" />
+            </a>
         </div>
-        <div class="flex flex-row justify-end" aria-live="polite">
-            <a href="/order" class="inline-block">Items: <span id="cartCount">0</span></a>
-        </div>
+        <div class="flex justify-end" aria-live="polite">
+            <a href="/order" class="relative inline-flex items-center" aria-label="Cart">
+
+    <CartIcon />
+    <span id="cartCount" class="absolute -top-1.5 -right-2.5 bg-pink-500 text-white text-[11px] font-semibold 
+             px-1.5 py-1 rounded-full min-w-[18px] text-center leading-none">
+      0
+    </span>
+
+  </a>
+</div>
     </nav>
-<header>
+</header>
 
 <style>
     nav {
@@ -16,7 +30,6 @@
         animation: header-blur-scroll 0.3s ease-in-out both;
         animation-timeline: scroll();
         animation-range: 0 250px;
-        border-bottom: 1px solid transparent;
     }
 
     @keyframes header-blur-scroll {
@@ -24,34 +37,49 @@
             background: transparent;
             backdrop-filter: blur(0px);
         }
+        99% {
+            border: 0px solid white;
+        }
         100% {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.339);
             backdrop-filter: blur(10px);
+            border: 1px solid white;
         }
     }
 </style>
 
 <script type="module">
-    import { initSync,itemCount } from '/js/cart.js';
+    import { initSync, itemCount } from "/js/cart.js";
 
-        const cartCountEl = document.getElementById('cartCount');
-        cartCountEl.textContent = itemCount();
+    function updateBadge(count) {
+        const el = document.getElementById("cartCount");
+        if (!el) return;
+        el.textContent = count;
+    }
 
-        if (!window.bcInitialized) {
+    function refreshFromStorage() {
+        updateBadge(itemCount());
+    }
+
+    function initCartUI() {
+        refreshFromStorage();
+
+        window.addEventListener("cart:update", (e) => {
+            const cart = e.detail || [];
+            updateBadge(cart.length);
+        });
+
+        document.addEventListener("astro:after-swap", refreshFromStorage);
+    }
+
+    if (!window.bcInitialized) {
         initSync();
         window.bcInitialized = true;
-        }
-        
-        window.addEventListener('cart:update', (e) => {
-        const cartCountEl = document.getElementById('cartCount');
-        const cart = e.detail || [];
-        cartCountEl.textContent = cart.length;
-        });
+    }
 
-        document.addEventListener('astro:after-swap', (e) => {
-        const cartCountEl = document.getElementById('cartCount');
-        cartCountEl.textContent = itemCount();
-        });
-
-        
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initCartUI);
+    } else {
+        initCartUI();
+    }
 </script>

@@ -130,43 +130,5 @@ export const EXPLORE: ProductList = [
     },
     route: '/products/edible-blooms',
     cta: 'Choose arrangement'
-  },
-  {
-    id: 'orderEvent',
-    slug: 'special-occasions',
-    title: 'Wedding Cakes',
-    description:
-      'Impress your clients and colleagues with sweet creations designed for professional events. Elegance and flavor in every detail.',
-    img: '/images/events',
-    priceFrom: 3,
-    tags: ['events', 'corporate', 'catering'],
-    leadTimeDays: 7,
-    dietary: ['vegetarian', 'vegan (by request)', 'gluten-free (by request)'],
-    options: {
-      formats: [
-        'Mini cupcakes',
-        'Standard cupcakes',
-        'Cake slices',
-        'Dessert table',
-        'Macaron towers',
-        'Corporate-branded cookies'
-      ],
-      allergens: ['gluten', 'eggs', 'milk', 'nuts', 'soy'],
-      branding: ['Edible logo prints', 'Pantone-matched buttercream', 'Ribbon/logo tags'],
-      service: ['Pickup', 'Delivery', 'On-site setup (dessert table)'],
-      packages: [
-        { name: 'Coffee break', serves: 20, includes: '40 mini cupcakes + 20 cookies', approxPrice: 120 },
-        { name: 'Launch party', serves: 50, includes: '100 mini cupcakes + macaron tower', approxPrice: 360 }
-      ],
-      addOns: ['Display stands rental', 'Signage cards', 'Cutlery & napkins']
-    },
-    logistics: 'Para setup en sitio, acceso 60–90 min antes del evento.',
-    props: {
-      bg: 'linear-gradient(135deg, white 0%, #bfc8e6 25%, #c7d0dd 50%, #b3bfd8 75%, white 100%)',
-      h: '350',
-      padding: '20px'
-    },
-    route: '/products/special-occasions',
-    cta: 'Get a quote'
   }
 ];
