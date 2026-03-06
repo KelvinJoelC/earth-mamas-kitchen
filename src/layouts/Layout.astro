@@ -19,12 +19,12 @@ import StickyOrderButton from "../components/StickyOrderButton.astro";
 		<script type="module" src="/js/orderForm.js"></script>
 		<ClientRouter/>
 	</head>
-	<body class="m-0 w-full h-full flex flex-col custom-gradient a text-white">
+	<body class="m-0 w-full min-h-screen flex flex-col custom-gradient text-white">
 		<Header/>
-		<main>
+		<main class="flex-1">
 			<slot />
 		</main>
-		<StickyOrderButton/>
+		<StickyOrderButton class="fixed bottom-6 right-6"/>
 		<Footer/>
 	</body>
 </html>

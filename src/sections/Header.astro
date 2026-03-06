@@ -3,17 +3,21 @@
     import CartIcon from "../assets/cart.svg";
 ---
 
-<header class="fixed top-0 w-full text-white mx-auto z-50">
-    <nav class="flex justify-between items-center py-2 px-6 m-6 max-w-[80%] rounded-full mx-auto text-sm" >
-        <div class="flex flex-row justify-start">
-            <a href="/">
-                <img src="/favicon.png" alt="Earth mama's kitchen" class="size-10" />
+<header class="fixed top-0 w-full z-50">
+    <nav class="flex justify-between items-center py-3 px-6 lg:px-8 bg-black/50 backdrop-blur-md mt-4 m-6  max-w-[80%]   rounded-full mx-auto text-sm" >
+        <div class="flex-shrink-0">
+            <a href="/" class="flex items-center">
+                <img src="/favicon.png" alt="Earth mama's kitchen" class="h-10 w-auto"/>
+                <div class="flex flex-col ml-2 font-bold font-calistoga">
+                    <span class=" text-lg hidden sm:block leading-4.5">Earth mama </span>
+                    <span class=" text-lg hidden sm:block leading-4.5">Kitchen</span>    
+                </div>                
             </a>
         </div>
-        <div class="flex justify-end" aria-live="polite">
+        <div class="flex-shrink-0" aria-live="polite">
             <a href="/order" class="relative inline-flex items-center" aria-label="Cart">
 
-    <CartIcon />
+            <CartIcon class="h-8 w-8" />
     <span id="cartCount" class="absolute -top-1.5 -right-2.5 bg-pink-500 text-white text-[11px] font-semibold 
              px-1.5 py-1 rounded-full min-w-[18px] text-center leading-none">
       0
