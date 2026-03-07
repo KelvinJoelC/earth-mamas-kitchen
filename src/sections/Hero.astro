@@ -1,10 +1,26 @@
-<section class="flex flex-col pt-30 p-4 justify-center items-center text-center text-white">
-    <h1 class="text-5xl mx-2 px-8 font-calistoga">Earth Mama Kitchen</h1>
-    <p class="text-xl text-center m-10 ">
-        Specialising in Floral Cupcake Bouquets and Bespoke Cakes, Scratch Baking. Edible blooms and Art for Any occasion <br>
-        <strong>Bake Like you mean it!</strong> 
+---
+import { Image } from "astro:assets";
+import logo from "../assets/images/favicon.png";
+---
+
+<section
+    class="flex flex-col px-6 justify-center items-center text-center text-white min-h-screen"
+>
+    <h1 class="text-5xl md:text-6xl lg:text-7xl font-calistoga">
+        Earth Mama Kitchen
+    </h1>
+    <p class="text-xl md:text-2xl mt-6 max-w-3xl">
+        Specialising in Floral Cupcake Bouquets and Bespoke Cakes, Scratch
+        Baking. Edible blooms and Art for Any occasion
+        <br />
+        <strong>Bake Like you mean it!</strong>
     </p>
-    <figure class="relative w-full h-[40vh] flex  justify-center">
-      <img class="absolute w-[60%] bottom-auto" src="/favicon.png" alt="Earth mamas icon" >
-   </figure>
+    <figure class="mt-10 flex justify-center">
+        <Image
+            src={logo}
+            alt="Earth Mama Kitchen logo"
+            width={250}
+            class="w-64 md:w-80 lg:w-96"
+        />
+    </figure>
 </section>
