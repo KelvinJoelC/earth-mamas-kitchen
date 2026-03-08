@@ -7,7 +7,7 @@ const { selection } = Astro.props;
 { Object.entries(selection.options ?? {})
 .filter(([key]) => key !== "allergens") 
 .map(([options, val]:[string, any]) => (
-  <div class="bg-white p-4 rounded-3xl shadow group">
+  <div class="bg-white p-4 rounded-3xl shadow group w-full">
     <label class="text-xl font-medium">{OPTION_LABELS[options as OptionKey] ?? options}:</label>      
     <hr class="my-2 border-pink-400" />
     { (() => {
