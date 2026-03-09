@@ -14,7 +14,7 @@ function readStorage() {
 function writeStorage(cart) {
   try {
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
-      window.dispatchEvent(new CustomEvent('cart:update', { detail: cart }));
+    window.dispatchEvent(new CustomEvent('cart:update', { detail: cart }));
     if (window.bc) window.bc.postMessage({ type: 'cart:update', cart });
   } catch (err) {
     console.error('cart write error', err);
@@ -67,22 +67,21 @@ export function initSync() {
 }
 
 export function updateCartResumen() {
-        console.log('updateCartResumen')
 
   const cartRoot = document.getElementById('cartRoot');
   const cartDeleteButon = document.getElementById('clearBtn');
 
-  if(cartRoot){
+  if (cartRoot) {
     const cartJson = getCart();
     cartRoot.innerHTML = '';
     if (!cartJson.length) {
-        cartDeleteButon.style.display = 'none';
-        const card = document.createElement('div');
-        card.className = 'order-card-empty';
-        card.innerHTML = '<span>Your cart is empty.</span>'
-        cartRoot.appendChild(card);
-    } 
-    else {      
+      cartDeleteButon.style.display = 'none';
+      const card = document.createElement('div');
+      card.className = 'order-card-empty';
+      card.innerHTML = '<span>Your cart is empty.</span>'
+      cartRoot.appendChild(card);
+    }
+    else {
       cartDeleteButon.style.display = 'block';
       cartJson.forEach(item => {
         cartRoot.appendChild(renderCartItem(item));
@@ -91,7 +90,7 @@ export function updateCartResumen() {
   }
 }
 
-export  function renderCartItem(item) {
+export function renderCartItem(item) {
   const card = document.createElement('div');
   card.className = 'order-card group';
   card.dataset.id = item.id;
@@ -120,24 +119,24 @@ export  function renderCartItem(item) {
   Object.entries(item.options).forEach(([key, value]) => {
     if (value) {
       if (key != 'addOns') {
-           addOption(optionsList, key, value);
+        addOption(optionsList, key, value);
       }
-      else if(value.length > 0) {
+      else if (value.length > 0) {
         const div = document.createElement('div');
         const addOnsList = document.createElement('ul');
         addOnsList.className = 'add-ons';
         Object.entries(value).forEach(([optionKey, optionValue]) => {
-            const span = document.createElement('span');
-            const li = document.createElement('li');
-            li.append(span, `- ${optionValue}`);
-            addOnsList.appendChild(li);
-            }  
+          const span = document.createElement('span');
+          const li = document.createElement('li');
+          li.append(span, `- ${optionValue}`);
+          addOnsList.appendChild(li);
+        }
         );
         const span = document.createElement('span');
-          span.textContent = `${key}:`;
+        span.textContent = `${key}:`;
         div.appendChild(span, addOnsList);
         div.appendChild(addOnsList);
-        optionsList.appendChild(div); 
+        optionsList.appendChild(div);
 
       }
     }
@@ -162,7 +161,7 @@ function addOption(list, label, value) {
   li.append(spanLabel, spanValue);
   list.appendChild(li);
 }
-  
+
 
 
 

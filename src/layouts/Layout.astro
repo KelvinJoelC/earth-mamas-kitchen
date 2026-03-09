@@ -1,10 +1,9 @@
 ---
 import "../styles/global.css";
-import Footer from '../sections/Footer.astro';
-import Header from '../sections/Header.astro';
+import Footer from "../sections/Footer.astro";
+import Header from "../sections/Header.astro";
 import { ClientRouter } from "astro:transitions";
 import StickyOrderButton from "../components/StickyOrderButton.astro";
-
 ---
 
 <!doctype html>
@@ -13,49 +12,59 @@ import StickyOrderButton from "../components/StickyOrderButton.astro";
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.png" />
-		<title>Earth Mamas Kitchen | Specialising in Floral Cupcake Bouquets and Bespoke Cakes 🎂 Scratch Baking 🍄 Edible Blooms and Art for any occasion 🌻 Love in every bite ❤️💋</title>
-		<meta name="description" content="Earth Mamas Kitchen | Specialising in Floral Cupcake Bouquets and Bespoke Cakes 🎂 Scratch Baking 🍄 Edible Blooms and Art for any occasion 🌻 Love in every bite ❤️💋" />
+		<title>
+			Earth Mamas Kitchen | Specialising in Floral Cupcake Bouquets and
+			Bespoke Cakes 🎂 Scratch Baking 🍄 Edible Blooms and Art for any
+			occasion 🌻 Love in every bite ❤️💋
+		</title>
+		<meta
+			name="description"
+			content="Earth Mamas Kitchen | Specialising in Floral Cupcake Bouquets and Bespoke Cakes 🎂 Scratch Baking 🍄 Edible Blooms and Art for any occasion 🌻 Love in every bite ❤️💋"
+		/>
 		<script type="module" src="/js/preOrderForm.js"></script>
 		<script type="module" src="/js/orderForm.js"></script>
-		<ClientRouter/>
+		<ClientRouter />
 	</head>
-	<body class="m-0 w-full min-h-screen flex flex-col custom-gradient text-white">
-		<Header/>
+	<body
+		class="m-0 w-full min-h-screen flex flex-col custom-gradient text-white"
+	>
+		<Header />
 		<main class="flex-1">
 			<slot />
 		</main>
-		<StickyOrderButton class="fixed bottom-6 right-6"/>
-		<Footer/>
+		<StickyOrderButton class="fixed bottom-6 right-6" />
+		<Footer />
 	</body>
 </html>
 
 <style>
 	.custom-gradient {
-		background: linear-gradient(10deg, var(--violeta-oscuro) 0%, var(--violeta-medio) 25%, var(--verde-azulado-claro) 50%, var(--verde-claro) 75%, var(--verde-oscuro) 100%);
+		background: linear-gradient(
+			10deg,
+			var(--violeta-oscuro) 0%,
+			var(--violeta-medio) 25%,
+			var(--verde-azulado-claro) 50%,
+			var(--verde-claro) 75%,
+			var(--verde-oscuro) 100%
+		);
 	}
 </style>
 
 <script>
 	import EmblaCarousel from "embla-carousel";
-	import Autoplay from 'embla-carousel-autoplay';
+	import Autoplay from "embla-carousel-autoplay";
 
-
-	function initCarousel() {   
-		
+	function initCarousel() {
 		const emblaNode = document.querySelector(".embla");
 		if (!emblaNode) return;
 		let options = { loop: false };
-		
+
 		if (emblaNode?.classList.contains("autoplayCarousel")) {
 			options = { loop: true };
 			EmblaCarousel(emblaNode as any, options, [
-    		Autoplay({ playOnInit: true, delay: 3000 })
-  		]);
-		}else EmblaCarousel(emblaNode as any, options);
-
-		
-
+				Autoplay({ playOnInit: true, delay: 3000 }),
+			]);
+		} else EmblaCarousel(emblaNode as any, options);
 	}
-	document.addEventListener('astro:page-load', initCarousel);
+	document.addEventListener("astro:page-load", initCarousel);
 </script>
-

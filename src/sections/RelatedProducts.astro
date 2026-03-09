@@ -1,54 +1,68 @@
 ---
-const { selection } = Astro.props ;
-import { EXPLORE } from '../consts/explore';
 import type { ProductList } from "../models/product.model";
+
+const { selection } = Astro.props;
 const products = selection as ProductList;
-
-
 ---
-<section class="flex flex-col p-4 pb-12 -mt-5 justify-center items-center bg-white rounded-t-4xl transform ">
-    <h2 class="text-4xl p-5 text-center text-black font-bold">You Might Also Like</h2>
-    <p class="text-center text-sm italic text-violet-700 -mb-20 "> ✨ Crafted with Love & Nature ✨  </p>
-   <div class="embla overflow-hidden w-full">
+
+<section
+  class="flex flex-col p-4 pb-12 -mt-5 justify-center items-center bg-white rounded-t-4xl transform"
+>
+  <h2 class="text-4xl p-5 text-center text-black font-bold">
+    You Might Also Like
+  </h2>
+  <p class="text-center text-sm italic text-violet-700 -mb-20">
+    ✨ Crafted with Love & Nature ✨
+  </p>
+  <div class="embla overflow-hidden w-full">
     <div class="embla__container flex">
       {
-        products.map(({ id, title, description, props: { h, padding, bg }, img }) => (
-          <div class="embla__slide mx-2 flex-none w-max">
-            <div
-              style={{ height: `${parseInt(h) + 100}px`}}
-              class="slide my-6 flex flex-col relative min-w-[250px] w-2xs overflow-hidden text-center items-center justify-end group">
+        products.map(
+          ({ id, title, description, props: { h, padding, bg }, img }) => (
+            <div class="embla__slide mx-2 flex-none w-max">
               <div
-                style={{ height: `${h}px` }}
-                class="card m-5  w-[98%] rounded-3xl border border-black flex flex-col justify-end items-center ease-in-out duration-700
+                style={{ height: `${parseInt(h) + 100}px` }}
+                class="slide my-6 flex flex-col relative min-w-[250px] w-2xs overflow-hidden text-center items-center justify-end group"
+              >
+                <div
+                  style={{ height: `${h}px` }}
+                  class="card m-5  w-[98%] rounded-3xl border border-black flex flex-col justify-end items-center ease-in-out duration-700
                 group-hover:shadow-md
                 group-hover:border-white
                 "
-              >
-                <div 
-                  style={{ background: bg  }}
-                  class="relative h-full w-[90%] rounded-3xl bg-violet-100/70 mt-3 flex justify-center transition-all ease-in-out duration-700 select-none
+                >
+                  <div
+                    style={{ background: bg }}
+                    class="relative h-full w-[90%] rounded-3xl bg-violet-100/70 mt-3 flex justify-center transition-all ease-in-out duration-700 select-none
                   group-hover:w-full 
                   group-hover:m-0"
-                >
-                  <img
-                    style={{ padding: `${padding ?? 0}` }}
-                    class="absolute w-full h-max top-10 scale-110 transition-all ease-in-out duration-700
+                  >
+                    <img
+                      style={{ padding: `${padding ?? 0}` }}
+                      class="absolute w-full h-max top-10 scale-110 transition-all ease-in-out duration-700
                     group-hover:-top-15"
-                    src={`${img}.webp`}
-                    alt={title}
-                  />
-                </div>
-                <div class="relative mx-4 rounded-xl bg-white text-black text-left py-4">
-                    <h3 class="select-none text-md font-bold mb-2">  {title}</h3>
-                    <p class=" select-none text-sm text-zinc-700 leading-snug">  {description}</p>
-                    <a href={`/products/${id}`} class="flex py-1 mt-5 items-center justify-center border rounded-3xl bg-purple-400 text-white font-bold">
+                      src={`${img}.webp`}
+                      alt={title}
+                    />
+                  </div>
+                  <div class="relative mx-4 rounded-xl bg-white text-black text-left py-4">
+                    <h3 class="select-none text-md font-bold mb-2"> {title}</h3>
+                    <p class=" select-none text-sm text-zinc-700 leading-snug">
+                      {" "}
+                      {description}
+                    </p>
+                    <a
+                      href={`/products/${id}`}
+                      class="flex py-1 mt-5 items-center justify-center border rounded-3xl bg-purple-400 text-white font-bold"
+                    >
                       View More
                     </a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))
+          ),
+        )
       }
     </div>
   </div>
