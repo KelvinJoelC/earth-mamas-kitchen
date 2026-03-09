@@ -11,7 +11,6 @@ function initPreOrderForm() {
 
     const data = new FormData(form);
     const values = Object.fromEntries(data.entries());
-    
     const item = {
       id: Date.now().toString(),
       product: form.dataset.productTitle,
@@ -21,9 +20,8 @@ function initPreOrderForm() {
       }
     };
     addItem(item);
-    alert('Item added to cart!');
-
-    document.getElementById('preOrderDetail')?.removeAttribute('open');
+    form.reset();
+    window.location.href = '/order';
   });
 }
 

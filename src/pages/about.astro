@@ -1,13 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import AboutMe from '../sections/AboutMe.astro';
+import Awards from '../sections/Awards.astro';
 ---
 <script
     src="https://cdn.jsdelivr.net/npm/@mirrorapp/iframe-bridge@latest/dist/index.umd.js"
 ></script>
 <Layout>
     <AboutMe/>
-    <section class="w-full flex flex-col justify-between items-center">
+    <Awards />
+    <section class="w-full flex flex-col justify-between items-center py-10">
         <div class="sm:w-10/12 text-center">
             <h2 class="font-calistoga text-3xl sm:text-5xl p-2 mt-6 ">Follow me on Instagram</h2>
             <p class="text-4xl sm:text-5xl font-dancing py-6 px-2 ">
@@ -15,12 +17,12 @@ import AboutMe from '../sections/AboutMe.astro';
             </p>
             <iframe
             onload="iFrameSetup(this)"
+            onerror="this.style.display='none'"
             src="https://app.mirror-app.com/feed-instagram/1d550f9d-6fcf-4463-8ed6-06feb682b93a/preview"
             style="width:100%;border:none;overflow:hidden;border-radius:2rem;"
             scrolling="no"
+            loading="lazy"
             ></iframe>
-
         </div>
-        
     </section>
 </Layout>

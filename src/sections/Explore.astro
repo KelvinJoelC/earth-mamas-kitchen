@@ -10,6 +10,7 @@ import { Image } from "astro:assets";
                 style={{
                     background: `${props.bg}`,
                     transform: `translateY(calc(-100px * ${index}))`,
+                    marginBottom: index === EXPLORE.length - 1 ? "100px" : "0"
                 }}
                 class="flex flex-col px-6 py-12 justify-center items-center rounded-t-4xl transform text-center"
             >
@@ -46,14 +47,7 @@ import { Image } from "astro:assets";
             transform: translateY(50px);
         }
     }
-    @keyframes marqueeHorizontal {
-        0% {
-            transform: translateX(0);
-        }
-        100% {
-            transform: translateX(-25%);
-        }
-    }
+
     .animate-slideIn {
         animation: slideIn 0.5s ease-in-out both;
         animation-timeline: view(50% 30%);
