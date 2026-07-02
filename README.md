@@ -8,11 +8,12 @@ The project is being developed as a production-minded bakery preorder website us
 
 The goal of version 1.0.0 is to deliver a complete and credible customer experience that allows visitors to:
 
-- browse the bakery's products;
-- view product details;
-- configure cakes and other bakery products;
-- add configured products to a cart;
-- submit preorder requests;
+- browse three configurable Product Offerings;
+- understand product details, pricing guidance, lead times, and policies;
+- configure guided preorders and design briefs;
+- add configured offerings to a cart;
+- submit preorder requests for bakery review;
+- submit custom enquiries for Events & Catering;
 - contact the bakery.
 
 This is not a tutorial or a claim of live commercial adoption. It is a realistic case study designed to demonstrate professional frontend engineering, product thinking, maintainable architecture, responsive UX, accessibility, SEO, performance, testing, documentation, and release discipline.
@@ -25,6 +26,34 @@ External client confirmation is not required. When real business information is 
 
 The original bakery context remains inspiration rather than a source of ongoing requirements or approval.
 
+## Domain terminology
+
+Version 1 uses the following terms consistently:
+
+- **Product Offering:** a configurable bakery product available through preorder.
+  - Floral Cupcake Bouquets
+  - Edible Blooms
+  - Bespoke Cakes
+- **Service Offering:** a consultation-led service rather than a standard configurable product.
+  - Events & Catering
+- **Option Groups:** reusable configuration concepts such as sizes, flavours, fillings, frostings, colour palettes, add-ons, design briefs, and enquiry fields.
+- **Workflow Type:** the customer journey assigned to an offering.
+  - `guided-preorder`
+  - `design-brief-preorder`
+  - `custom-enquiry`
+
+The three Product Offerings are not categories containing multiple separately named products.
+
+## Domain architecture direction
+
+The planned v1 architecture is configuration-driven without attempting to become a database or unrestricted form engine.
+
+Reusable catalogues define shared concepts such as flavours, fillings, frostings, colour palettes, add-ons, dietary adaptations, occasions, and workflow types. Product Offerings reference the catalogue entries they support and provide relationship-specific settings such as selection limits, availability, price adjustments, ordering, and review requirements.
+
+Business rules use a limited set of typed, declarative operations—for example requirements, exclusions, automatic selections, selection limits, and redirects to custom enquiry. Global policies, workflow rules, offering rules, and compatibility rules remain separate.
+
+For v1, these contracts and catalogues can remain strongly typed TypeScript data. A database or CMS is not required.
+
 ## Technology
 
 - **Astro** — static-first application architecture and performance
@@ -34,9 +63,9 @@ The original bakery context remains inspiration rather than a source of ongoing 
 
 ## Current status
 
-The repository contains an evolving product catalogue, product-detail routes, configurable preorder forms, a browser-persisted cart, and responsive presentation work.
+The repository contains an evolving catalogue, offering-detail routes, configurable preorder forms, a browser-persisted cart, and responsive presentation work.
 
-The current implementation is being upgraded toward the planned v1.0.0 quality standard. Until that release is complete, some workflows and documentation may still be provisional.
+The current implementation is being upgraded toward the planned v1.0.0 domain model and quality standard. Until that release is complete, some workflows, terminology, and documentation may still be provisional.
 
 See the [GitHub Issues](https://github.com/KelvinJoelC/earth-mamas-kitchen/issues) for the ordered delivery backlog.
 
@@ -55,7 +84,7 @@ src/
 └── styles/             Global and feature styles
 ```
 
-The architecture and folder boundaries will continue to be refined incrementally through the v1.0.0 backlog.
+The architecture and folder boundaries will be refined incrementally through the v1.0.0 backlog.
 
 ## Local development
 
