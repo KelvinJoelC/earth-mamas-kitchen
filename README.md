@@ -50,6 +50,39 @@ The planned v1 architecture is configuration-driven without attempting to become
 
 Reusable catalogues define shared concepts such as flavours, fillings, frostings, colour palettes, add-ons, dietary adaptations, occasions, and workflow types. Product Offerings reference the catalogue entries they support and provide relationship-specific settings such as selection limits, availability, price adjustments, ordering, and review requirements.
 
+### Add-on ownership model
+
+The Global Add-on Catalogue is the single source of truth for add-on identity. Every global definition contains only:
+
+- stable ID;
+- customer-facing name;
+- description;
+- default price in AUD cents;
+- global availability;
+- default review requirement.
+
+A Product Offering owns the relationship between itself and a supported add-on. Its configuration references the add-on ID and may define a product-specific price override, availability override, review override, display order, and compatibility rules.
+
+Supported offerings, workflow compatibility, and display order are not duplicated in the global definition. This avoids bidirectional data that can drift out of sync.
+
+The approved v1 Global Add-on Catalogue contains:
+
+- Gift Message
+- Personalised Acrylic Topper
+- Personalised Ribbon
+- Fairy Lights
+- Premium Bouquet Wrapping
+- Premium Gift Bag
+- Premium Cupcake Packaging
+- Custom Cupcake Toppers
+- Premium Cupcake Decorations
+- Edible Image
+- Chocolate Drip
+- Sugar Flowers
+- Fresh Flowers
+- Macarons
+- Edible Gold Leaf
+
 Business rules use a limited set of typed, declarative operations—for example requirements, exclusions, automatic selections, selection limits, and redirects to custom enquiry. Global policies, workflow rules, offering rules, and compatibility rules remain separate.
 
 For v1, these contracts and catalogues can remain strongly typed TypeScript data. A database or CMS is not required.
