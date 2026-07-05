@@ -2,7 +2,7 @@ export interface ProductOptionSize {
   sizeInch?: number;
   shape?: string | 'Heart' | 'Round' | 'Square' | 'Rectangle';
   servings?: number;
-  label?: string; 
+  label?: string;
   pieces?: number;
 }
 
@@ -57,8 +57,8 @@ export interface Product {
   logistics?: string;
   props: {
     bg: string;
-    h: string; 
-    padding: string; 
+    h: string;
+    padding: string;
   };
   route?: string;
   cta?: string;
@@ -67,12 +67,32 @@ export interface Product {
 export type ProductList = Product[];
 
 export type OptionKey =
-  | 'sizes' | 'sponge' | 'fillings' | 'frostings' | 'finishes' | 'themes'
-  | 'cupcakeType' | 'buttercreamStyle' | 'flavors' | 'colorPalettes'
-  | 'quantities' | 'arrangementType' | 'presentation' | 'container'
-  | 'addOns' | 'minimumOrder' | 'flavorSets' | 'branding' | 'service'
-  | 'packages' | 'messageCard' | 'inscriptions' | 'servingGuideIncluded' 
-  | 'noteOnTransport' | 'allergens' | 'notes';
+  | 'sizes'
+  | 'sponge'
+  | 'fillings'
+  | 'frostings'
+  | 'finishes'
+  | 'themes'
+  | 'cupcakeType'
+  | 'buttercreamStyle'
+  | 'flavors'
+  | 'colorPalettes'
+  | 'quantities'
+  | 'arrangementType'
+  | 'presentation'
+  | 'container'
+  | 'addOns'
+  | 'minimumOrder'
+  | 'flavorSets'
+  | 'branding'
+  | 'service'
+  | 'packages'
+  | 'messageCard'
+  | 'inscriptions'
+  | 'servingGuideIncluded'
+  | 'noteOnTransport'
+  | 'allergens'
+  | 'notes';
 
 export const OPTION_LABELS: Record<OptionKey, string> = {
   sizes: 'Sizes & servings',
@@ -100,6 +120,5 @@ export const OPTION_LABELS: Record<OptionKey, string> = {
   servingGuideIncluded: 'Serving guide included',
   noteOnTransport: 'Transport note',
   allergens: 'Allergens',
-  notes: 'Note'
+  notes: 'Note',
 };
-

@@ -13,17 +13,19 @@ export function initConfirmOrderForm() {
     const emailText = jsonToEmailText();
 
     const subject = encodeURIComponent(`${name} - New Order`);
-    const body = encodeURIComponent(`G'day, My name is ${name}.\nMy phone number is ${phone}.\n I would like to order a cake... \n\n${emailText}`);
+    const body = encodeURIComponent(
+      `G'day, My name is ${name}.\nMy phone number is ${phone}.\n I would like to order a cake... \n\n${emailText}`,
+    );
 
     window.location.href = `mailto:earthmamaskitchen@gmail.com?subject=${subject}&body=${body}`;
   });
 }
 
 function jsonToEmailText() {
-  let text = "ORDER DETAILS\n------------------------\n\n";
+  let text = 'ORDER DETAILS\n------------------------\n\n';
 
   const data = getCart();
-  Object.entries(data).forEach(([key, value]) => {
+  Object.values(data).forEach((value) => {
     if (value) {
       Object.entries(value).forEach(([subKey, subValue]) => {
         if (subKey === 'options' && typeof subValue === 'object') {
@@ -31,7 +33,6 @@ function jsonToEmailText() {
           Object.entries(subValue).forEach(([optionKey, optionValue]) => {
             if (optionValue.length > 0) {
               text += `  - ${optionKey}: ${optionValue}\n`;
-
             }
           });
         } else if (subKey !== 'id') {
@@ -40,18 +41,15 @@ function jsonToEmailText() {
       });
     }
     text += `\n------------------------\n`;
-
   });
   return text;
 }
 
-
-
 document.addEventListener('click', (e) => {
-  const btn = e.target.closest('#clearBtn')
-  if (!btn) return
-  clearCart()
-})
+  const btn = e.target.closest('#clearBtn');
+  if (!btn) return;
+  clearCart();
+});
 
 document.addEventListener('astro:page-load', () => {
   if (!document.querySelector('#cart-resumen')) return;
@@ -60,4 +58,3 @@ document.addEventListener('astro:page-load', () => {
 });
 
 window.addEventListener('cart:update', () => updateCartResumen());
-

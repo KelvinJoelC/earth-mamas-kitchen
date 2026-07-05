@@ -126,12 +126,29 @@ npm install
 npm run dev
 ```
 
-| Command | Purpose |
-| --- | --- |
-| `npm run dev` | Start the local Astro development server |
-| `npm run build` | Create a production build |
-| `npm run preview` | Preview the production build locally |
-| `npm run astro -- --help` | View available Astro commands |
+| Command                   | Purpose                                                                  |
+| ------------------------- | ------------------------------------------------------------------------ |
+| `npm run dev`             | Start the local Astro development server                                 |
+| `npm run format`          | Apply the project's Prettier formatting rules                            |
+| `npm run format:check`    | Check formatting without changing files                                  |
+| `npm run lint`            | Run ESLint across Astro, TypeScript, and JavaScript files                |
+| `npm run check`           | Run Astro diagnostics and TypeScript validation                          |
+| `npm run build`           | Create a production build                                                |
+| `npm run quality`         | Run formatting, linting, Astro/TypeScript checks, and a production build |
+| `npm run preview`         | Preview the production build locally                                     |
+| `npm run astro -- --help` | View available Astro commands                                            |
+
+Before opening or updating a pull request, run:
+
+```bash
+npm run quality
+```
+
+GitHub Actions runs the same quality gate for pull requests targeting `main` and for pushes to `main`.
+
+### Known quality baseline
+
+The initial quality pass intentionally retains warnings for explicit `any` values in the legacy dynamic option renderers and non-blocking Astro hints in existing templates. These are visible in local output and CI rather than suppressed. They require product-domain typing or template changes that fall outside EMK-002 and should be resolved with the related implementation work.
 
 ## Live demo
 

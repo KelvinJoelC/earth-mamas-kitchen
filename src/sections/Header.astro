@@ -1,103 +1,99 @@
 ---
-import CartIcon from "../assets/cart.svg";
+import CartIcon from '../assets/cart.svg';
 ---
 
 <header class="fixed top-0 w-full z-50">
-    <nav
-        class="flex justify-between items-center py-1 px-5 lg:px-8 bg-black/50 backdrop-blur-md mt-4 m-6 max-w-[80%] rounded-full mx-auto text-sm"
-    >
-        <div class="flex-shrink-0">
-            <a href="/" class="flex items-center">
-                <img
-                    src="/favicon.png"
-                    alt="Earth mama's kitchen"
-                    class="h-10 w-auto"
-                />
-                <div class="flex flex-col ml-2 font-bold font-calistoga">
-                    <span class="text-lg hidden sm:block leading-4.5"
-                        >Earth mama
-                    </span>
-                    <span class="text-lg hidden sm:block leading-4.5"
-                        >Kitchen</span
-                    >
-                </div>
-            </a>
+  <nav
+    class="flex justify-between items-center py-1 px-5 lg:px-8 bg-black/50 backdrop-blur-md mt-4 m-6 max-w-[80%] rounded-full mx-auto text-sm"
+  >
+    <div class="flex-shrink-0">
+      <a href="/" class="flex items-center">
+        <img
+          src="/favicon.png"
+          alt="Earth mama's kitchen"
+          class="h-10 w-auto"
+        />
+        <div class="flex flex-col ml-2 font-bold font-calistoga">
+          <span class="text-lg hidden sm:block leading-4.5">Earth mama </span>
+          <span class="text-lg hidden sm:block leading-4.5">Kitchen</span>
         </div>
-        <div class="flex-shrink-0 m-3" aria-live="polite">
-            <a
-                href="/order"
-                class="relative inline-flex items-center"
-                aria-label="Cart"
-            >
-                <CartIcon class="h-8 w-8" />
-                <span
-                    id="cartCount"
-                    class="absolute -top-1.5 -right-2.5 bg-pink-500 text-white text-[11px] font-semibold
+      </a>
+    </div>
+    <div class="flex-shrink-0 m-3" aria-live="polite">
+      <a
+        href="/order"
+        class="relative inline-flex items-center"
+        aria-label="Cart"
+      >
+        <CartIcon class="h-8 w-8" />
+        <span
+          id="cartCount"
+          class="absolute -top-1.5 -right-2.5 bg-pink-500 text-white text-[11px] font-semibold
                  px-1.5 py-1 rounded-full min-w-[18px] text-center leading-none"
-                >
-                    0
-                </span>
-            </a>
-        </div>
-    </nav>
+        >
+          0
+        </span>
+      </a>
+    </div>
+  </nav>
 </header>
 
 <style>
-    nav {
-        background: transparent;
-        animation: header-blur-scroll 0.3s ease-in-out both;
-        animation-timeline: scroll();
-        animation-range: 0 250px;
-    }
+  nav {
+    background: transparent;
+    animation: header-blur-scroll 0.3s ease-in-out both;
+    animation-timeline: scroll();
+    animation-range: 0 250px;
+  }
 
-    @keyframes header-blur-scroll {
-        0% {
-            background: transparent;
-            backdrop-filter: blur(0px);
-        }
-        99% {
-            border: 0px solid white;
-        }
-        100% {
-            background: rgba(255, 255, 255, 0.339);
-            backdrop-filter: blur(10px);
-            border: 1px solid white;
-        }
+  @keyframes header-blur-scroll {
+    0% {
+      background: transparent;
+      backdrop-filter: blur(0px);
     }
+    99% {
+      border: 0px solid white;
+    }
+    100% {
+      background: rgba(255, 255, 255, 0.339);
+      backdrop-filter: blur(10px);
+      border: 1px solid white;
+    }
+  }
 </style>
 
 <script type="module">
-    import { initSync, itemCount } from "/js/cart.js";
+  import { initSync, itemCount } from '/js/cart.js';
 
-    function updateBadge(count) {
-        const el = document.getElementById("cartCount");
-        if (!el) return;
-        el.textContent = count;
-    }
+  function updateBadge(count) {
+    const el = document.getElementById('cartCount');
+    if (!el) return;
+    el.textContent = count;
+  }
 
-    function refreshFromStorage() {
-        updateBadge(itemCount());
-    }
+  function refreshFromStorage() {
+    updateBadge(itemCount());
+  }
 
-    function initCartUI() {
-        refreshFromStorage();
+  function initCartUI() {
+    refreshFromStorage();
 
-        window.addEventListener("cart:update", (e) => {
-            const cart = e.detail || [];
-            updateBadge(cart.length);
-        });
+    window.addEventListener('cart:update', (e) => {
+      const cart = e.detail || [];
+      updateBadge(cart.length);
+    });
 
-        document.addEventListener("astro:after-swap", refreshFromStorage);
-    }
+    document.addEventListener('astro:after-swap', refreshFromStorage);
+  }
 
-    if (!window.bcInitialized) {
-        initSync();
-        window.bcInitialized = true;
-    }
+  if (!window.bcInitialized) {
+    initSync();
+    window.bcInitialized = true;
+  }
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initCartUI);
-    } else {
-        initCartUI();
-    }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCartUI);
+  } else {
+    initCartUI();
+  }
 </script>

@@ -1,96 +1,103 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @import '@fontsource-variable/dancing-script';
 @import '@fontsource-variable/merienda';
 @import '@fontsource/calistoga';
 
-
 @theme {
-    --font-calistoga: "Calistoga", "sans-serif"; 
-    --font-dancing: "Dancing Script Variable", "sans-serif"; 
-    --font-merienda: "Merienda", "sans-serif"; 
+  --font-calistoga: 'Calistoga', 'sans-serif';
+  --font-dancing: 'Dancing Script Variable', 'sans-serif';
+  --font-merienda: 'Merienda', 'sans-serif';
 
-    --violeta-oscuro: #78698C;
-    --violeta-medio: #7A778C;
-    --verde-azulado-claro: #86A688;
-    --verde-claro: #8FA690;
-    --verde-oscuro: #0B4009;
+  --violeta-oscuro: #78698c;
+  --violeta-medio: #7a778c;
+  --verde-azulado-claro: #86a688;
+  --verde-claro: #8fa690;
+  --verde-oscuro: #0b4009;
 }
 
 @utility mask-fade-top {
-    mask-image: linear-gradient(to top, black 50%, black 70%,transparent 100%);
-    -webkit-mask-image: linear-gradient(to top, black 50%, black 70%, transparent 100%);
+  mask-image: linear-gradient(to top, black 50%, black 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(
+    to top,
+    black 50%,
+    black 70%,
+    transparent 100%
+  );
 }
 
 @utility mask-fade-bottom {
-    mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
 }
 
-@utility effect-shadow-bottom{
-    &::before{
-        content: '';
-        position: absolute;
-        background-color: black;
-        width: 100%;
-        height: 100px;
-        top: 100%;
-        border-radius: 50%;
-        filter:blur(60px);
-    }    
+@utility effect-shadow-bottom {
+  &::before {
+    content: '';
+    position: absolute;
+    background-color: black;
+    width: 100%;
+    height: 100px;
+    top: 100%;
+    border-radius: 50%;
+    filter: blur(60px);
+  }
 }
 
 @keyframes jiggle {
-    0% { transform: rotate(-3deg)}
-    50% { transform: rotate(3deg)}
-    100% { transform: rotate(-3deg)}
+  0% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+  100% {
+    transform: rotate(-3deg);
+  }
 }
 
 @keyframes marqueeHorizontal {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-25%);
-    }
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-25%);
+  }
 }
 @keyframes slideIn {
-    0% {
-        transform: translateY(0);
-    }
-    100% {
-        transform: translateY(50px);
-    }
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(50px);
+  }
 }
 
 .animate-slideIn {
-    animation: slideIn 0.5s ease-in-out both;
-    animation-timeline: view(50% 30%);
+  animation: slideIn 0.5s ease-in-out both;
+  animation-timeline: view(50% 30%);
 }
 
-
 @utility animation-jiggle-infinite {
-    animation: jiggle 1s infinite;
+  animation: jiggle 1s infinite;
 }
 
 .animate-marquee-horizontal {
-        animation: marqueeHorizontal 10s linear infinite;
-    }
+  animation: marqueeHorizontal 10s linear infinite;
+}
 
-.marquee-horizontal span, .vertical-marquee span {
-        font-size: clamp(4.5rem, 3.64rem + 4.29vw, 9rem);
+.marquee-horizontal span,
+.vertical-marquee span {
+  font-size: clamp(4.5rem, 3.64rem + 4.29vw, 9rem);
 }
 
 @media (min-width: 1024px) {
-  .marquee-horizontal span, 
+  .marquee-horizontal span,
   .vertical-marquee span {
     font-size: clamp(2.25rem, 1.82rem + 2.14vw, 4.5rem);
   }
 }
 
 .marquee-font {
-    -webkit-text-fill-color: transparent;
-    -webkit-text-stroke-width: 1.75px;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: 1.75px;
 }
-
-
-

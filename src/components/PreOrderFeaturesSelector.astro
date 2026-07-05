@@ -1,77 +1,86 @@
 ---
-import { OPTION_LABELS, type OptionKey, type Product } from "../models/product.model";
+import { OPTION_LABELS, type OptionKey } from '../models/product.model';
 
 const { selection } = Astro.props;
-
 ---
-{ Object.entries(selection.options ?? {})
-.filter(([key]) => key !== "allergens") 
-.map(([options, val]:[string, any]) => (
-  <div class="bg-white p-4 rounded-3xl shadow group w-full">
-    <label class="text-xl font-medium">{OPTION_LABELS[options as OptionKey] ?? options}:</label>      
-    <hr class="my-2 border-pink-400" />
-    { (() => {
-    switch (options) {
-      case 'sizes':
-        return (
-          <select
-            name="size"
-            class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
-                       focus:outline-none focus:ring-2 focus:ring-violeta-medio">
-            {val.map((features: any) => (
-              features.pieces ? (
-                <option value={features.label}>
-                  {features.label} - {features.pieces} servings
-                </option>
-              ) : (
-                <option value={features.servings}>
-                  {features.label ?? `${features.sizeInch}"`} - {features.servings ?? '—'} servings
-                </option>
-              )
-            ))}
-          </select>
-        );
 
-      case 'packages':
-        return (
-          <select
-            name="package"
-            class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
-                       focus:outline-none focus:ring-2 focus:ring-violeta-medio">
-            {val.map((pkg: any) => (
-              <option value={pkg.name}>
-                {pkg.name}
-              </option>
-            ))}
-          </select>
-        );
-      case 'addOns':
-        return (
-          val.map((extra:any) => (
-          <label class="inline-flex items-center gap-2 text-xs text-slate-700">
-            <input type="checkbox" name="addOns" value={extra} class="rounded border-slate-300" />
-            <span>{extra}</span>
-          </label><br/>
-        ))
-        );
+{
+  Object.entries(selection.options ?? {})
+    .filter(([key]) => key !== 'allergens')
+    .map(([options, val]: [string, any]) => (
+      <div class="bg-white p-4 rounded-3xl shadow group w-full">
+        <label class="text-xl font-medium">
+          {OPTION_LABELS[options as OptionKey] ?? options}:
+        </label>
+        <hr class="my-2 border-pink-400" />
+        {(() => {
+          switch (options) {
+            case 'sizes':
+              return (
+                <select
+                  name="size"
+                  class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
+                       focus:outline-none focus:ring-2 focus:ring-violeta-medio"
+                >
+                  {val.map((features: any) =>
+                    features.pieces ? (
+                      <option value={features.label}>
+                        {features.label} - {features.pieces} servings
+                      </option>
+                    ) : (
+                      <option value={features.servings}>
+                        {features.label ?? `${features.sizeInch}"`} -{' '}
+                        {features.servings ?? '—'} servings
+                      </option>
+                    ),
+                  )}
+                </select>
+              );
 
-      default:
-        const value: string[] = Array.isArray(val) ? val : [] ;
-        return (
-          <select
-            name={options}
-            class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
-                       focus:outline-none focus:ring-2 focus:ring-violeta-medio">
-            {value.map((item: any) => (
-              <option value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
-        );
-    }
-  })()
-  }
-</div>
-))}
+            case 'packages':
+              return (
+                <select
+                  name="package"
+                  class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
+                       focus:outline-none focus:ring-2 focus:ring-violeta-medio"
+                >
+                  {val.map((pkg: any) => (
+                    <option value={pkg.name}>{pkg.name}</option>
+                  ))}
+                </select>
+              );
+            case 'addOns':
+              return val.map((extra: any) => (
+                <>
+                  <label class="inline-flex items-center gap-2 text-xs text-slate-700">
+                    <input
+                      type="checkbox"
+                      name="addOns"
+                      value={extra}
+                      class="rounded border-slate-300"
+                    />
+                    <span>{extra}</span>
+                  </label>
+                  <br />
+                </>
+              ));
 
+            default: {
+              const value: string[] = Array.isArray(val) ? val : [];
+              return (
+                <select
+                  name={options}
+                  class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
+                       focus:outline-none focus:ring-2 focus:ring-violeta-medio"
+                >
+                  {value.map((item: any) => (
+                    <option value={item}>{item}</option>
+                  ))}
+                </select>
+              );
+            }
+          }
+        })()}
+      </div>
+    ))
+}
