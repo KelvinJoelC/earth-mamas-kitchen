@@ -184,7 +184,7 @@ Active palettes are:
 - Bright & Colourful;
 - Custom Colours.
 
-Autumn Colours and Christmas Colours are inactive outside their seasons.
+Autumn Colours and Christmas Colours are inactive and not selectable in the v1.0.0 release. V1 does not implement an automatic seasonal activation schedule.
 
 ### 6.5 Bespoke Cakes
 
@@ -271,6 +271,22 @@ Cake Message is writing placed on the cake. Gift Message is a separate card or n
 
 Minimum notice is five calendar days.
 
+## 6.6 Product imagery policy
+
+Each Product Offering must have:
+
+- one representative primary image;
+- optional curated supporting images when they add meaningful product context;
+- imagery that clearly distinguishes gifting bouquets, sharing boxes, and bespoke cakes.
+
+Catalogue imagery communicates the offering's style and presentation. It does not guarantee that a future handcrafted order will exactly reproduce the photographed design.
+
+Only imagery with appropriate permission or usage rights may be published. Images must not imply that the current case study is an active business operated by Silvia.
+
+Customer reference images are never uploaded to or stored by the website. Customers attach them manually to the generated email.
+
+Meaningful images require contextual alternative text. Decorative images use empty alternative text. Asset optimisation, responsive sources, and final production-image selection are delivered under the dedicated browsing and visual-asset issues.
+
 ## 7. Global Add-on Catalogue
 
 The Global Add-on Catalogue owns:
@@ -284,23 +300,25 @@ The Global Add-on Catalogue owns:
 
 All 15 v1 add-ons are globally available.
 
-| Add-on | Default cents | Display price | Requires review |
-| --- | ---: | ---: | :---: |
-| Gift Message | 0 | AUD $0 | No |
-| Personalised Acrylic Topper | 1200 | AUD $12 | Yes |
-| Personalised Ribbon | 500 | AUD $5 | No |
-| Fairy Lights | 800 | AUD $8 | No |
-| Premium Bouquet Wrapping | 1000 | AUD $10 | No |
-| Premium Gift Bag | 800 | AUD $8 | No |
-| Premium Cupcake Packaging | 600 | AUD $6 | No |
-| Custom Cupcake Toppers | 1500 | AUD $15 per order | Yes |
-| Premium Cupcake Decorations | 1000 | AUD $10 | No |
-| Edible Image | 1500 | AUD $15 | Yes |
-| Chocolate Drip | 800 | AUD $8 | No |
-| Sugar Flowers | 2500 | AUD $25 | Yes |
-| Fresh Flowers | 2000 | AUD $20 | Yes |
-| Macarons | 1800 | AUD $18 | No |
-| Edible Gold Leaf | 1500 | AUD $15 | No |
+Stable IDs use lowercase kebab-case and are immutable once referenced by persisted cart data.
+
+| Stable ID | Add-on | Description | Default cents | Display price | Review |
+| --- | --- | --- | ---: | ---: | :---: |
+| gift-message | Gift Message | A personalised printed card or handwritten note supplied with the order. | 0 | AUD $0 | No |
+| personalised-acrylic-topper | Personalised Acrylic Topper | A custom acrylic topper with a name, age, or short celebration message. | 1200 | AUD $12 | Yes |
+| personalised-ribbon | Personalised Ribbon | A ribbon personalised with a short name or celebratory message. | 500 | AUD $5 | No |
+| fairy-lights | Fairy Lights | Battery-operated decorative lights used to enhance presentation. | 800 | AUD $8 | No |
+| premium-bouquet-wrapping | Premium Bouquet Wrapping | Upgraded bouquet wrapping using premium materials and finishes. | 1000 | AUD $10 | No |
+| premium-gift-bag | Premium Gift Bag | A reusable gift bag that improves presentation and transport. | 800 | AUD $8 | No |
+| premium-cupcake-packaging | Premium Cupcake Packaging | An upgraded presentation box for Edible Blooms. | 600 | AUD $6 | No |
+| custom-cupcake-toppers | Custom Cupcake Toppers | One coordinated set of personalised toppers for the selected order. | 1500 | AUD $15 per order | Yes |
+| premium-cupcake-decorations | Premium Cupcake Decorations | Premium sprinkles, edible pearls, metallic details, or similar finishes. | 1000 | AUD $10 | No |
+| edible-image | Edible Image | A printed edible decoration based on customer-supplied artwork. | 1500 | AUD $15 | Yes |
+| chocolate-drip | Chocolate Drip | A standard decorative chocolate drip finish. | 800 | AUD $8 | No |
+| sugar-flowers | Sugar Flowers | A handcrafted set of decorative sugar flowers. | 2500 | AUD $25 | Yes |
+| fresh-flowers | Fresh Flowers | Seasonal fresh flowers selected for decorative cake presentation. | 2000 | AUD $20 | Yes |
+| macarons | Macarons | A predefined quantity of macarons used as cake decoration. | 1800 | AUD $18 | No |
+| edible-gold-leaf | Edible Gold Leaf | Edible gold leaf applied within a predefined decorative scope. | 1500 | AUD $15 | No |
 
 An add-on marked requiresReview is included in the estimate at its default price, but the bakery may revise or reject it during review.
 
@@ -502,7 +520,7 @@ Collection availability:
 
 - Monday to Friday;
 - 9:00 am to 4:00 pm AEST;
-- 30-minute intervals;
+- 30-minute requested collection times from 9:00 am through 4:00 pm inclusive;
 - Saturday and Sunday unavailable.
 
 There is no daily cutoff time and no blackout-date catalogue.
@@ -540,7 +558,7 @@ Submitting or preparing an email does not:
 ### 12.1 Preorder customer fields
 
 - Full Name: required, maximum 100 characters.
-- Phone: required, exactly the local Australian mobile format represented by 0412345678, maximum 10 characters.
+- Phone: required, exactly 10 digits, beginning with 04; the validation rule is ^04[0-9]{8}$. Spaces, hyphens, landlines, and international formats are not accepted.
 - Separate email field: not collected.
 
 The bakery replies to the address from which the customer manually sends the email.
@@ -565,6 +583,8 @@ Required fields:
 - Phone Number;
 - Event Type;
 - Message.
+
+The Events & Catering phone field uses an appropriate tel input but does not enforce the preorder-only local-mobile rule.
 
 Optional:
 
@@ -592,7 +612,7 @@ A functional general-enquiry mailto form collects:
 
 - Name: required;
 - Email: required;
-- Phone: optional;
+- Phone: optional; it uses an appropriate tel input but does not enforce the preorder-only local-mobile rule;
 - Message: required, maximum 1,000 characters.
 
 Public business channels remain Instagram and Facebook. A public bakery phone number and exact address are not displayed.
@@ -681,6 +701,18 @@ Each indexable page requires unique metadata, a descriptive heading hierarchy, m
 
 The site must not publish the exact collection address.
 
+### 17.1 Structured-data honesty
+
+Local SEO content may demonstrate optimisation for the approved Cairns search themes, but machine-readable data must not present the case study as an active bakery operated by Silvia.
+
+For the current portfolio status:
+
+- Bakery or LocalBusiness structured data is not approved;
+- Product availability or purchase structured data is not approved;
+- Events & Catering must not be represented as a fixed-price product;
+- WebSite, CreativeWork, and developer/author attribution may be used when they accurately describe the project;
+- any future commercial structured data would require a new Product Owner decision and verified business details.
+
 ## 18. Accessibility
 
 WCAG 2.2 Level AA is the v1 target.
@@ -742,7 +774,31 @@ The following are outside v1:
 8. All dates, collection times, prices, dietary requests, and designs remain provisional until personal confirmation.
 9. The final website is a portfolio baseline and not a commitment to future product expansion.
 
-## 22. Approval
+## 22. EMK-001 acceptance-criteria traceability
+
+| Acceptance criterion | Evidence in this document |
+| --- | --- |
+| Internally consistent v1 bakery model | Sections 1–5, 8, 11, 12, and 20 |
+| Three Product Offerings and Events & Catering fully defined | Sections 6 and 13 |
+| Shared catalogues and compatibility approved | Sections 5, 7, and 9 |
+| Configuration choices have documented purpose | Sections 6, 7, 8, and 9 |
+| Preorder and enquiry information defined | Sections 12–14 |
+| Missing information resolved through assumptions | Sections 9.3 and 21 |
+| No implementation-critical business question remains unresolved | Approved rules and explicit out-of-scope decisions throughout |
+| Product Owner is the final approval source | Sections 1 and 23 |
+
+## 23. Reference standards
+
+The following authoritative sources inform the approved policy boundaries:
+
+- [Australian Competition and Consumer Commission — Consumer rights and guarantees](https://www.accc.gov.au/consumers/buying-products-and-services/consumer-rights-and-guarantees)
+- [Food Standards Australia New Zealand — Allergen labelling for consumers](https://www.foodstandards.gov.au/consumer/labelling/allergen-labelling)
+- [W3C Web Accessibility Initiative — WCAG 2.2 Level AA](https://www.w3.org/WAI/WCAG2AA-Conformance)
+- [Office of the Australian Information Commissioner — What is a privacy policy?](https://www.oaic.gov.au/privacy/your-privacy-rights/your-personal-information/what-is-a-privacy-policy)
+
+These references support product requirements but do not replace legal, food-safety, or accessibility specialist advice for a real commercial deployment.
+
+## 24. Approval
 
 These requirements were established through the EMK-001 Product Owner workshop and approved by Kelvin Carreño Espin.
 
