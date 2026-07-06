@@ -11,19 +11,19 @@ import { EXPLORE } from '@/consts/explore';
   <section class="w-full flex flex-col items-center">
     <!--  bg-gradient-to-b from-[#1E3A8A] to-[#1E40AF]-->
     <div class="flex justify-center pt-20">
-      <div class="flex gap-1 p-2 bg-amber-50 rounded-full shadow-lg">
+      <div class="social-links-surface">
         <a
           href="https://www.instagram.com/earthmamaskitchen"
           target="_blank"
           rel="noopener noreferrer"
-          class="p-2 rounded-full text-white hover:text-gray-300 bg-amber-500 transition duration-300"
+          class="ui-icon-link ui-icon-link--social"
         >
           <InstagramIcon class="size-5" />
         </a>
         <a
           href="https://www.facebook.com/profile.php?id=100067897911008"
           target="_blank"
-          class="p-2 rounded-full text-white hover:text-gray-300 bg-amber-500 transition duration-300"
+          class="ui-icon-link ui-icon-link--social"
         >
           <FacebookIcon class="size-5" />
         </a>
@@ -70,7 +70,7 @@ import { EXPLORE } from '@/consts/explore';
         name="name"
         maxlength="20"
         placeholder="Type your name here"
-        class="p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
+        class="form-control"
       />
       <input
         required
@@ -78,11 +78,9 @@ import { EXPLORE } from '@/consts/explore';
         name="phone"
         maxlength="10"
         placeholder="e.g.: 0412345678 o 0212345678"
-        class="p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
+        class="form-control"
       />
-      <button
-        type="submit"
-        class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
+      <button type="submit" class="ui-button ui-button--primary"
         >Send Email</button
       >
     </form>

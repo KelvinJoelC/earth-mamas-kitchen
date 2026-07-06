@@ -6,19 +6,19 @@ import FacebookIcon from '@/assets/facebook.svg';
 <section
   class="flex flex-col items-center pt-20 rounded-b-4xl rounded-t-2xl transform -translate-y-15 min-h-screen bg-gradient-to-b from-[#1E3A8A] to-[#1E40AF] text-white p-4 mt-15"
 >
-  <div class="flex gap-1 p-2 bg-amber-50 rounded-full shadow-lg">
+  <div class="social-links-surface">
     <a
       href="https://www.instagram.com/earthmamaskitchen"
       target="_blank"
       rel="noopener noreferrer"
-      class="p-2 rounded-full text-white hover:text-gray-300 bg-amber-500 transition duration-300"
+      class="ui-icon-link ui-icon-link--social"
     >
       <InstagramIcon class="size-5" />
     </a>
     <a
       href="https://www.facebook.com/profile.php?id=100067897911008"
       target="_blank"
-      class="p-2 rounded-full text-white hover:text-gray-300 bg-amber-500 transition duration-300"
+      class="ui-icon-link ui-icon-link--social"
     >
       <FacebookIcon class="size-5" />
     </a>
@@ -35,25 +35,14 @@ import FacebookIcon from '@/assets/facebook.svg';
   </p>
   <form class="w-full">
     <div class="flex flex-col gap-2 p-4 rounded-lg shadow-lg w-full max-w-md">
-      <input
-        type="text"
-        placeholder="Your Name"
-        class="p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
-      />
+      <input type="text" placeholder="Your Name" class="form-control" />
       <input
         type="number"
         placeholder="Your Phone Number"
-        class="p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
+        class="form-control"
       />
-      <input
-        type="email"
-        placeholder="Your Email"
-        class="p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
-      />
-      <button
-        type="submit"
-        class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
-      >
+      <input type="email" placeholder="Your Email" class="form-control" />
+      <button type="submit" class="ui-button ui-button--primary">
         Send Message
       </button>
     </div>

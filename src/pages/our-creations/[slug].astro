@@ -48,7 +48,7 @@ const { selection } = Astro.props as { selection: Product };
         class="p-4 rounded-xl space-y-6 text-black text-left w-full max-w-3xl
            transition-all duration-500 ease-in-out"
       >
-        <div class="bg-white p-4 rounded-3xl shadow">
+        <div class="surface-card">
           <h2 class="font-calistoga text-2xl pb-3 font-bold">
             {selection.title}
           </h2>
@@ -66,7 +66,7 @@ const { selection } = Astro.props as { selection: Product };
           </div>
           <p class="text-xl text-left">{selection.description}</p>
         </div>
-        <details class="bg-white p-4 rounded-3xl shadow">
+        <details class="surface-card">
           <summary
             class="flex items-center bg-white text-2xl pb-2 font-bold
         text-black cursor-pointer hover:bg-violeta-medio transition"
@@ -99,29 +99,28 @@ const { selection } = Astro.props as { selection: Product };
           <PreOrderFeaturesSelector selection={selection} />
         </div>
 
-        <div class="bg-white p-4 rounded-3xl shadow">
-          <label class="text-xl font-medium">Notes</label>
+        <div class="surface-card">
+          <label class="form-label">Notes</label>
           <textarea
             name="notes"
             rows="3"
             maxlength="150"
             placeholder="E.g. specific requests or preferences"
-            class="w-full rounded-xl border border-slate-200 px-3 py-2 text-lg
-        focus:outline-none focus:ring-2 focus:ring-violeta-medio resize-none"
+            class="form-control form-control--soft text-lg resize-none"
           ></textarea>
         </div>
 
         <div class="flex gap-2 justify-end pt-2 col-span-full">
           <button
             type="reset"
-            class="text-xs px-3 py-2 rounded-full border border-slate-200 text-slate-500 hover:bg-slate-50"
+            class="ui-button text-xs px-3 py-2 rounded-full border border-slate-200 text-slate-500 hover:bg-slate-50"
           >
             Clean
           </button>
 
           <button
             type="submit"
-            class="text-xs px-4 py-2 rounded-full bg-green-500 text-white font-semibold hover:bg-verde-medio shadow-sm"
+            class="ui-button text-xs px-4 py-2 rounded-full bg-green-500 text-white font-semibold hover:bg-verde-medio shadow-sm"
           >
             Confirm
           </button>

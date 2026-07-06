@@ -8,8 +8,8 @@ const { selection } = Astro.props;
   Object.entries(selection.options ?? {})
     .filter(([key]) => key !== 'allergens')
     .map(([options, val]: [string, any]) => (
-      <div class="bg-white p-4 rounded-3xl shadow group w-full">
-        <label class="text-xl font-medium">
+      <div class="surface-card group w-full">
+        <label class="form-label">
           {OPTION_LABELS[options as OptionKey] ?? options}:
         </label>
         <hr class="my-2 border-pink-400" />
@@ -19,8 +19,7 @@ const { selection } = Astro.props;
               return (
                 <select
                   name="size"
-                  class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
-                       focus:outline-none focus:ring-2 focus:ring-violeta-medio"
+                  class="form-control form-control--soft text-sm"
                 >
                   {val.map((features: any) =>
                     features.pieces ? (
@@ -41,8 +40,7 @@ const { selection } = Astro.props;
               return (
                 <select
                   name="package"
-                  class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
-                       focus:outline-none focus:ring-2 focus:ring-violeta-medio"
+                  class="form-control form-control--soft text-sm"
                 >
                   {val.map((pkg: any) => (
                     <option value={pkg.name}>{pkg.name}</option>
@@ -70,8 +68,7 @@ const { selection } = Astro.props;
               return (
                 <select
                   name={options}
-                  class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
-                       focus:outline-none focus:ring-2 focus:ring-violeta-medio"
+                  class="form-control form-control--soft text-sm"
                 >
                   {value.map((item: any) => (
                     <option value={item}>{item}</option>

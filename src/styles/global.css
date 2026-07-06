@@ -2,6 +2,8 @@
 @import '@fontsource-variable/dancing-script';
 @import '@fontsource-variable/merienda';
 @import '@fontsource/calistoga';
+@import './tokens.css';
+@import './components.css';
 
 @theme {
   --font-calistoga: 'Calistoga', 'sans-serif';
