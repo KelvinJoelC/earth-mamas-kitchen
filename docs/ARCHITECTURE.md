@@ -218,6 +218,21 @@ Additional rules:
 
 Images that benefit from Astro optimisation should move to `src/assets` during EMK-020. Asset optimisation is not part of EMK-003.
 
+## Routing conventions
+
+Product Offering detail routes use `/our-creations/{slug}`. Static paths are
+generated from `productOfferings`, and links resolve through the readonly path
+registry in `configuration/offerings/offering-paths.ts`. Product Offering slugs
+remain owned by their configuration definitions.
+
+Service Offering paths are generated separately from `serviceOfferings` at the
+site root. Events & Catering therefore resolves to `/events-catering` and never
+passes through a Product Offering detail route.
+
+Legacy presentation IDs and route strings do not participate in routing. Only
+configured paths are generated; unknown and retired URLs use Astro's standard
+404 behaviour.
+
 ## Migration strategy
 
 | Issue   | Responsibility                                                                                                                                        |

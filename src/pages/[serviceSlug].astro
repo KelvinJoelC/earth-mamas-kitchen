@@ -1,0 +1,29 @@
+---
+import { serviceOfferings } from '@/configuration/offerings/service-offerings';
+import Layout from '@/layouts/Layout.astro';
+import type { ServiceOfferingDefinition } from '@/domain/offerings';
+
+export function getStaticPaths() {
+  return serviceOfferings.map((offering) => ({
+    params: { serviceSlug: offering.slug },
+    props: { offering },
+  }));
+}
+
+const { offering } = Astro.props as {
+  offering: ServiceOfferingDefinition;
+};
+---
+
+<Layout title={offering.name} description={offering.summary}>
+  <section
+    class="mx-auto flex min-h-[70vh] max-w-3xl flex-col items-center justify-center gap-6 px-6 py-24 text-center"
+  >
+    <h1 class="font-calistoga text-5xl sm:text-6xl">{offering.name}</h1>
+    <p class="max-w-2xl text-xl sm:text-2xl">{offering.summary}</p>
+    <p class="max-w-2xl text-lg">
+      This is an initial enquiry pathway. Availability, requirements and final
+      pricing are confirmed personally after consultation.
+    </p>
+  </section>
+</Layout>

@@ -1,5 +1,6 @@
 ---
 import type { ProductList } from '@/models/product.model';
+import { productOfferingPaths } from '@/configuration/offerings/offering-paths';
 
 const { selection } = Astro.props;
 const products = selection as ProductList;
@@ -18,7 +19,13 @@ const products = selection as ProductList;
     <div class="embla__container flex">
       {
         products.map(
-          ({ id, title, description, props: { h, padding, bg }, img }) => (
+          ({
+            offeringId,
+            title,
+            description,
+            props: { h, padding, bg },
+            img,
+          }) => (
             <div class="embla__slide mx-2 flex-none w-max">
               <div
                 style={{ height: `${parseInt(h) + 100}px` }}
@@ -52,7 +59,7 @@ const products = selection as ProductList;
                       {description}
                     </p>
                     <a
-                      href={`/products/${id}`}
+                      href={productOfferingPaths[offeringId]}
                       class="flex py-1 mt-5 items-center justify-center border rounded-3xl bg-purple-400 text-white font-bold"
                     >
                       View More

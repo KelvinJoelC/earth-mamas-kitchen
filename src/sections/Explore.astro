@@ -1,11 +1,12 @@
 ---
 import { EXPLORE } from '@/consts/explore';
+import { productOfferingPaths } from '@/configuration/offerings/offering-paths';
 import { Image } from 'astro:assets';
 ---
 
 <section class="-mb-55">
   {
-    EXPLORE.map(({ id, title, img, description, props }, index) => (
+    EXPLORE.map(({ offeringId, title, img, description, props }, index) => (
       <section
         style={{
           background: `${props.bg}`,
@@ -19,7 +20,7 @@ import { Image } from 'astro:assets';
           {description}
         </p>
         <a
-          href={`/products/${id}`}
+          href={productOfferingPaths[offeringId]}
           class="inline-flex items-center justify-center px-6 py-3 bg-white text-black border border-gray-300 font-bold rounded-full hover:bg-gray-100 transition"
         >
           View More
