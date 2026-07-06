@@ -1,9 +1,9 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import { EXPLORE } from "../../consts/explore";
-import { OPTION_LABELS, type Product } from "../../models/product.model";
-import PreOrderFeaturesSelector from "../../components/PreOrderFeaturesSelector.astro";
-import { Image } from "astro:assets";
+import Layout from '../../layouts/Layout.astro';
+import { EXPLORE } from '../../consts/explore';
+import { OPTION_LABELS, type Product } from '../../models/product.model';
+import PreOrderFeaturesSelector from '../../components/PreOrderFeaturesSelector.astro';
+import { Image } from 'astro:assets';
 
 export async function getStaticPaths() {
   return EXPLORE.map((p) => ({
@@ -59,14 +59,14 @@ const { selection } = Astro.props as { selection: Product };
             class="flex items-center bg-white text-2xl pb-2 font-bold
         text-black cursor-pointer hover:bg-violeta-medio transition"
           >
-            {OPTION_LABELS["allergens"]}
+            {OPTION_LABELS['allergens']}
             <hr class="my-2 border-pink-400" />
           </summary>
           <div class="text-sm text-slate-700">
             {
               selection.options.allergens
-                ? selection.options.allergens.join(", ")
-                : "No allergens information available."
+                ? selection.options.allergens.join(', ')
+                : 'No allergens information available.'
             }
           </div>
         </details>

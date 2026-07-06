@@ -17,7 +17,7 @@ function initPreOrderForm() {
       options: {
         ...values,
         addOns: data.getAll('addOns'),
-      }
+      },
     };
     addItem(item);
     form.reset();
@@ -26,6 +26,3 @@ function initPreOrderForm() {
 }
 
 document.addEventListener('astro:page-load', initPreOrderForm);
-
-
-

@@ -1,6 +1,5 @@
 export const CART_KEY = 'myapp_cart';
 
-
 function readStorage() {
   try {
     const raw = localStorage.getItem(CART_KEY);
@@ -28,7 +27,7 @@ export function getCart() {
 export function addItem(item) {
   const cart = readStorage();
 
-  const idx = cart.findIndex(i => i.id === item.id);
+  const idx = cart.findIndex((i) => i.id === item.id);
   if (idx === -1) cart.push(item);
   writeStorage(cart);
   return cart;
@@ -36,7 +35,7 @@ export function addItem(item) {
 
 export function removeItem(id) {
   const cart = readStorage();
-  const newCart = cart.filter(i => i.id !== id);
+  const newCart = cart.filter((i) => i.id !== id);
   writeStorage(newCart);
   updateCartResumen();
   return newCart;
@@ -54,20 +53,20 @@ export function itemCount() {
 }
 
 export function initSync() {
-
   if ('BroadcastChannel' in window) {
     window.bc = new BroadcastChannel('myapp_cart');
     window.bc.addEventListener('message', (ev) => {
       if (ev.data?.type === 'cart:update') {
         localStorage.setItem(CART_KEY, JSON.stringify(ev.data.cart));
-        window.dispatchEvent(new CustomEvent('cart:update', { detail: ev.data.cart }));
+        window.dispatchEvent(
+          new CustomEvent('cart:update', { detail: ev.data.cart }),
+        );
       }
     });
   }
 }
 
 export function updateCartResumen() {
-
   const cartRoot = document.getElementById('cartRoot');
   const cartDeleteButon = document.getElementById('clearBtn');
 
@@ -78,12 +77,11 @@ export function updateCartResumen() {
       cartDeleteButon.style.display = 'none';
       const card = document.createElement('div');
       card.className = 'order-card-empty';
-      card.innerHTML = '<span>Your cart is empty.</span>'
+      card.innerHTML = '<span>Your cart is empty.</span>';
       cartRoot.appendChild(card);
-    }
-    else {
+    } else {
       cartDeleteButon.style.display = 'block';
-      cartJson.forEach(item => {
+      cartJson.forEach((item) => {
         cartRoot.appendChild(renderCartItem(item));
       });
     }
@@ -120,24 +118,21 @@ export function renderCartItem(item) {
     if (value) {
       if (key != 'addOns') {
         addOption(optionsList, key, value);
-      }
-      else if (value.length > 0) {
+      } else if (value.length > 0) {
         const div = document.createElement('div');
         const addOnsList = document.createElement('ul');
         addOnsList.className = 'add-ons';
-        Object.entries(value).forEach(([optionKey, optionValue]) => {
+        Object.values(value).forEach((optionValue) => {
           const span = document.createElement('span');
           const li = document.createElement('li');
           li.append(span, `- ${optionValue}`);
           addOnsList.appendChild(li);
-        }
-        );
+        });
         const span = document.createElement('span');
         span.textContent = `${key}:`;
         div.appendChild(span, addOnsList);
         div.appendChild(addOnsList);
         optionsList.appendChild(div);
-
       }
     }
   });
@@ -154,18 +149,9 @@ function addOption(list, label, value) {
 
   const spanLabel = document.createElement('span');
   const spanValue = document.createElement('span');
-  const br = document.createElement('br');
   spanLabel.textContent = `${label}:`;
   spanValue.textContent = ` ${value}`;
 
   li.append(spanLabel, spanValue);
   list.appendChild(li);
 }
-
-
-
-
-
-
-
-

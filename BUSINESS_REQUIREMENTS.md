@@ -110,11 +110,11 @@ Floral Cupcake Bouquets are premium gift products arranged and wrapped to resemb
 
 #### Sizes and estimated base prices
 
-| Size | Cupcakes | Flavour limit | Estimated base price |
-| --- | ---: | ---: | ---: |
-| Small Bouquet | 7 | 1 | AUD $65 |
-| Medium Bouquet | 12 | Up to 2 | AUD $95 |
-| Large Bouquet | 19 | Up to 3 | AUD $145 |
+| Size           | Cupcakes | Flavour limit | Estimated base price |
+| -------------- | -------: | ------------: | -------------------: |
+| Small Bouquet  |        7 |             1 |              AUD $65 |
+| Medium Bouquet |       12 |       Up to 2 |              AUD $95 |
+| Large Bouquet  |       19 |       Up to 3 |             AUD $145 |
 
 When multiple flavours are selected, cupcakes are distributed as evenly as possible.
 
@@ -137,12 +137,12 @@ Edible Blooms are decorated cupcake collections intended for sharing. They do no
 
 #### Sizes and estimated base prices
 
-| Size | Cupcakes | Flavour limit | Estimated base price |
-| --- | ---: | ---: | ---: |
-| Small Box | 6 | 1 | AUD $35 |
-| Standard Box | 12 | Up to 2 | AUD $65 |
-| Party Box | 24 | Up to 3 | AUD $120 |
-| Celebration Box | 48 | Up to 4 | AUD $220 |
+| Size            | Cupcakes | Flavour limit | Estimated base price |
+| --------------- | -------: | ------------: | -------------------: |
+| Small Box       |        6 |             1 |              AUD $35 |
+| Standard Box    |       12 |       Up to 2 |              AUD $65 |
+| Party Box       |       24 |       Up to 3 |             AUD $120 |
+| Celebration Box |       48 |       Up to 4 |             AUD $220 |
 
 Custom quantities are not supported. Requests above 48 cupcakes are redirected to Events & Catering.
 
@@ -192,11 +192,11 @@ Bespoke Cakes use a design-brief preorder workflow. The form collects a request 
 
 #### Sizes and estimated base prices
 
-| Size | Approximate servings | Estimated base price |
-| --- | --- | ---: |
-| 6-inch round | 15–20 | AUD $110 |
-| 8-inch round | 40–50 | AUD $170 |
-| Two-tier 6+8-inch | Approximately 55 | AUD $260 |
+| Size              | Approximate servings | Estimated base price |
+| ----------------- | -------------------- | -------------------: |
+| 6-inch round      | 15–20                |             AUD $110 |
+| 8-inch round      | 40–50                |             AUD $170 |
+| Two-tier 6+8-inch | Approximately 55     |             AUD $260 |
 
 #### Guided-preorder limits
 
@@ -302,23 +302,23 @@ All 15 v1 add-ons are globally available.
 
 Stable IDs use lowercase kebab-case and are immutable once referenced by persisted cart data.
 
-| Stable ID | Add-on | Description | Default cents | Display price | Review |
-| --- | --- | --- | ---: | ---: | :---: |
-| gift-message | Gift Message | A personalised printed card or handwritten note supplied with the order. | 0 | AUD $0 | No |
-| personalised-acrylic-topper | Personalised Acrylic Topper | A custom acrylic topper with a name, age, or short celebration message. | 1200 | AUD $12 | Yes |
-| personalised-ribbon | Personalised Ribbon | A ribbon personalised with a short name or celebratory message. | 500 | AUD $5 | No |
-| fairy-lights | Fairy Lights | Battery-operated decorative lights used to enhance presentation. | 800 | AUD $8 | No |
-| premium-bouquet-wrapping | Premium Bouquet Wrapping | Upgraded bouquet wrapping using premium materials and finishes. | 1000 | AUD $10 | No |
-| premium-gift-bag | Premium Gift Bag | A reusable gift bag that improves presentation and transport. | 800 | AUD $8 | No |
-| premium-cupcake-packaging | Premium Cupcake Packaging | An upgraded presentation box for Edible Blooms. | 600 | AUD $6 | No |
-| custom-cupcake-toppers | Custom Cupcake Toppers | One coordinated set of personalised toppers for the selected order. | 1500 | AUD $15 per order | Yes |
-| premium-cupcake-decorations | Premium Cupcake Decorations | Premium sprinkles, edible pearls, metallic details, or similar finishes. | 1000 | AUD $10 | No |
-| edible-image | Edible Image | A printed edible decoration based on customer-supplied artwork. | 1500 | AUD $15 | Yes |
-| chocolate-drip | Chocolate Drip | A standard decorative chocolate drip finish. | 800 | AUD $8 | No |
-| sugar-flowers | Sugar Flowers | A handcrafted set of decorative sugar flowers. | 2500 | AUD $25 | Yes |
-| fresh-flowers | Fresh Flowers | Seasonal fresh flowers selected for decorative cake presentation. | 2000 | AUD $20 | Yes |
-| macarons | Macarons | A predefined quantity of macarons used as cake decoration. | 1800 | AUD $18 | No |
-| edible-gold-leaf | Edible Gold Leaf | Edible gold leaf applied within a predefined decorative scope. | 1500 | AUD $15 | No |
+| Stable ID                   | Add-on                      | Description                                                              | Default cents |     Display price | Review |
+| --------------------------- | --------------------------- | ------------------------------------------------------------------------ | ------------: | ----------------: | :----: |
+| gift-message                | Gift Message                | A personalised printed card or handwritten note supplied with the order. |             0 |            AUD $0 |   No   |
+| personalised-acrylic-topper | Personalised Acrylic Topper | A custom acrylic topper with a name, age, or short celebration message.  |          1200 |           AUD $12 |  Yes   |
+| personalised-ribbon         | Personalised Ribbon         | A ribbon personalised with a short name or celebratory message.          |           500 |            AUD $5 |   No   |
+| fairy-lights                | Fairy Lights                | Battery-operated decorative lights used to enhance presentation.         |           800 |            AUD $8 |   No   |
+| premium-bouquet-wrapping    | Premium Bouquet Wrapping    | Upgraded bouquet wrapping using premium materials and finishes.          |          1000 |           AUD $10 |   No   |
+| premium-gift-bag            | Premium Gift Bag            | A reusable gift bag that improves presentation and transport.            |           800 |            AUD $8 |   No   |
+| premium-cupcake-packaging   | Premium Cupcake Packaging   | An upgraded presentation box for Edible Blooms.                          |           600 |            AUD $6 |   No   |
+| custom-cupcake-toppers      | Custom Cupcake Toppers      | One coordinated set of personalised toppers for the selected order.      |          1500 | AUD $15 per order |  Yes   |
+| premium-cupcake-decorations | Premium Cupcake Decorations | Premium sprinkles, edible pearls, metallic details, or similar finishes. |          1000 |           AUD $10 |   No   |
+| edible-image                | Edible Image                | A printed edible decoration based on customer-supplied artwork.          |          1500 |           AUD $15 |  Yes   |
+| chocolate-drip              | Chocolate Drip              | A standard decorative chocolate drip finish.                             |           800 |            AUD $8 |   No   |
+| sugar-flowers               | Sugar Flowers               | A handcrafted set of decorative sugar flowers.                           |          2500 |           AUD $25 |  Yes   |
+| fresh-flowers               | Fresh Flowers               | Seasonal fresh flowers selected for decorative cake presentation.        |          2000 |           AUD $20 |  Yes   |
+| macarons                    | Macarons                    | A predefined quantity of macarons used as cake decoration.               |          1800 |           AUD $18 |   No   |
+| edible-gold-leaf            | Edible Gold Leaf            | Edible gold leaf applied within a predefined decorative scope.           |          1500 |           AUD $15 |   No   |
 
 An add-on marked requiresReview is included in the estimate at its default price, but the bakery may revise or reject it during review.
 
@@ -454,31 +454,31 @@ Non-edible add-ons do not carry allergen metadata.
 
 This matrix is a documented project assumption. It demonstrates the domain model and must be validated against actual recipes, preparation methods, and supplier labels before any commercial use.
 
-| Element | Assumed Contains |
-| --- | --- |
-| Vanilla cupcake | Wheat, Gluten, Milk, Egg |
-| Chocolate cupcake | Wheat, Gluten, Milk, Egg, Soy |
-| Red Velvet cupcake | Wheat, Gluten, Milk, Egg |
-| Lemon cupcake | Wheat, Gluten, Milk, Egg |
-| Cookies & Cream cupcake | Wheat, Gluten, Milk, Egg, Soy |
-| Salted Caramel cupcake | Wheat, Gluten, Milk, Egg |
-| Vanilla sponge | Wheat, Gluten, Milk, Egg |
-| Chocolate sponge | Wheat, Gluten, Milk, Egg, Soy |
-| Chai Spiced Carrot sponge | Wheat, Gluten, Milk, Egg |
-| Hummingbird sponge | Wheat, Gluten, Milk, Egg |
-| Chocolate Vegan sponge | Wheat, Gluten, Soy |
-| Orange Almond sponge | Milk, Egg, Almond |
-| Raspberry Jam | None declared |
-| Biscoff | Wheat, Gluten, Soy |
-| Nutella | Milk, Soy, Hazelnut |
-| Buttercream | Milk |
-| Vegan Buttercream | Soy |
-| Edible Image | Soy |
-| Chocolate Drip | Milk, Soy |
-| Sugar Flowers | Egg |
-| Macarons | Egg, Almond |
-| Premium Cupcake Decorations | Soy |
-| Edible Gold Leaf | None declared |
+| Element                     | Assumed Contains              |
+| --------------------------- | ----------------------------- |
+| Vanilla cupcake             | Wheat, Gluten, Milk, Egg      |
+| Chocolate cupcake           | Wheat, Gluten, Milk, Egg, Soy |
+| Red Velvet cupcake          | Wheat, Gluten, Milk, Egg      |
+| Lemon cupcake               | Wheat, Gluten, Milk, Egg      |
+| Cookies & Cream cupcake     | Wheat, Gluten, Milk, Egg, Soy |
+| Salted Caramel cupcake      | Wheat, Gluten, Milk, Egg      |
+| Vanilla sponge              | Wheat, Gluten, Milk, Egg      |
+| Chocolate sponge            | Wheat, Gluten, Milk, Egg, Soy |
+| Chai Spiced Carrot sponge   | Wheat, Gluten, Milk, Egg      |
+| Hummingbird sponge          | Wheat, Gluten, Milk, Egg      |
+| Chocolate Vegan sponge      | Wheat, Gluten, Soy            |
+| Orange Almond sponge        | Milk, Egg, Almond             |
+| Raspberry Jam               | None declared                 |
+| Biscoff                     | Wheat, Gluten, Soy            |
+| Nutella                     | Milk, Soy, Hazelnut           |
+| Buttercream                 | Milk                          |
+| Vegan Buttercream           | Soy                           |
+| Edible Image                | Soy                           |
+| Chocolate Drip              | Milk, Soy                     |
+| Sugar Flowers               | Egg                           |
+| Macarons                    | Egg, Almond                   |
+| Premium Cupcake Decorations | Soy                           |
+| Edible Gold Leaf            | None declared                 |
 
 None declared does not mean allergen-free.
 
@@ -776,16 +776,16 @@ The following are outside v1:
 
 ## 22. EMK-001 acceptance-criteria traceability
 
-| Acceptance criterion | Evidence in this document |
-| --- | --- |
-| Internally consistent v1 bakery model | Sections 1–5, 8, 11, 12, and 20 |
-| Three Product Offerings and Events & Catering fully defined | Sections 6 and 13 |
-| Shared catalogues and compatibility approved | Sections 5, 7, and 9 |
-| Configuration choices have documented purpose | Sections 6, 7, 8, and 9 |
-| Preorder and enquiry information defined | Sections 12–14 |
-| Missing information resolved through assumptions | Sections 9.3 and 21 |
+| Acceptance criterion                                            | Evidence in this document                                     |
+| --------------------------------------------------------------- | ------------------------------------------------------------- |
+| Internally consistent v1 bakery model                           | Sections 1–5, 8, 11, 12, and 20                               |
+| Three Product Offerings and Events & Catering fully defined     | Sections 6 and 13                                             |
+| Shared catalogues and compatibility approved                    | Sections 5, 7, and 9                                          |
+| Configuration choices have documented purpose                   | Sections 6, 7, 8, and 9                                       |
+| Preorder and enquiry information defined                        | Sections 12–14                                                |
+| Missing information resolved through assumptions                | Sections 9.3 and 21                                           |
 | No implementation-critical business question remains unresolved | Approved rules and explicit out-of-scope decisions throughout |
-| Product Owner is the final approval source | Sections 1 and 23 |
+| Product Owner is the final approval source                      | Sections 1 and 23                                             |
 
 ## 23. Reference standards
 

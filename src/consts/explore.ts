@@ -1,4 +1,4 @@
-import type { ProductList } from "../models/product.model";
+import type { ProductList } from '../models/product.model';
 
 export const EXPLORE: ProductList = [
   {
@@ -14,8 +14,8 @@ export const EXPLORE: ProductList = [
     dietary: ['vegetarian'],
     options: {
       cupcakeType: ['Vanilla sponge', 'Chocolate sponge'],
-      // Extra cost 
-      buttercreamStyle: ['Simple range', 'Deluxe range'], 
+      // Extra cost
+      buttercreamStyle: ['Simple range', 'Deluxe range'],
       quantities: [7],
       // colorPalettes: ['Pastel mix', 'Blush & ivory', 'Lilac & sage', 'Bold brights', 'Custom'],
       // Color in notes
@@ -29,14 +29,15 @@ export const EXPLORE: ProductList = [
       // ],
       // allergens: ['gluten', 'eggs', 'milk'], Add in notes
     },
-    notes: 'Ideal para regalos; transporte en vertical. Mejor consumir el mismo día.',
+    notes:
+      'Ideal para regalos; transporte en vertical. Mejor consumir el mismo día.',
     props: {
       bg: 'linear-gradient(135deg, white 0%, #a0cb5c 20%, #6ca771 50%, #a89bc0 80%, white 100%)',
       h: '350',
-      padding: '20px'
+      padding: '20px',
     },
     route: '/products/floral-cupcake-bouquets',
-    cta: 'Customize bouquet'
+    cta: 'Customize bouquet',
   },
   {
     id: 'Cake',
@@ -49,19 +50,22 @@ export const EXPLORE: ProductList = [
     tags: ['birthday', 'wedding', 'celebration'],
     leadTimeDays: 4,
     dietary: ['vegetarian'],
-    
+
     options: {
       sizes: [
-        { sizeInch: 6, shape: 'Round', servings: 15 },//15 20
-        { sizeInch: 8, shape: 'Round', servings: 40 },// 40-50
-        { label: '2-tier 6\"+8\"', servings: 55 },
+        { sizeInch: 6, shape: 'Round', servings: 15 }, //15 20
+        { sizeInch: 8, shape: 'Round', servings: 40 }, // 40-50
+        { label: '2-tier 6"+8"', servings: 55 },
       ],
-      sponge: ['Vanilla', 'Chocolate', 'Chai spiced carrot','Hummingbird', 'Chocolate vegan', 'Orange Almond (GF)'],
-      fillings: [
-        'Raspberry jam',
-        'Biscoff',
-        'Nutella'
+      sponge: [
+        'Vanilla',
+        'Chocolate',
+        'Chai spiced carrot',
+        'Hummingbird',
+        'Chocolate vegan',
+        'Orange Almond (GF)',
       ],
+      fillings: ['Raspberry jam', 'Biscoff', 'Nutella'],
       frostings: ['buttercream', 'Vegan buttercream'],
       // finishes: [
       //   'Smooth buttercream',
@@ -73,7 +77,7 @@ export const EXPLORE: ProductList = [
       // ],
       // themes: ['Floral', 'Minimalist', 'Rustic', 'Whimsical', 'Brand colors', 'Custom illustration'],
       // Event, theme color
-      // 
+      //
       // addOns: [
       //   'Sugar flowers',
       //   'Macarons (12)',
@@ -88,11 +92,10 @@ export const EXPLORE: ProductList = [
     props: {
       bg: 'linear-gradient(135deg, #fcb0b3, #ffdeaa, #c1d3fe)',
       h: '350',
-      padding: '0px'
-
+      padding: '0px',
     },
     route: '/products/bespoke-cakes',
-    cta: 'Build your cake'
+    cta: 'Build your cake',
   },
   {
     id: 'EdibleBloom',
@@ -126,9 +129,9 @@ export const EXPLORE: ProductList = [
     props: {
       bg: 'linear-gradient(135deg, white 0%, #dba2b1 30%, #d88b6f 70%, white 100%)',
       h: '350',
-      padding: '0px'
+      padding: '0px',
     },
     route: '/products/edible-blooms',
-    cta: 'Choose arrangement'
-  }
+    cta: 'Choose arrangement',
+  },
 ];
