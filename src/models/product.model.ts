@@ -1,3 +1,7 @@
+/**
+ * Transitional UI model. New business configuration belongs in `src/domain`
+ * and `src/configuration`; EMK-008/EMK-009 will migrate consumers.
+ */
 export interface ProductOptionSize {
   sizeInch?: number;
   shape?: string | 'Heart' | 'Round' | 'Square' | 'Rectangle';
