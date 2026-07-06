@@ -1,4 +1,7 @@
 import type { ProductList } from '@/models/product.model';
+import { bespokeCakes } from '@/configuration/offerings/products/bespoke-cakes';
+import { edibleBlooms } from '@/configuration/offerings/products/edible-blooms';
+import { floralCupcakeBouquets } from '@/configuration/offerings/products/floral-cupcake-bouquets';
 
 /**
  * Transitional page data. The authoritative offering catalogue is under
@@ -6,6 +9,7 @@ import type { ProductList } from '@/models/product.model';
  */
 export const EXPLORE: ProductList = [
   {
+    offeringId: floralCupcakeBouquets.id,
     id: 'Bouquet',
     slug: 'floral-cupcake-bouquets',
     title: 'Floral Cupcake Bouquets',
@@ -44,6 +48,7 @@ export const EXPLORE: ProductList = [
     cta: 'Customize bouquet',
   },
   {
+    offeringId: bespokeCakes.id,
     id: 'Cake',
     slug: 'bespoke-cakes',
     title: 'Bespoke cakes',
@@ -102,6 +107,7 @@ export const EXPLORE: ProductList = [
     cta: 'Build your cake',
   },
   {
+    offeringId: edibleBlooms.id,
     id: 'EdibleBloom',
     slug: 'edible-blooms',
     title: 'Edible blooms',

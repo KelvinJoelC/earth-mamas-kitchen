@@ -1,3 +1,5 @@
+import type { ProductOfferingId } from '@/configuration/offerings/product-offerings';
+
 /**
  * Transitional UI model. New business configuration belongs in `src/domain`
  * and `src/configuration`; EMK-008/EMK-009 will migrate consumers.
@@ -46,7 +48,9 @@ export interface ProductOptions {
 }
 
 export interface Product {
+  offeringId: ProductOfferingId;
   id: string;
+  /** @deprecated Canonical slugs are owned by Product Offering configuration. */
   slug: string;
   title: string;
   description: string;
@@ -64,6 +68,7 @@ export interface Product {
     h: string;
     padding: string;
   };
+  /** @deprecated Resolve URLs through the canonical offering path registry. */
   route?: string;
   cta?: string;
 }
