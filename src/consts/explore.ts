@@ -1,5 +1,9 @@
 import type { ProductList } from '@/models/product.model';
 
+/**
+ * Transitional page data. The authoritative offering catalogue is under
+ * `src/configuration`; EMK-008 will migrate this presentation consumer.
+ */
 export const EXPLORE: ProductList = [
   {
     id: 'Bouquet',

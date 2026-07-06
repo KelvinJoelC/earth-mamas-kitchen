@@ -55,7 +55,7 @@ Folders are created when they own real code. Empty directories are not committed
 
 `src/domain` owns stable, framework-independent business concepts:
 
-- branded ID contracts;
+- stable ID contracts derived from immutable catalogue data;
 - money represented as integer AUD cents;
 - allergen metadata contracts and derivation;
 - Product Offering and Service Offering contracts;
@@ -223,7 +223,7 @@ Images that benefit from Astro optimisation should move to `src/assets` during E
 | Issue   | Responsibility                                                                                                                                        |
 | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | EMK-003 | Document boundaries, add alias enforcement, move browser scripts into the source graph, classify editorial content, and remove confirmed-unused files |
-| EMK-004 | Replace `models/product.model.ts` and `consts/explore.ts` with domain contracts, catalogues, offerings, workflows, and rules                          |
+| EMK-004 | Introduce authoritative domain contracts, catalogues, offerings, workflows, and rules; retain legacy UI inputs until their consumers migrate          |
 | EMK-005 | Establish canonical IDs, slugs, and routes                                                                                                            |
 | EMK-006 | Introduce shared UI foundations where reuse is demonstrated                                                                                           |
 | EMK-007 | Restrict layout responsibilities and page-specific script loading                                                                                     |
@@ -237,7 +237,7 @@ Images that benefit from Astro optimisation should move to `src/assets` during E
 
 ### Transitional files
 
-`src/models/product.model.ts` and `src/consts/explore.ts` remain temporarily in place. They mix responsibilities and are not templates for new development. EMK-004 owns their replacement, so EMK-003 avoids moving them merely to move them again.
+`src/models/product.model.ts` and `src/consts/explore.ts` remain temporarily in place for existing page consumers. They mix responsibilities and are not templates for new development. The EMK-004 configuration is authoritative; EMK-008 and EMK-009 will migrate catalogue and configuration consumers before removing these files. Retaining them prevents an architectural issue from changing routes or user-facing behaviour.
 
 The JavaScript modules moved from `public/js` into `src/browser` still combine responsibilities that later issues will separate. They are moved without redesigning behaviour. No new business logic should be added to them before their owning migration issues.
 
