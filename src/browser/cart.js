@@ -103,7 +103,7 @@ export function renderCartItem(item) {
   const btn = document.createElement('button');
   btn.className = 'delete-btn';
   btn.setAttribute('aria-label', 'Delete order');
-  btn.textContent = '✕';
+  btn.textContent = 'âœ•';
 
   btn.addEventListener('click', () => {
     removeItem(item.id);

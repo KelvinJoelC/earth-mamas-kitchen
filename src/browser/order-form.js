@@ -1,4 +1,4 @@
-import { clearCart, updateCartResumen, getCart } from '/js/cart.js';
+import { clearCart, updateCartResumen, getCart } from './cart.js';
 
 export function initConfirmOrderForm() {
   const form = document.getElementById('contactForm');
