@@ -1,5 +1,5 @@
 ---
-import CartIcon from '../assets/cart.svg';
+import CartIcon from '@/assets/cart.svg';
 ---
 
 <header class="fixed top-0 w-full z-50">
@@ -62,13 +62,19 @@ import CartIcon from '../assets/cart.svg';
   }
 </style>
 
-<script type="module">
-  import { initSync, itemCount } from '/js/cart.js';
+<script>
+  import { initSync, itemCount } from '@/browser/cart.js';
 
-  function updateBadge(count) {
+  interface CartWindow extends Window {
+    bcInitialized?: boolean;
+  }
+
+  const cartWindow = window as CartWindow;
+
+  function updateBadge(count: number) {
     const el = document.getElementById('cartCount');
     if (!el) return;
-    el.textContent = count;
+    el.textContent = String(count);
   }
 
   function refreshFromStorage() {
@@ -78,17 +84,17 @@ import CartIcon from '../assets/cart.svg';
   function initCartUI() {
     refreshFromStorage();
 
-    window.addEventListener('cart:update', (e) => {
-      const cart = e.detail || [];
+    window.addEventListener('cart:update', (event) => {
+      const cart = (event as CustomEvent<unknown[]>).detail || [];
       updateBadge(cart.length);
     });
 
     document.addEventListener('astro:after-swap', refreshFromStorage);
   }
 
-  if (!window.bcInitialized) {
+  if (!cartWindow.bcInitialized) {
     initSync();
-    window.bcInitialized = true;
+    cartWindow.bcInitialized = true;
   }
 
   if (document.readyState === 'loading') {

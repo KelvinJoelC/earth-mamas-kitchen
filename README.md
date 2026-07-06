@@ -117,7 +117,9 @@ src/
 └── styles/             Global and feature styles
 ```
 
-The architecture and folder boundaries will be refined incrementally through the v1.0.0 backlog.
+The current `consts` and `models` folders remain transitional until EMK-004. Browser entrypoints now live under `src/browser`, while editorial data lives under `src/content`.
+
+See [Application Architecture](docs/ARCHITECTURE.md) for ownership boundaries, dependency rules, naming conventions, import conventions, and the incremental migration strategy.
 
 ## Local development
 

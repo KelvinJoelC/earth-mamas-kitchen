@@ -1,4 +1,4 @@
-import type { ProductList } from '../models/product.model';
+import type { ProductList } from '@/models/product.model';
 
 export const EXPLORE: ProductList = [
   {

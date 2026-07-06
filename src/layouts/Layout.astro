@@ -1,9 +1,9 @@
 ---
-import '../styles/global.css';
-import Footer from '../sections/Footer.astro';
-import Header from '../sections/Header.astro';
+import '@/styles/global.css';
+import Footer from '@/sections/Footer.astro';
+import Header from '@/sections/Header.astro';
 import { ClientRouter } from 'astro:transitions';
-import StickyOrderButton from '../components/StickyOrderButton.astro';
+import StickyOrderButton from '@/components/StickyOrderButton.astro';
 ---
 
 <!doctype html>
@@ -21,8 +21,10 @@ import StickyOrderButton from '../components/StickyOrderButton.astro';
       name="description"
       content="Earth Mamas Kitchen | Specialising in Floral Cupcake Bouquets and Bespoke Cakes 🎂 Scratch Baking 🍄 Edible Blooms and Art for any occasion 🌻 Love in every bite ❤️💋"
     />
-    <script type="module" src="/js/preOrderForm.js"></script>
-    <script type="module" src="/js/orderForm.js"></script>
+    <script>
+      import '@/browser/preorder-form.js';
+      import '@/browser/order-form.js';
+    </script>
     <ClientRouter />
   </head>
   <body
