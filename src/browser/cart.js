@@ -1,91 +1,29 @@
-export const CART_KEY = 'myapp_cart';
-
-function readStorage() {
-  try {
-    const raw = localStorage.getItem(CART_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch (err) {
-    console.error('cart read error', err);
-    return [];
-  }
-}
-
-function writeStorage(cart) {
-  try {
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
-    window.dispatchEvent(new CustomEvent('cart:update', { detail: cart }));
-    if (window.bc) window.bc.postMessage({ type: 'cart:update', cart });
-  } catch (err) {
-    console.error('cart write error', err);
-  }
-}
-
-export function getCart() {
-  return readStorage();
-}
-
-export function addItem(item) {
-  const cart = readStorage();
-
-  const idx = cart.findIndex((i) => i.id === item.id);
-  if (idx === -1) cart.push(item);
-  writeStorage(cart);
-  return cart;
-}
-
-export function removeItem(id) {
-  const cart = readStorage();
-  const newCart = cart.filter((i) => i.id !== id);
-  writeStorage(newCart);
-  updateCartResumen();
-  return newCart;
-}
-
-export function clearCart() {
-  const cart = [];
-  writeStorage(cart);
-  return cart;
-}
-
-export function itemCount() {
-  const cart = readStorage();
-  return cart.length;
-}
-
-export function initSync() {
-  if ('BroadcastChannel' in window) {
-    window.bc = new BroadcastChannel('myapp_cart');
-    window.bc.addEventListener('message', (ev) => {
-      if (ev.data?.type === 'cart:update') {
-        localStorage.setItem(CART_KEY, JSON.stringify(ev.data.cart));
-        window.dispatchEvent(
-          new CustomEvent('cart:update', { detail: ev.data.cart }),
-        );
-      }
-    });
-  }
-}
+import { readCart, removeCartItem } from './cart-state.js';
 
 export function updateCartResumen() {
   const cartRoot = document.getElementById('cartRoot');
-  const cartDeleteButon = document.getElementById('clearBtn');
+  const cartDeleteButton = document.getElementById('clearBtn');
 
-  if (cartRoot) {
-    const cartJson = getCart();
-    cartRoot.innerHTML = '';
-    if (!cartJson.length) {
-      cartDeleteButon.style.display = 'none';
-      const card = document.createElement('div');
-      card.className = 'order-card-empty';
-      card.innerHTML = '<span>Your cart is empty.</span>';
-      cartRoot.appendChild(card);
-    } else {
-      cartDeleteButon.style.display = 'block';
-      cartJson.forEach((item) => {
-        cartRoot.appendChild(renderCartItem(item));
-      });
-    }
+  if (!cartRoot) return;
+
+  const cartItems = readCart();
+  cartRoot.innerHTML = '';
+
+  if (!cartItems.length) {
+    if (cartDeleteButton) cartDeleteButton.style.display = 'none';
+
+    const card = document.createElement('div');
+    card.className = 'order-card-empty';
+    card.innerHTML = '<span>Your cart is empty.</span>';
+    cartRoot.appendChild(card);
+    return;
   }
+
+  if (cartDeleteButton) cartDeleteButton.style.display = 'block';
+
+  cartItems.forEach((item) => {
+    cartRoot.appendChild(renderCartItem(item));
+  });
 }
 
 export function renderCartItem(item) {
@@ -103,10 +41,10 @@ export function renderCartItem(item) {
   const btn = document.createElement('button');
   btn.className = 'delete-btn';
   btn.setAttribute('aria-label', 'Delete order');
-  btn.textContent = 'âœ•';
+  btn.textContent = '×';
 
   btn.addEventListener('click', () => {
-    removeItem(item.id);
+    removeCartItem(item.id);
   });
 
   header.append(title, btn);
@@ -121,24 +59,7 @@ export function renderCartItem(item) {
         const displayValue = item.labels?.options?.[key]?.value ?? value;
         addOption(optionsList, label, displayValue);
       } else if (value.length > 0) {
-        const div = document.createElement('div');
-        const addOnsList = document.createElement('ul');
-        addOnsList.className = 'add-ons';
-        const addOnLabels = item.labels?.addOns ?? [];
-        Object.values(value).forEach((optionValue) => {
-          const addOnLabel =
-            addOnLabels.find(({ addOnId }) => addOnId === optionValue)?.label ??
-            optionValue;
-          const span = document.createElement('span');
-          const li = document.createElement('li');
-          li.append(span, `- ${addOnLabel}`);
-          addOnsList.appendChild(li);
-        });
-        const span = document.createElement('span');
-        span.textContent = 'Add-ons:';
-        div.appendChild(span);
-        div.appendChild(addOnsList);
-        optionsList.appendChild(div);
+        addAddOns(optionsList, value, item.labels?.addOns ?? []);
       }
     }
   });
@@ -169,6 +90,27 @@ export function renderCartItem(item) {
   card.append(header, optionsList);
 
   return card;
+}
+
+function addAddOns(list, value, addOnLabels) {
+  const wrapper = document.createElement('div');
+  const label = document.createElement('span');
+  const addOnsList = document.createElement('ul');
+
+  label.textContent = 'Add-ons:';
+  addOnsList.className = 'add-ons';
+
+  Object.values(value).forEach((optionValue) => {
+    const addOnLabel =
+      addOnLabels.find(({ addOnId }) => addOnId === optionValue)?.label ??
+      optionValue;
+    const li = document.createElement('li');
+    li.append(`- ${addOnLabel}`);
+    addOnsList.appendChild(li);
+  });
+
+  wrapper.append(label, addOnsList);
+  list.appendChild(wrapper);
 }
 
 function addOption(list, label, value) {

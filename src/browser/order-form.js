@@ -1,4 +1,5 @@
-import { clearCart, updateCartResumen, getCart } from './cart.js';
+import { updateCartResumen } from './cart.js';
+import { clearCart, readCart } from './cart-state.js';
 
 export function initConfirmOrderForm() {
   const form = document.getElementById('contactForm');
@@ -24,7 +25,7 @@ export function initConfirmOrderForm() {
 function jsonToEmailText() {
   let text = 'ORDER DETAILS\n------------------------\n\n';
 
-  const data = getCart();
+  const data = readCart();
   Object.values(data).forEach((item) => {
     text += `${item.product}\n`;
     if (item.offeringId) text += `Offering ID: ${item.offeringId}\n`;
