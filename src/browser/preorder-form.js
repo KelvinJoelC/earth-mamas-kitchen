@@ -1,25 +1,430 @@
 import { addItem } from './cart.js';
 
+const currencyFormatter = new Intl.NumberFormat('en-AU', {
+  style: 'currency',
+  currency: 'AUD',
+});
+
+function readPreorderConfig(form) {
+  if (!form?.dataset.preorderConfig) return null;
+
+  try {
+    return JSON.parse(form.dataset.preorderConfig);
+  } catch (err) {
+    console.error('preorder config parse error', err);
+    return null;
+  }
+}
+
+function formatAud(cents) {
+  return currencyFormatter.format(cents / 100);
+}
+
+function getControl(form, groupId) {
+  return form.querySelector(`[name="${CSS.escape(groupId)}"]`);
+}
+
+function getSelectedValues(form, groupId) {
+  const controls = [
+    ...form.querySelectorAll(`[name="${CSS.escape(groupId)}"]`),
+  ];
+
+  if (controls.some((control) => control.type === 'checkbox')) {
+    return controls
+      .filter((control) => control.checked)
+      .map((control) => control.value);
+  }
+
+  const control = controls[0];
+  return control?.value ? [control.value] : [];
+}
+
+function conditionMatches(form, condition) {
+  if (condition.kind === 'selection-equals') {
+    return getSelectedValues(form, condition.groupId).includes(condition.value);
+  }
+
+  if (condition.kind === 'selection-includes') {
+    return getSelectedValues(form, condition.groupId).includes(condition.value);
+  }
+
+  if (condition.kind === 'field-has-value') {
+    return Boolean(getControl(form, condition.field)?.value.trim());
+  }
+
+  return false;
+}
+
+function setMessage(groupId, message) {
+  const messageElement = document.querySelector(
+    `[data-field-message="${CSS.escape(groupId)}"]`,
+  );
+  if (messageElement) messageElement.textContent = message;
+}
+
+function applyCollectionDateLimit(form, config) {
+  const collectionDate = getControl(form, 'collection-date');
+  if (!collectionDate || config.leadTime?.unit !== 'calendar-days') return;
+
+  const minimumDate = new Date();
+  minimumDate.setDate(minimumDate.getDate() + config.leadTime.minimum);
+
+  collectionDate.min = minimumDate.toISOString().slice(0, 10);
+  setMessage(
+    'collection-date',
+    `Minimum notice: ${config.leadTime.minimum} calendar days.`,
+  );
+}
+
+function applyAddOnInputs(form) {
+  const addOnCheckboxes = [...form.querySelectorAll('[name="addOns"]')];
+
+  addOnCheckboxes.forEach((checkbox) => {
+    const inputWrapper = form.querySelector(
+      `[data-add-on-input="${CSS.escape(checkbox.value)}"]`,
+    );
+    if (!inputWrapper) return;
+
+    const input = inputWrapper.querySelector('input, textarea');
+    inputWrapper.classList.toggle('hidden', !checkbox.checked);
+
+    if (input) {
+      input.required = checkbox.checked;
+      if (!checkbox.checked) input.value = '';
+    }
+  });
+}
+
+function applyRequiredRules(form, rules) {
+  rules
+    .filter((rule) => rule.kind === 'requires')
+    .forEach((rule) => {
+      const target = getControl(form, rule.targetGroupId);
+      if (!target) return;
+
+      const active = conditionMatches(form, rule.when);
+      target.required = active;
+      setMessage(
+        rule.targetGroupId,
+        active ? 'Required based on your current selection.' : '',
+      );
+    });
+}
+
+function applyExclusionRules(form, rules) {
+  const excludedByGroup = new Map();
+
+  rules
+    .filter(
+      (rule) => rule.kind === 'excludes' && conditionMatches(form, rule.when),
+    )
+    .forEach((rule) => {
+      const existing = excludedByGroup.get(rule.targetGroupId) ?? new Set();
+      rule.values.forEach((value) => existing.add(value));
+      excludedByGroup.set(rule.targetGroupId, existing);
+    });
+
+  form.querySelectorAll('option, input[type="checkbox"]').forEach((control) => {
+    const groupId = control.closest('[data-option-group]')?.dataset.optionGroup;
+    if (!groupId) return;
+
+    const excludedValues = excludedByGroup.get(groupId);
+    const isExcluded = excludedValues?.has(control.value) ?? false;
+    control.disabled = isExcluded;
+
+    if (isExcluded && control.selected) control.selected = false;
+    if (isExcluded && control.checked) control.checked = false;
+  });
+}
+
+function applyAutoSelectRules(form, rules) {
+  rules
+    .filter(
+      (rule) =>
+        rule.kind === 'auto-selects' && conditionMatches(form, rule.when),
+    )
+    .forEach((rule) => {
+      const control = getControl(form, rule.targetGroupId);
+      if (!control) return;
+
+      control.value = rule.value;
+      setMessage(
+        rule.targetGroupId,
+        'Automatically selected to keep this configuration compatible.',
+      );
+    });
+}
+
+function getActiveMaximumSelections(form, group, rules) {
+  const matchingRule = rules.find(
+    (rule) =>
+      rule.kind === 'limits-selection' &&
+      rule.targetGroupId === group.id &&
+      conditionMatches(form, rule.when),
+  );
+
+  return matchingRule?.maximumSelections ?? group.maximumSelections;
+}
+
+function applySelectionLimits(form, config) {
+  config.optionGroups
+    .filter((group) => group.kind === 'multi-select')
+    .forEach((group) => {
+      const checkboxes = [
+        ...form.querySelectorAll(`[name="${CSS.escape(group.id)}"]`),
+      ];
+      const selectedCount = checkboxes.filter(
+        (checkbox) => checkbox.checked,
+      ).length;
+      const maximumSelections = getActiveMaximumSelections(
+        form,
+        group,
+        config.rules,
+      );
+      const minimumSelections = group.minimumSelections ?? 0;
+      const firstCheckbox = checkboxes[0];
+
+      checkboxes.forEach((checkbox) => {
+        checkbox.disabled =
+          Boolean(maximumSelections) &&
+          selectedCount >= maximumSelections &&
+          !checkbox.checked;
+      });
+
+      if (firstCheckbox) {
+        firstCheckbox.setCustomValidity(
+          selectedCount < minimumSelections
+            ? `Please select at least ${minimumSelections}.`
+            : '',
+        );
+      }
+
+      const limitMessage = maximumSelections
+        ? `Select up to ${maximumSelections}.`
+        : '';
+      setMessage(group.id, limitMessage);
+    });
+}
+
+function collectSelections(form, config) {
+  const selections = {};
+  const labels = {};
+
+  config.optionGroups.forEach((group) => {
+    if (group.kind === 'multi-select') {
+      const selectedControls = [
+        ...form.querySelectorAll(`[name="${CSS.escape(group.id)}"]:checked`),
+      ];
+      selections[group.id] = selectedControls.map((control) => control.value);
+      labels[group.id] = {
+        label: group.label,
+        value: selectedControls.map((control) => control.dataset.label),
+      };
+      return;
+    }
+
+    const control = getControl(form, group.id);
+    selections[group.id] = control?.value ?? '';
+    labels[group.id] = {
+      label: group.label,
+      value:
+        control?.selectedOptions?.[0]?.dataset.label ?? control?.value ?? '',
+    };
+  });
+
+  const notes = getControl(form, 'notes')?.value.trim();
+  if (notes) {
+    selections.notes = notes;
+    labels.notes = { label: 'Notes', value: notes };
+  }
+
+  return { selections, labels };
+}
+
+function collectAddOns(form) {
+  const selectedAddOns = [...form.querySelectorAll('[name="addOns"]:checked')];
+
+  return {
+    values: selectedAddOns.map((checkbox) => {
+      const customerInput = getControl(form, `addOnInput:${checkbox.value}`);
+      return {
+        addOnId: checkbox.value,
+        customerInput: customerInput?.value.trim() || undefined,
+      };
+    }),
+    labels: selectedAddOns.map((checkbox) => {
+      const customerInput = getControl(form, `addOnInput:${checkbox.value}`);
+      return {
+        addOnId: checkbox.value,
+        label: checkbox.dataset.label,
+        customerInput: customerInput?.value.trim() || undefined,
+      };
+    }),
+  };
+}
+
+function calculateEstimatedPrice(form, config) {
+  const components = [];
+
+  config.optionGroups
+    .filter((group) => group.kind === 'priced-single-select')
+    .forEach((group) => {
+      const control = getControl(form, group.id);
+      const selected = control?.selectedOptions?.[0];
+      const price = Number(selected?.dataset.price ?? 0);
+
+      if (selected?.value && price) {
+        components.push({
+          type: 'base-option',
+          referenceId: selected.value,
+          label: selected.dataset.label,
+          amount: price,
+        });
+      }
+    });
+
+  form.querySelectorAll('[name="addOns"]:checked').forEach((checkbox) => {
+    const price = Number(checkbox.dataset.price ?? 0);
+    components.push({
+      type: 'add-on',
+      referenceId: checkbox.value,
+      label: checkbox.dataset.label,
+      amount: price,
+    });
+  });
+
+  const amount = components.reduce(
+    (total, component) => total + component.amount,
+    0,
+  );
+
+  return {
+    kind: 'estimate',
+    currency: 'AUD',
+    amount,
+    components,
+    finalQuotationRequired: true,
+  };
+}
+
+function updateEstimatedPrice(form, config) {
+  const target = document.getElementById('estimatedPrice');
+  if (!target) return;
+
+  const estimatedPrice = calculateEstimatedPrice(form, config);
+  target.textContent = estimatedPrice.amount
+    ? formatAud(estimatedPrice.amount)
+    : 'Select a size to calculate your estimate.';
+}
+
+function getContainsAllergens(form, config) {
+  const allergenIds = new Set();
+
+  config.optionGroups.forEach((group) => {
+    getSelectedValues(form, group.id).forEach((value) => {
+      const allergens = config.optionAllergens[value] ?? [];
+      allergens.forEach((allergen) => allergenIds.add(allergen));
+    });
+  });
+
+  form.querySelectorAll('[name="addOns"]:checked').forEach((checkbox) => {
+    const addOn = config.addOns.find(
+      ({ addOnId }) => addOnId === checkbox.value,
+    );
+    addOn?.allergens?.forEach((allergen) => allergenIds.add(allergen));
+  });
+
+  return [...allergenIds].map(
+    (allergenId) => config.allergenLabels[allergenId] ?? allergenId,
+  );
+}
+
+function updateAllergens(form, config) {
+  const containsTarget = document.getElementById('containsAllergens');
+  const warningTarget = document.getElementById('crossContaminationWarning');
+
+  if (warningTarget) {
+    warningTarget.textContent = config.allergenPolicy.crossContaminationWarning;
+  }
+
+  if (!containsTarget) return;
+
+  const contains = getContainsAllergens(form, config);
+  containsTarget.textContent = contains.length
+    ? contains.join(', ')
+    : 'None listed.';
+}
+
+function configurationRequiresReview(form, config) {
+  const selectedReviewRule = config.rules.some(
+    (rule) =>
+      rule.kind === 'requires-review' && conditionMatches(form, rule.when),
+  );
+  const selectedReviewAddOn = [
+    ...form.querySelectorAll('[name="addOns"]:checked'),
+  ].some((checkbox) => checkbox.dataset.requiresReview === 'true');
+
+  return selectedReviewRule || selectedReviewAddOn;
+}
+
+function refreshFormState(form, config) {
+  applyRequiredRules(form, config.rules);
+  applyAutoSelectRules(form, config.rules);
+  applyExclusionRules(form, config.rules);
+  applySelectionLimits(form, config);
+  applyAddOnInputs(form);
+  updateEstimatedPrice(form, config);
+  updateAllergens(form, config);
+}
+
+function buildCartItem(form, config) {
+  const { selections, labels } = collectSelections(form, config);
+  const addOns = collectAddOns(form);
+
+  return {
+    id: Date.now().toString(),
+    product: form.dataset.productTitle,
+    offeringId: config.offeringId,
+    workflowId: config.workflowId,
+    options: {
+      ...selections,
+      addOns: addOns.values.map(({ addOnId }) => addOnId),
+    },
+    labels: {
+      options: labels,
+      addOns: addOns.labels,
+    },
+    addOnInputs: addOns.values,
+    estimatedPrice: calculateEstimatedPrice(form, config),
+    containsAllergens: getContainsAllergens(form, config),
+    requiresReview: configurationRequiresReview(form, config),
+    referenceImageInstructions:
+      config.workflowId === 'design-brief-preorder'
+        ? 'Please attach reference images manually when your email client opens.'
+        : undefined,
+  };
+}
+
 function initPreOrderForm() {
   const form = document.getElementById('preOrderForm');
-  if (!form || form.dataset.bound) return;
+  const config = readPreorderConfig(form);
+
+  if (!form || !config || form.dataset.bound) return;
 
   form.dataset.bound = 'true';
+  applyCollectionDateLimit(form, config);
+  refreshFormState(form, config);
+
+  form.addEventListener('change', () => refreshFormState(form, config));
+  form.addEventListener('input', () => refreshFormState(form, config));
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+    refreshFormState(form, config);
 
-    const data = new FormData(form);
-    const values = Object.fromEntries(data.entries());
-    const item = {
-      id: Date.now().toString(),
-      product: form.dataset.productTitle,
-      options: {
-        ...values,
-        addOns: data.getAll('addOns'),
-      },
-    };
-    addItem(item);
+    if (!form.reportValidity()) return;
+
+    addItem(buildCartItem(form, config));
     form.reset();
     window.location.href = '/order';
   });
