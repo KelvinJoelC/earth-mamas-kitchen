@@ -1,42 +1,80 @@
 ---
 import { EXPLORE } from '@/consts/explore';
-import { productOfferingPaths } from '@/configuration/offerings/offering-paths';
+import {
+  productOfferingPaths,
+  serviceOfferingPaths,
+} from '@/configuration/offerings/offering-paths';
+import { eventsCatering } from '@/configuration/offerings/services/events-catering';
 import { Image } from 'astro:assets';
+
+const offeringImageAltText = {
+  'floral-cupcake-bouquets':
+    'Floral cupcake bouquet arranged as an edible gift',
+  'edible-blooms': 'Decorated cupcake collection for sharing at celebrations',
+  'bespoke-cakes': 'Custom celebration cake with handcrafted decoration',
+} as const;
 ---
 
 <section class="-mb-55">
+  <h2 class="sr-only">Product offerings</h2>
   {
-    EXPLORE.map(({ offeringId, title, img, description, props }, index) => (
-      <section
-        style={{
-          background: `${props.bg}`,
-          transform: `translateY(calc(-100px * ${index}))`,
-          marginBottom: index === EXPLORE.length - 1 ? '100px' : '0',
-        }}
-        class="flex flex-col px-6 py-12 justify-center items-center rounded-t-4xl transform text-center"
-      >
-        <h3 class="font-calistoga text-5xl p-2 mt-6  ">{title}</h3>
-        <p class="text-4xl sm:text-5xl font-dancing py-6 px-2 max-w-xl">
-          {description}
-        </p>
-        <a
-          href={productOfferingPaths[offeringId]}
-          class="inline-flex items-center justify-center px-6 py-3 bg-white text-black border border-gray-300 font-bold rounded-full hover:bg-gray-100 transition"
+    EXPLORE.map(
+      ({ offeringId, title, img, description, props, cta }, index) => (
+        <section
+          style={{
+            background: `${props.bg}`,
+            transform: `translateY(calc(-100px * ${index}))`,
+            marginBottom: index === EXPLORE.length - 1 ? '100px' : '0',
+          }}
+          class="flex flex-col px-6 py-12 justify-center items-center rounded-t-4xl transform text-center"
         >
-          View More
-        </a>
-        <figure class="mt-4 flex justify-center">
-          <Image
-            src={`${img}.webp`}
-            class="animate-slideIn"
-            alt="Flower cupcakes bouquet"
-            width={400}
-            height={400}
-          />
-        </figure>
-      </section>
-    ))
+          <h3 class="font-calistoga text-5xl p-2 mt-6  ">{title}</h3>
+          <p class="text-4xl sm:text-5xl font-dancing py-6 px-2 max-w-xl">
+            {description}
+          </p>
+          <a
+            href={productOfferingPaths[offeringId]}
+            class="inline-flex items-center justify-center px-6 py-3 bg-white text-black border border-gray-300 font-bold rounded-full hover:bg-gray-100 transition"
+          >
+            {cta ?? 'Start Preorder'}
+          </a>
+          <figure class="mt-4 flex justify-center">
+            <Image
+              src={`${img}.webp`}
+              class="animate-slideIn"
+              alt={offeringImageAltText[offeringId]}
+              width={400}
+              height={400}
+            />
+          </figure>
+        </section>
+      ),
+    )
   }
+  <aside
+    class="mx-6 flex flex-col items-center justify-center rounded-4xl bg-white/90 px-6 py-8 text-center text-black shadow-lg"
+    style={{
+      transform: `translateY(calc(-100px * ${EXPLORE.length}))`,
+      marginBottom: '100px',
+    }}
+  >
+    <p class="text-sm font-bold uppercase tracking-[0.2em] text-violet-700">
+      Service Offering
+    </p>
+    <h2 class="font-calistoga text-3xl sm:text-4xl mt-2">
+      {eventsCatering.name}
+    </h2>
+    <p class="max-w-2xl text-xl sm:text-2xl font-dancing py-4">
+      Large events, catering requests and complex celebrations are handled
+      through a personal enquiry, not the standard preorder flow.
+    </p>
+    <a
+      href={serviceOfferingPaths[eventsCatering.id]}
+      class="inline-flex items-center justify-center px-6 py-3 bg-violeta-medio text-white border border-white/70 font-bold rounded-full hover:bg-violeta-oscuro transition"
+    >
+      Plan Your Event
+    </a>
+  </aside>
 </section>
 
 <style>
