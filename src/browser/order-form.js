@@ -25,21 +25,56 @@ function jsonToEmailText() {
   let text = 'ORDER DETAILS\n------------------------\n\n';
 
   const data = getCart();
-  Object.values(data).forEach((value) => {
-    if (value) {
-      Object.entries(value).forEach(([subKey, subValue]) => {
-        if (subKey === 'options' && typeof subValue === 'object') {
-          text += `${subKey}:\n`;
-          Object.entries(subValue).forEach(([optionKey, optionValue]) => {
-            if (optionValue.length > 0) {
-              text += `  - ${optionKey}: ${optionValue}\n`;
-            }
-          });
-        } else if (subKey !== 'id') {
-          text += `${subKey}: ${subValue}\n`;
-        }
-      });
+  Object.values(data).forEach((item) => {
+    text += `${item.product}\n`;
+    if (item.offeringId) text += `Offering ID: ${item.offeringId}\n`;
+    if (item.workflowId) text += `Workflow: ${item.workflowId}\n`;
+
+    text += 'Selections:\n';
+    Object.entries(item.options ?? {}).forEach(([optionKey, optionValue]) => {
+      if (!optionValue || optionValue.length === 0) return;
+
+      if (optionKey === 'addOns') {
+        const addOnLabels = item.labels?.addOns ?? [];
+        const selectedAddOns = Object.values(optionValue)
+          .map((addOnId) => {
+            const addOn = addOnLabels.find(
+              (label) => label.addOnId === addOnId,
+            );
+            return addOn?.customerInput
+              ? `${addOn.label} (${addOn.customerInput})`
+              : (addOn?.label ?? addOnId);
+          })
+          .join(', ');
+
+        if (selectedAddOns) text += `  - Add-ons: ${selectedAddOns}\n`;
+        return;
+      }
+
+      const label = item.labels?.options?.[optionKey]?.label ?? optionKey;
+      const value = item.labels?.options?.[optionKey]?.value ?? optionValue;
+      text += `  - ${label}: ${Array.isArray(value) ? value.join(', ') : value}\n`;
+    });
+
+    if (item.estimatedPrice?.amount) {
+      text += `Estimated Price: ${new Intl.NumberFormat('en-AU', {
+        style: 'currency',
+        currency: 'AUD',
+      }).format(item.estimatedPrice.amount / 100)}\n`;
     }
+
+    if (item.containsAllergens?.length) {
+      text += `Contains: ${item.containsAllergens.join(', ')}\n`;
+    }
+
+    if (item.requiresReview) {
+      text += 'Review: Final quotation requires bakery review.\n';
+    }
+
+    if (item.referenceImageInstructions) {
+      text += `${item.referenceImageInstructions}\n`;
+    }
+
     text += `\n------------------------\n`;
   });
   return text;

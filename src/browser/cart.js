@@ -116,26 +116,55 @@ export function renderCartItem(item) {
 
   Object.entries(item.options).forEach(([key, value]) => {
     if (value) {
-      if (key != 'addOns') {
-        addOption(optionsList, key, value);
+      if (key !== 'addOns') {
+        const label = item.labels?.options?.[key]?.label ?? key;
+        const displayValue = item.labels?.options?.[key]?.value ?? value;
+        addOption(optionsList, label, displayValue);
       } else if (value.length > 0) {
         const div = document.createElement('div');
         const addOnsList = document.createElement('ul');
         addOnsList.className = 'add-ons';
+        const addOnLabels = item.labels?.addOns ?? [];
         Object.values(value).forEach((optionValue) => {
+          const addOnLabel =
+            addOnLabels.find(({ addOnId }) => addOnId === optionValue)?.label ??
+            optionValue;
           const span = document.createElement('span');
           const li = document.createElement('li');
-          li.append(span, `- ${optionValue}`);
+          li.append(span, `- ${addOnLabel}`);
           addOnsList.appendChild(li);
         });
         const span = document.createElement('span');
-        span.textContent = `${key}:`;
-        div.appendChild(span, addOnsList);
+        span.textContent = 'Add-ons:';
+        div.appendChild(span);
         div.appendChild(addOnsList);
         optionsList.appendChild(div);
       }
     }
   });
+
+  if (item.estimatedPrice?.amount) {
+    addOption(
+      optionsList,
+      'Estimated price',
+      new Intl.NumberFormat('en-AU', {
+        style: 'currency',
+        currency: 'AUD',
+      }).format(item.estimatedPrice.amount / 100),
+    );
+  }
+
+  if (item.containsAllergens?.length) {
+    addOption(optionsList, 'Contains', item.containsAllergens);
+  }
+
+  if (item.requiresReview) {
+    addOption(optionsList, 'Review', 'Final quotation requires bakery review');
+  }
+
+  if (item.referenceImageInstructions) {
+    addOption(optionsList, 'Reference images', item.referenceImageInstructions);
+  }
 
   card.append(header, optionsList);
 
@@ -150,7 +179,7 @@ function addOption(list, label, value) {
   const spanLabel = document.createElement('span');
   const spanValue = document.createElement('span');
   spanLabel.textContent = `${label}:`;
-  spanValue.textContent = ` ${value}`;
+  spanValue.textContent = ` ${Array.isArray(value) ? value.join(', ') : value}`;
 
   li.append(spanLabel, spanValue);
   list.appendChild(li);

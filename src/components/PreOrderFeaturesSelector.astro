@@ -1,83 +1,267 @@
 ---
-import { OPTION_LABELS, type OptionKey } from '@/models/product.model';
+import { addOnCatalogue } from '@/configuration/catalogues/add-ons';
+import type {
+  AddOnDefinition,
+  ProductOfferingAddOnConfiguration,
+} from '@/domain/add-ons';
+import type { ProductOfferingDefinition } from '@/domain/offerings';
+import type { OptionGroup } from '@/domain/option-groups';
 
-const { selection } = Astro.props;
+const { offering } = Astro.props as { offering: ProductOfferingDefinition };
+
+const optionGroups = [...offering.optionGroups].sort(
+  (current, next) => current.displayOrder - next.displayOrder,
+);
+
+interface ResolvedAddOn {
+  configuration: ProductOfferingAddOnConfiguration;
+  definition: AddOnDefinition;
+}
+
+const addOns: ResolvedAddOn[] = offering.addOns
+  .flatMap((configuration) => {
+    const definition = addOnCatalogue.find(
+      ({ id }) => id === configuration.addOnId,
+    ) as AddOnDefinition | undefined;
+
+    return definition ? [{ configuration, definition }] : [];
+  })
+  .sort(
+    (current, next) =>
+      current.configuration.displayOrder - next.configuration.displayOrder,
+  );
+
+function formatAud(cents: number) {
+  return new Intl.NumberFormat('en-AU', {
+    style: 'currency',
+    currency: 'AUD',
+  }).format(cents / 100);
+}
+
+function fieldId(group: OptionGroup) {
+  return `field-${group.id}`;
+}
 ---
 
 {
-  Object.entries(selection.options ?? {})
-    .filter(([key]) => key !== 'allergens')
-    .map(([options, val]: [string, any]) => (
-      <div class="surface-card group w-full">
-        <label class="form-label">
-          {OPTION_LABELS[options as OptionKey] ?? options}:
-        </label>
-        <hr class="my-2 border-pink-400" />
-        {(() => {
-          switch (options) {
-            case 'sizes':
-              return (
-                <select
-                  name="size"
-                  class="form-control form-control--soft text-sm"
-                >
-                  {val.map((features: any) =>
-                    features.pieces ? (
-                      <option value={features.label}>
-                        {features.label} - {features.pieces} servings
-                      </option>
-                    ) : (
-                      <option value={features.servings}>
-                        {features.label ?? `${features.sizeInch}"`} -{' '}
-                        {features.servings ?? '—'} servings
-                      </option>
-                    ),
-                  )}
-                </select>
-              );
+  optionGroups.map((group) => (
+    <div class="surface-card group w-full">
+      <label for={fieldId(group)} class="form-label">
+        {group.label}
+      </label>
+      {group.description && (
+        <p class="form-message form-message--help">{group.description}</p>
+      )}
+      <hr class="my-2 border-pink-400" />
 
-            case 'packages':
-              return (
-                <select
-                  name="package"
-                  class="form-control form-control--soft text-sm"
-                >
-                  {val.map((pkg: any) => (
-                    <option value={pkg.name}>{pkg.name}</option>
-                  ))}
-                </select>
-              );
-            case 'addOns':
-              return val.map((extra: any) => (
-                <>
+      {(() => {
+        switch (group.kind) {
+          case 'single-select':
+          case 'priced-single-select':
+            return (
+              <select
+                id={fieldId(group)}
+                name={group.id}
+                required={group.required}
+                class="form-control form-control--soft text-sm"
+                data-option-group={group.id}
+                data-option-kind={group.kind}
+              >
+                <option value="">Select an option</option>
+                {group.options.map((option) => (
+                  <option
+                    value={option.value}
+                    data-label={option.label}
+                    data-price={'price' in option ? option.price : undefined}
+                  >
+                    {option.label}
+                    {'price' in option ? ` - ${formatAud(option.price)}` : ''}
+                    {option.description ? ` (${option.description})` : ''}
+                  </option>
+                ))}
+              </select>
+            );
+
+          case 'multi-select':
+            return (
+              <div
+                class="space-y-2"
+                data-option-group={group.id}
+                data-option-kind={group.kind}
+                data-minimum-selections={group.minimumSelections}
+                data-maximum-selections={group.maximumSelections}
+              >
+                {group.options.map((option) => (
                   <label class="inline-flex items-center gap-2 text-xs text-slate-700">
                     <input
                       type="checkbox"
-                      name="addOns"
-                      value={extra}
+                      name={group.id}
+                      value={option.value}
+                      data-label={option.label}
                       class="rounded border-slate-300"
                     />
-                    <span>{extra}</span>
+                    <span>{option.label}</span>
                   </label>
-                  <br />
-                </>
-              ));
+                ))}
+              </div>
+            );
 
-            default: {
-              const value: string[] = Array.isArray(val) ? val : [];
-              return (
-                <select
-                  name={options}
-                  class="form-control form-control--soft text-sm"
-                >
-                  {value.map((item: any) => (
-                    <option value={item}>{item}</option>
-                  ))}
-                </select>
-              );
-            }
-          }
-        })()}
+          case 'text':
+            return group.multiline ? (
+              <textarea
+                id={fieldId(group)}
+                name={group.id}
+                required={group.required}
+                maxlength={group.maxLength}
+                rows="3"
+                class="form-control form-control--soft text-sm resize-none"
+                data-option-group={group.id}
+                data-option-kind={group.kind}
+              />
+            ) : (
+              <input
+                id={fieldId(group)}
+                type="text"
+                name={group.id}
+                required={group.required}
+                maxlength={group.maxLength}
+                class="form-control form-control--soft text-sm"
+                data-option-group={group.id}
+                data-option-kind={group.kind}
+              />
+            );
+
+          case 'date':
+            return (
+              <input
+                id={fieldId(group)}
+                type="date"
+                name={group.id}
+                required={group.required}
+                class="form-control form-control--soft text-sm"
+                data-option-group={group.id}
+                data-option-kind={group.kind}
+              />
+            );
+        }
+      })()}
+
+      <p
+        id={`${group.id}-message`}
+        class="form-message form-message--help"
+        data-field-message={group.id}
+        aria-live="polite"
+      />
+    </div>
+  ))
+}
+
+{
+  addOns.length > 0 && (
+    <div class="surface-card group w-full sm:col-span-2">
+      <h3 class="form-label">Optional add-ons</h3>
+      <p class="form-message form-message--help">
+        Selected add-ons update the estimated price. Some personalised options
+        are reviewed before the final quotation is confirmed.
+      </p>
+      <hr class="my-2 border-pink-400" />
+      <div class="grid gap-3 sm:grid-cols-2">
+        {addOns.map(({ configuration, definition }) => {
+          const price = configuration.priceOverride ?? definition.defaultPrice;
+          const requiresReview =
+            configuration.requiresReviewOverride ?? definition.requiresReview;
+          const input = configuration.customerInput;
+
+          return (
+            <div class="rounded-2xl border border-slate-200 p-3">
+              <label class="inline-flex items-start gap-2 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  name="addOns"
+                  value={definition.id}
+                  data-label={definition.name}
+                  data-price={price}
+                  data-requires-review={requiresReview}
+                  class="mt-1 rounded border-slate-300"
+                />
+                <span>
+                  <span class="block font-semibold text-black">
+                    {definition.name} - {formatAud(price)}
+                  </span>
+                  <span class="block text-xs">{definition.description}</span>
+                  {requiresReview && (
+                    <span class="block text-xs italic text-slate-500">
+                      Requires bakery review.
+                    </span>
+                  )}
+                </span>
+              </label>
+              {input && (
+                <div class="mt-2 hidden" data-add-on-input={definition.id}>
+                  <label
+                    for={`add-on-input-${definition.id}`}
+                    class="text-xs font-semibold text-slate-700"
+                  >
+                    {input.label}
+                  </label>
+                  {input.kind === 'multi-line-text' ? (
+                    <textarea
+                      id={`add-on-input-${definition.id}`}
+                      name={`addOnInput:${definition.id}`}
+                      maxlength={input.maxLength}
+                      rows="2"
+                      class="form-control form-control--soft mt-1 text-sm resize-none"
+                    />
+                  ) : (
+                    <input
+                      id={`add-on-input-${definition.id}`}
+                      type="text"
+                      name={`addOnInput:${definition.id}`}
+                      maxlength={input.maxLength}
+                      class="form-control form-control--soft mt-1 text-sm"
+                    />
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
-    ))
+    </div>
+  )
+}
+
+<div class="surface-card w-full sm:col-span-2">
+  <h3 class="form-label">Estimated Price</h3>
+  <p id="estimatedPrice" class="text-lg font-bold" aria-live="polite">
+    Select a size to calculate your estimate.
+  </p>
+  <p class="form-message form-message--help">
+    This estimate is based on your current selections. Your final quotation will
+    be confirmed after review.
+  </p>
+</div>
+
+<div class="surface-card w-full sm:col-span-2">
+  <h3 class="form-label">Allergen Information</h3>
+  <p class="text-sm text-slate-700">
+    <span class="font-semibold">Contains:</span>
+    <span id="containsAllergens" aria-live="polite">
+      Select options to show allergen information.
+    </span>
+  </p>
+  <p id="crossContaminationWarning" class="form-message form-message--help"></p>
+</div>
+
+{
+  offering.workflowId === 'design-brief-preorder' && (
+    <div class="surface-card w-full sm:col-span-2">
+      <h3 class="form-label">Reference Images</h3>
+      <p class="form-message form-message--help">
+        This website does not upload or store reference images. Please describe
+        your idea here, then attach any reference images when your email client
+        opens.
+      </p>
+    </div>
+  )
 }
