@@ -4,6 +4,26 @@ import Footer from '@/sections/Footer.astro';
 import Header from '@/sections/Header.astro';
 import { ClientRouter } from 'astro:transitions';
 import StickyOrderButton from '@/components/StickyOrderButton.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  showStickyOrderButton?: boolean;
+}
+
+const defaultTitle =
+  'Earth Mamas Kitchen | Specialising in Floral Cupcake Bouquets and Bespoke Cakes 🎂 Scratch Baking 🍄 Edible Blooms and Art for any occasion 🌻 Love in every bite ❤️💋';
+const defaultDescription =
+  'Earth Mamas Kitchen | Specialising in Floral Cupcake Bouquets and Bespoke Cakes 🎂 Scratch Baking 🍄 Edible Blooms and Art for any occasion 🌻 Love in every bite ❤️💋';
+
+const {
+  title = defaultTitle,
+  description = defaultDescription,
+  showStickyOrderButton = true,
+} = Astro.props;
+
+const pageTitle =
+  title === defaultTitle ? title : `${title} | Earth Mama's Kitchen`;
 ---
 
 <!doctype html>
@@ -12,19 +32,8 @@ import StickyOrderButton from '@/components/StickyOrderButton.astro';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.png" />
-    <title>
-      Earth Mamas Kitchen | Specialising in Floral Cupcake Bouquets and Bespoke
-      Cakes 🎂 Scratch Baking 🍄 Edible Blooms and Art for any occasion 🌻 Love
-      in every bite ❤️💋
-    </title>
-    <meta
-      name="description"
-      content="Earth Mamas Kitchen | Specialising in Floral Cupcake Bouquets and Bespoke Cakes 🎂 Scratch Baking 🍄 Edible Blooms and Art for any occasion 🌻 Love in every bite ❤️💋"
-    />
-    <script>
-      import '@/browser/preorder-form.js';
-      import '@/browser/order-form.js';
-    </script>
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
     <ClientRouter />
   </head>
   <body
@@ -34,7 +43,11 @@ import StickyOrderButton from '@/components/StickyOrderButton.astro';
     <main class="flex-1">
       <slot />
     </main>
-    <StickyOrderButton class="fixed bottom-6 right-6" />
+    {
+      showStickyOrderButton && (
+        <StickyOrderButton class="fixed bottom-6 right-6" />
+      )
+    }
     <Footer />
   </body>
 </html>
@@ -51,22 +64,3 @@ import StickyOrderButton from '@/components/StickyOrderButton.astro';
     );
   }
 </style>
-
-<script>
-  import EmblaCarousel from 'embla-carousel';
-  import Autoplay from 'embla-carousel-autoplay';
-
-  function initCarousel() {
-    const emblaNode = document.querySelector('.embla');
-    if (!emblaNode) return;
-    let options = { loop: false };
-
-    if (emblaNode?.classList.contains('autoplayCarousel')) {
-      options = { loop: true };
-      EmblaCarousel(emblaNode as any, options, [
-        Autoplay({ playOnInit: true, delay: 3000 }),
-      ]);
-    } else EmblaCarousel(emblaNode as any, options);
-  }
-  document.addEventListener('astro:page-load', initCarousel);
-</script>
