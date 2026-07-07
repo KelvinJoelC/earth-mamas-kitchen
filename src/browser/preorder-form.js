@@ -1,4 +1,4 @@
-import { addItem } from './cart.js';
+import { addCartItem } from './cart-state.js';
 
 const currencyFormatter = new Intl.NumberFormat('en-AU', {
   style: 'currency',
@@ -367,6 +367,10 @@ function configurationRequiresReview(form, config) {
   return selectedReviewRule || selectedReviewAddOn;
 }
 
+function createCartItemId() {
+  return crypto.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
+}
+
 function refreshFormState(form, config) {
   applyRequiredRules(form, config.rules);
   applyAutoSelectRules(form, config.rules);
@@ -382,7 +386,7 @@ function buildCartItem(form, config) {
   const addOns = collectAddOns(form);
 
   return {
-    id: Date.now().toString(),
+    id: createCartItemId(),
     product: form.dataset.productTitle,
     offeringId: config.offeringId,
     workflowId: config.workflowId,
@@ -424,7 +428,16 @@ function initPreOrderForm() {
 
     if (!form.reportValidity()) return;
 
-    addItem(buildCartItem(form, config));
+    const result = addCartItem(buildCartItem(form, config));
+    if (!result.ok) {
+      const message =
+        result.reason === 'cart-limit-reached'
+          ? 'You can save up to three preorder configurations. Please remove one before adding another.'
+          : 'We could not save this preorder configuration. Please try again.';
+      window.alert(message);
+      return;
+    }
+
     form.reset();
     window.location.href = '/order';
   });

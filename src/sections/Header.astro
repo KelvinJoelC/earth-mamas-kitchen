@@ -64,10 +64,11 @@ import CartIcon from '@/assets/cart.svg';
 </style>
 
 <script>
-  import { initSync, itemCount } from '@/browser/cart.js';
+  import { getCartCount, initCartSync } from '@/browser/cart-state.js';
 
   interface CartWindow extends Window {
     bcInitialized?: boolean;
+    cartUiInitialized?: boolean;
   }
 
   const cartWindow = window as CartWindow;
@@ -79,14 +80,21 @@ import CartIcon from '@/assets/cart.svg';
   }
 
   function refreshFromStorage() {
-    updateBadge(itemCount());
+    updateBadge(getCartCount());
   }
 
   function initCartUI() {
+    if (cartWindow.cartUiInitialized) {
+      refreshFromStorage();
+      return;
+    }
+
+    cartWindow.cartUiInitialized = true;
     refreshFromStorage();
 
     window.addEventListener('cart:update', (event) => {
-      const cart = (event as CustomEvent<unknown[]>).detail || [];
+      const cart =
+        (event as CustomEvent<{ cart?: unknown[] }>).detail?.cart || [];
       updateBadge(cart.length);
     });
 
@@ -94,7 +102,7 @@ import CartIcon from '@/assets/cart.svg';
   }
 
   if (!cartWindow.bcInitialized) {
-    initSync();
+    initCartSync();
     cartWindow.bcInitialized = true;
   }
 
