@@ -31,6 +31,39 @@
   color: #ffffff;
 }
 
+.preorder-email-actions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.preorder-email-status {
+  min-height: 1.5rem;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.12);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.preorder-email-status:empty {
+  display: none;
+}
+
+.preorder-email-status[data-status='error'] {
+  background-color: #fef2f2;
+  color: #991b1b;
+}
+
+.preorder-email-status[data-status='success'] {
+  background-color: #ecfdf5;
+  color: #065f46;
+}
+
+.preorder-email-fallback {
+  min-height: 14rem;
+  resize: vertical;
+}
+
 .order-card {
   position: relative;
   background: #ffffff;

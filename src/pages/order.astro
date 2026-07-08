@@ -74,16 +74,18 @@ import { EXPLORE } from '@/consts/explore';
     />
     <h2 class="text-2xl font-bold mb-2">Confirm Your Order</h2>
     <p class="mb-4 text-center">
-      Complete the order providing your name and phone number. An email with all
-      the details will be sent. We will contact you as soon as possible.
+      Complete the preorder request with your name, phone number and collection
+      preference. Your email client will open with a prepared message for you to
+      review and send manually.
     </p>
     <form id="contactForm" class="w-full p-2 flex flex-col gap-2">
       <input
         required
         type="text"
         name="name"
-        maxlength="20"
-        placeholder="Type your name here"
+        autocomplete="name"
+        maxlength="80"
+        placeholder="Full name"
         class="form-control"
       />
       <input
@@ -91,12 +93,47 @@ import { EXPLORE } from '@/consts/explore';
         type="tel"
         name="phone"
         maxlength="10"
-        placeholder="e.g.: 0412345678 o 0212345678"
+        inputmode="numeric"
+        autocomplete="tel"
+        pattern="04[0-9]{8}"
+        placeholder="Australian mobile e.g. 0412345678"
         class="form-control"
       />
-      <button type="submit" class="ui-button ui-button--primary"
-        >Send Email</button
+      <select required name="collectionPreference" class="form-control">
+        <option value="">Select collection preference</option>
+        <option value="Weekday morning pickup, 9am-12pm">
+          Weekday morning pickup, 9am-12pm
+        </option>
+        <option value="Weekday afternoon pickup, 12pm-4pm">
+          Weekday afternoon pickup, 12pm-4pm
+        </option>
+        <option value="Flexible pickup time"> Flexible pickup time </option>
+      </select>
+      <div
+        id="preorderEmailStatus"
+        class="preorder-email-status"
+        role="status"
+        aria-live="polite"
       >
+      </div>
+      <textarea
+        id="preorderEmailFallback"
+        class="preorder-email-fallback"
+        readonly
+        hidden
+        aria-label="Prepared preorder email"></textarea>
+      <div class="preorder-email-actions">
+        <button type="submit" class="ui-button ui-button--primary">
+          Prepare Email
+        </button>
+        <button
+          id="copyPreorderEmail"
+          type="button"
+          class="ui-button ui-button--secondary"
+        >
+          Copy preorder email
+        </button>
+      </div>
     </form>
   </section>
 </Layout>
