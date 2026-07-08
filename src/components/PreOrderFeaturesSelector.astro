@@ -41,16 +41,43 @@ function formatAud(cents: number) {
 function fieldId(group: OptionGroup) {
   return `field-${group.id}`;
 }
+
+function fieldLabelId(group: OptionGroup) {
+  return `${group.id}-label`;
+}
+
+function fieldDescriptionId(group: OptionGroup) {
+  return `${group.id}-description`;
+}
+
+function fieldMessageId(group: OptionGroup) {
+  return `${group.id}-message`;
+}
+
+function describedBy(group: OptionGroup) {
+  return [
+    group.description ? fieldDescriptionId(group) : undefined,
+    fieldMessageId(group),
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
 ---
 
 {
   optionGroups.map((group) => (
     <div class="surface-card group w-full">
-      <label for={fieldId(group)} class="form-label">
+      <p id={fieldLabelId(group)} class="form-label">
         {group.label}
-      </label>
+        {group.required && <span class="sr-only"> required</span>}
+      </p>
       {group.description && (
-        <p class="form-message form-message--help">{group.description}</p>
+        <p
+          id={fieldDescriptionId(group)}
+          class="form-message form-message--help"
+        >
+          {group.description}
+        </p>
       )}
       <hr class="my-2 border-pink-400" />
 
@@ -66,6 +93,8 @@ function fieldId(group: OptionGroup) {
                 class="form-control form-control--soft text-sm"
                 data-option-group={group.id}
                 data-option-kind={group.kind}
+                aria-labelledby={fieldLabelId(group)}
+                aria-describedby={describedBy(group)}
               >
                 <option value="">Select an option</option>
                 {group.options.map((option) => (
@@ -86,6 +115,9 @@ function fieldId(group: OptionGroup) {
             return (
               <div
                 class="space-y-2"
+                role="group"
+                aria-labelledby={fieldLabelId(group)}
+                aria-describedby={describedBy(group)}
                 data-option-group={group.id}
                 data-option-kind={group.kind}
                 data-minimum-selections={group.minimumSelections}
@@ -99,6 +131,7 @@ function fieldId(group: OptionGroup) {
                       value={option.value}
                       data-label={option.label}
                       class="rounded border-slate-300"
+                      aria-describedby={describedBy(group)}
                     />
                     <span>{option.label}</span>
                   </label>
@@ -117,6 +150,8 @@ function fieldId(group: OptionGroup) {
                 class="form-control form-control--soft text-sm resize-none"
                 data-option-group={group.id}
                 data-option-kind={group.kind}
+                aria-labelledby={fieldLabelId(group)}
+                aria-describedby={describedBy(group)}
               />
             ) : (
               <input
@@ -128,6 +163,8 @@ function fieldId(group: OptionGroup) {
                 class="form-control form-control--soft text-sm"
                 data-option-group={group.id}
                 data-option-kind={group.kind}
+                aria-labelledby={fieldLabelId(group)}
+                aria-describedby={describedBy(group)}
               />
             );
 
@@ -141,13 +178,15 @@ function fieldId(group: OptionGroup) {
                 class="form-control form-control--soft text-sm"
                 data-option-group={group.id}
                 data-option-kind={group.kind}
+                aria-labelledby={fieldLabelId(group)}
+                aria-describedby={describedBy(group)}
               />
             );
         }
       })()}
 
       <p
-        id={`${group.id}-message`}
+        id={fieldMessageId(group)}
         class="form-message form-message--help"
         data-field-message={group.id}
         aria-live="polite"

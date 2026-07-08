@@ -17,6 +17,7 @@ import { EXPLORE } from '@/consts/explore';
           target="_blank"
           rel="noopener noreferrer"
           class="ui-icon-link ui-icon-link--social"
+          aria-label="Visit Earth Mama's Kitchen on Instagram"
         >
           <InstagramIcon class="size-5" />
         </a>
@@ -25,14 +26,15 @@ import { EXPLORE } from '@/consts/explore';
           target="_blank"
           rel="noopener noreferrer"
           class="ui-icon-link ui-icon-link--social"
+          aria-label="Visit Earth Mama's Kitchen on Facebook"
         >
           <FacebookIcon class="size-5" />
         </a>
       </div>
     </div>
     <div class="flex flex-col items-center justify-center p-4 mb-4 gap-1">
-      <h2 class="text-3xl font-bold">Earth Mama Kitchen</h2>
-      <h3 class="font-merienda text-3xl">Bake like you mean it.</h3>
+      <p class="text-3xl font-bold">Earth Mama Kitchen</p>
+      <p class="font-merienda text-3xl">Bake like you mean it.</p>
     </div>
   </section>
   <section id="cart-resumen" class="w-full p-3 mb-5">
@@ -79,7 +81,9 @@ import { EXPLORE } from '@/consts/explore';
       review and send manually.
     </p>
     <form id="contactForm" class="w-full p-2 flex flex-col gap-2">
+      <label for="preorder-customer-name" class="sr-only">Full name</label>
       <input
+        id="preorder-customer-name"
         required
         type="text"
         name="name"
@@ -87,8 +91,13 @@ import { EXPLORE } from '@/consts/explore';
         maxlength="80"
         placeholder="Full name"
         class="form-control"
+        aria-describedby="preorderEmailStatus"
       />
+      <label for="preorder-customer-phone" class="sr-only">
+        Australian mobile number
+      </label>
       <input
+        id="preorder-customer-phone"
         required
         type="tel"
         name="phone"
@@ -98,8 +107,18 @@ import { EXPLORE } from '@/consts/explore';
         pattern="04[0-9]{8}"
         placeholder="Australian mobile e.g. 0412345678"
         class="form-control"
+        aria-describedby="preorderEmailStatus"
       />
-      <select required name="collectionPreference" class="form-control">
+      <label for="preorder-collection-preference" class="sr-only">
+        Collection preference
+      </label>
+      <select
+        id="preorder-collection-preference"
+        required
+        name="collectionPreference"
+        class="form-control"
+        aria-describedby="preorderEmailStatus"
+      >
         <option value="">Select collection preference</option>
         <option value="Weekday morning pickup, 9am-12pm">
           Weekday morning pickup, 9am-12pm
