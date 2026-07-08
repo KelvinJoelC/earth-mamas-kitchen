@@ -3,9 +3,16 @@ import { clearCart, readCart } from './cart-state.js';
 
 export function initConfirmOrderForm() {
   const form = document.getElementById('contactForm');
+  if (!form || form.dataset.cartFormInitialized === 'true') return;
 
+  form.dataset.cartFormInitialized = 'true';
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+
+    if (readCart().length === 0) {
+      alert('Please add at least one preorder configuration before sending.');
+      return;
+    }
 
     const formData = new FormData(form);
     const name = formData.get('name');
@@ -81,16 +88,34 @@ function jsonToEmailText() {
   return text;
 }
 
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('#clearBtn');
-  if (!btn) return;
-  clearCart();
-});
+if (!window.__orderCartClearInitialized) {
+  window.__orderCartClearInitialized = true;
 
-document.addEventListener('astro:page-load', () => {
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('#clearBtn');
+    if (!btn) return;
+
+    const shouldClear = confirm(
+      'Clear all saved preorder configurations from your cart?',
+    );
+
+    if (!shouldClear) return;
+    clearCart();
+  });
+}
+
+function initCartPage() {
   if (!document.querySelector('#cart-resumen')) return;
   updateCartResumen();
   initConfirmOrderForm();
-});
+}
 
-window.addEventListener('cart:update', () => updateCartResumen());
+if (!window.__orderCartPageInitialized) {
+  window.__orderCartPageInitialized = true;
+  document.addEventListener('astro:page-load', initCartPage);
+}
+
+if (!window.__orderCartUpdateInitialized) {
+  window.__orderCartUpdateInitialized = true;
+  window.addEventListener('cart:update', () => updateCartResumen());
+}

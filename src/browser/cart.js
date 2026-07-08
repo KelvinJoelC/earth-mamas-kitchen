@@ -1,77 +1,91 @@
 import { readCart, removeCartItem } from './cart-state.js';
 
+const currencyFormatter = new Intl.NumberFormat('en-AU', {
+  style: 'currency',
+  currency: 'AUD',
+});
+
 export function updateCartResumen() {
   const cartRoot = document.getElementById('cartRoot');
   const cartDeleteButton = document.getElementById('clearBtn');
+  const cartCountSummary = document.getElementById('cartCountSummary');
+  const orderSubmission = document.getElementById('orderSubmission');
 
   if (!cartRoot) return;
 
   const cartItems = readCart();
   cartRoot.innerHTML = '';
 
-  if (!cartItems.length) {
-    if (cartDeleteButton) cartDeleteButton.style.display = 'none';
+  updateCartPageState({
+    cartDeleteButton,
+    cartCountSummary,
+    orderSubmission,
+    count: cartItems.length,
+  });
 
-    const card = document.createElement('div');
-    card.className = 'order-card-empty';
-    card.innerHTML = '<span>Your cart is empty.</span>';
-    cartRoot.appendChild(card);
+  if (!cartItems.length) {
+    cartRoot.appendChild(renderEmptyState());
     return;
   }
 
-  if (cartDeleteButton) cartDeleteButton.style.display = 'block';
-
-  cartItems.forEach((item) => {
-    cartRoot.appendChild(renderCartItem(item));
+  cartItems.forEach((item, index) => {
+    cartRoot.appendChild(renderCartItem(item, index));
   });
 }
 
-export function renderCartItem(item) {
-  const card = document.createElement('div');
-  card.className = 'order-card group';
+export function renderCartItem(item, index = 0) {
+  const card = document.createElement('article');
+  card.className = 'order-card';
   card.dataset.id = item.id;
 
   const header = document.createElement('div');
   header.className = 'order-header';
 
+  const headingGroup = document.createElement('div');
+
+  const eyebrow = document.createElement('p');
+  eyebrow.className = 'order-card-eyebrow';
+  eyebrow.textContent = `Configuration ${index + 1}`;
+
   const title = document.createElement('h3');
   title.className = 'title';
   title.textContent = item.product;
 
+  headingGroup.append(eyebrow, title);
+
   const btn = document.createElement('button');
   btn.className = 'delete-btn';
-  btn.setAttribute('aria-label', 'Delete order');
-  btn.textContent = '×';
+  btn.type = 'button';
+  btn.setAttribute('aria-label', `Remove ${item.product} from cart`);
+  btn.textContent = 'Remove';
 
   btn.addEventListener('click', () => {
     removeCartItem(item.id);
   });
 
-  header.append(title, btn);
+  header.append(headingGroup, btn);
+  card.append(header);
 
-  const optionsList = document.createElement('ul');
+  const optionsList = document.createElement('dl');
   optionsList.className = 'options';
 
-  Object.entries(item.options).forEach(([key, value]) => {
-    if (value) {
-      if (key !== 'addOns') {
-        const label = item.labels?.options?.[key]?.label ?? key;
-        const displayValue = item.labels?.options?.[key]?.value ?? value;
-        addOption(optionsList, label, displayValue);
-      } else if (value.length > 0) {
-        addAddOns(optionsList, value, item.labels?.addOns ?? []);
-      }
-    }
+  Object.entries(item.options ?? {}).forEach(([key, value]) => {
+    if (!hasDisplayValue(value) || key === 'addOns') return;
+
+    const label = item.labels?.options?.[key]?.label ?? formatLabel(key);
+    const displayValue = item.labels?.options?.[key]?.value ?? value;
+    addOption(optionsList, label, displayValue);
   });
+
+  if (hasDisplayValue(item.options?.addOns)) {
+    addAddOns(optionsList, item.options.addOns, item.labels?.addOns ?? []);
+  }
 
   if (item.estimatedPrice?.amount) {
     addOption(
       optionsList,
       'Estimated price',
-      new Intl.NumberFormat('en-AU', {
-        style: 'currency',
-        currency: 'AUD',
-      }).format(item.estimatedPrice.amount / 100),
+      currencyFormatter.format(item.estimatedPrice.amount / 100),
     );
   }
 
@@ -79,50 +93,124 @@ export function renderCartItem(item) {
     addOption(optionsList, 'Contains', item.containsAllergens);
   }
 
-  if (item.requiresReview) {
-    addOption(optionsList, 'Review', 'Final quotation requires bakery review');
-  }
+  card.append(optionsList);
 
-  if (item.referenceImageInstructions) {
-    addOption(optionsList, 'Reference images', item.referenceImageInstructions);
-  }
-
-  card.append(header, optionsList);
+  const notices = renderNotices(item);
+  if (notices) card.append(notices);
 
   return card;
 }
 
-function addAddOns(list, value, addOnLabels) {
-  const wrapper = document.createElement('div');
-  const label = document.createElement('span');
-  const addOnsList = document.createElement('ul');
+function updateCartPageState({
+  cartDeleteButton,
+  cartCountSummary,
+  orderSubmission,
+  count,
+}) {
+  const hasItems = count > 0;
 
-  label.textContent = 'Add-ons:';
-  addOnsList.className = 'add-ons';
+  if (cartDeleteButton) cartDeleteButton.hidden = !hasItems;
+  if (orderSubmission) orderSubmission.hidden = !hasItems;
 
-  Object.values(value).forEach((optionValue) => {
-    const addOnLabel =
-      addOnLabels.find(({ addOnId }) => addOnId === optionValue)?.label ??
-      optionValue;
-    const li = document.createElement('li');
-    li.append(`- ${addOnLabel}`);
-    addOnsList.appendChild(li);
+  if (!cartCountSummary) return;
+
+  cartCountSummary.textContent = hasItems
+    ? `${count} saved preorder configuration${count === 1 ? '' : 's'}`
+    : 'No saved preorder configurations yet.';
+}
+
+function renderEmptyState() {
+  const card = document.createElement('div');
+  card.className = 'order-card-empty';
+
+  const title = document.createElement('h2');
+  title.textContent = 'Your cart is empty';
+
+  const message = document.createElement('p');
+  message.textContent =
+    'Start from the homepage catalogue to configure a product before sending a preorder request.';
+
+  const link = document.createElement('a');
+  link.className = 'ui-button ui-button--primary';
+  link.href = '/';
+  link.textContent = 'Browse products';
+
+  card.append(title, message, link);
+  return card;
+}
+
+function renderNotices(item) {
+  const messages = [];
+
+  if (item.requiresReview) {
+    messages.push('Final quotation requires bakery review.');
+  }
+
+  if (item.containsAllergens?.length) {
+    messages.push(
+      'All products are prepared in a shared kitchen and cannot be guaranteed free from allergens.',
+    );
+  }
+
+  if (item.referenceImageInstructions) {
+    messages.push(item.referenceImageInstructions);
+  }
+
+  if (!messages.length) return null;
+
+  const notices = document.createElement('aside');
+  notices.className = 'order-card-notices';
+  notices.setAttribute('aria-label', 'Important preorder notices');
+
+  messages.forEach((message) => {
+    const itemNotice = document.createElement('p');
+    itemNotice.textContent = message;
+    notices.appendChild(itemNotice);
   });
 
-  wrapper.append(label, addOnsList);
-  list.appendChild(wrapper);
+  return notices;
+}
+
+function addAddOns(list, value, addOnLabels) {
+  const selectedAddOns = Object.values(value)
+    .map((optionValue) => {
+      const addOnLabel = addOnLabels.find(
+        ({ addOnId }) => addOnId === optionValue,
+      );
+
+      if (!addOnLabel) return optionValue;
+
+      return addOnLabel.customerInput
+        ? `${addOnLabel.label} (${addOnLabel.customerInput})`
+        : addOnLabel.label;
+    })
+    .filter(Boolean);
+
+  addOption(list, 'Add-ons', selectedAddOns);
 }
 
 function addOption(list, label, value) {
-  if (!value || value.length === 0) return;
+  if (!hasDisplayValue(value)) return;
 
-  const li = document.createElement('li');
+  const wrapper = document.createElement('div');
 
-  const spanLabel = document.createElement('span');
-  const spanValue = document.createElement('span');
-  spanLabel.textContent = `${label}:`;
-  spanValue.textContent = ` ${Array.isArray(value) ? value.join(', ') : value}`;
+  const term = document.createElement('dt');
+  term.textContent = label;
 
-  li.append(spanLabel, spanValue);
-  list.appendChild(li);
+  const description = document.createElement('dd');
+  description.textContent = Array.isArray(value) ? value.join(', ') : value;
+
+  wrapper.append(term, description);
+  list.appendChild(wrapper);
+}
+
+function hasDisplayValue(value) {
+  return Boolean(value) && (!Array.isArray(value) || value.length > 0);
+}
+
+function formatLabel(key) {
+  return key
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/[-_]/g, ' ')
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }

@@ -37,22 +37,35 @@ import { EXPLORE } from '@/consts/explore';
   </section>
   <section id="cart-resumen" class="w-full p-3 mb-5">
     <div class="flex flex-col items-start w-full bg-white p-4 shadow-lg">
-      <div class="flex flex-col items-start w-full">
-        <h1 class="text-3xl text-black font-medium">Summary</h1>
-        <button
-          id="clearBtn"
-          type="reset"
-          class="text-xs font-medium cursor-pointer text-blue-500 hover:text-indigo-700 hover:underline rounded-2xl h-max"
-          >Delete all items</button
-        >
+      <div class="cart-summary-header">
+        <div>
+          <h1 class="text-3xl text-black font-medium">Summary</h1>
+          <p
+            id="cartCountSummary"
+            class="cart-count-summary"
+            aria-live="polite"
+          >
+            Loading saved preorder configurations...
+          </p>
+        </div>
+        <button id="clearBtn" type="button" class="cart-clear-button" hidden>
+          Clear cart
+        </button>
       </div>
-      <div id="cartRoot" class="flex flex-col w-full gap-2 mt-2"></div>
+      <div
+        id="cartRoot"
+        class="flex flex-col w-full gap-2 mt-2"
+        aria-live="polite"
+      >
+      </div>
     </div>
   </section>
   <RelatedProducts selection={EXPLORE} />
 
   <section
+    id="orderSubmission"
     class="flex flex-col items-center rounded-4xl transform -translate-y-10 bg-gradient-to-b from-[#1E3A8A] to-[#1E40AF] text-white p-4"
+    hidden
   >
     <img
       src="/favicon.png"
