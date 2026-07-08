@@ -30,22 +30,172 @@ import FacebookIcon from '@/assets/facebook.svg';
   </div>
   <h3 class="font-merienda text-3xl">Bake like you mean it.</h3>
   <p class="text-2xl text-center mb-4 w-4/5">
-    Contact me for inquiries, orders, or just to talk cake! I love hearing about
-    your design ideas or leave to me and I can create something unique just for
-    you.
+    Contact me for general questions or to talk cake. For preorder requests,
+    please use the product pages so your configuration can be reviewed properly.
   </p>
-  <form class="w-full">
-    <div class="flex flex-col gap-2 p-4 rounded-lg shadow-lg w-full max-w-md">
-      <input type="text" placeholder="Your Name" class="form-control" />
-      <input
-        type="number"
-        placeholder="Your Phone Number"
-        class="form-control"
-      />
-      <input type="email" placeholder="Your Email" class="form-control" />
-      <button type="submit" class="ui-button ui-button--primary">
-        Send Message
-      </button>
+  <form id="generalContactForm" class="w-full" novalidate>
+    <div
+      class="flex flex-col gap-3 p-4 rounded-lg shadow-lg w-full max-w-md mx-auto"
+    >
+      <p class="text-sm text-white/85">
+        This form prepares a general enquiry email in your own email client.
+        Please review and send it manually. Your details are not stored by this
+        website.
+      </p>
+
+      <div class="contact-field">
+        <label for="contact-name" class="contact-label">Name *</label>
+        <input
+          id="contact-name"
+          name="name"
+          required
+          type="text"
+          autocomplete="name"
+          placeholder="Your name"
+          class="form-control"
+          aria-describedby="contact-name-error"
+        />
+        <p id="contact-name-error" class="contact-error"></p>
+      </div>
+
+      <div class="contact-field">
+        <label for="contact-email" class="contact-label">Email *</label>
+        <input
+          id="contact-email"
+          name="email"
+          required
+          type="email"
+          autocomplete="email"
+          placeholder="you@example.com"
+          class="form-control"
+          aria-describedby="contact-email-error"
+        />
+        <p id="contact-email-error" class="contact-error"></p>
+      </div>
+
+      <div class="contact-field">
+        <label for="contact-phone" class="contact-label">
+          Phone <span class="font-normal text-white/80">(optional)</span>
+        </label>
+        <input
+          id="contact-phone"
+          name="phone"
+          type="tel"
+          autocomplete="tel"
+          placeholder="Optional phone number"
+          class="form-control"
+          aria-describedby="contact-phone-help"
+        />
+        <p id="contact-phone-help" class="contact-help">
+          Optional. Include this only if you are happy to be contacted by phone.
+        </p>
+      </div>
+
+      <div class="contact-field">
+        <label for="contact-message" class="contact-label">Message *</label>
+        <textarea
+          id="contact-message"
+          name="message"
+          required
+          maxlength="1000"
+          rows="6"
+          placeholder="How can we help?"
+          class="form-control"
+          aria-describedby="contact-message-help contact-message-error"
+        ></textarea>
+        <p id="contact-message-help" class="contact-help">
+          Maximum 1,000 characters.
+        </p>
+        <p id="contact-message-error" class="contact-error"></p>
+      </div>
+
+      <div
+        id="generalContactStatus"
+        class="contact-status"
+        role="status"
+        aria-live="polite"
+      >
+      </div>
+
+      <textarea
+        id="generalContactFallback"
+        class="form-control contact-fallback"
+        readonly
+        hidden
+        aria-label="Prepared general enquiry email"></textarea>
+
+      <div class="contact-actions">
+        <button type="submit" class="ui-button ui-button--primary">
+          Prepare Email
+        </button>
+        <button
+          id="copyGeneralContactMessage"
+          type="button"
+          class="ui-button ui-button--secondary"
+        >
+          Copy message
+        </button>
+      </div>
     </div>
   </form>
 </section>
+
+<script>
+  import '@/browser/contact-form.js';
+</script>
+
+<style>
+  .contact-field {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .contact-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  .contact-help {
+    font-size: 0.8rem;
+    color: rgb(255 255 255 / 0.8);
+  }
+
+  .contact-error {
+    min-height: 1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #fecaca;
+  }
+
+  .contact-status {
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    background-color: rgb(255 255 255 / 0.12);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .contact-status:empty {
+    display: none;
+  }
+
+  .contact-status[data-status='error'] {
+    background-color: #fef2f2;
+    color: #991b1b;
+  }
+
+  .contact-status[data-status='success'] {
+    background-color: #ecfdf5;
+    color: #065f46;
+  }
+
+  .contact-fallback {
+    min-height: 14rem;
+    resize: vertical;
+  }
+
+  .contact-actions {
+    display: grid;
+    gap: 0.75rem;
+  }
+</style>
