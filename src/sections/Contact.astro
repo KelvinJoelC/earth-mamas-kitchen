@@ -4,6 +4,7 @@ import FacebookIcon from '@/assets/facebook.svg';
 ---
 
 <section
+  aria-labelledby="general-contact-heading"
   class="flex flex-col items-center pt-20 rounded-b-4xl rounded-t-2xl transform -translate-y-15 min-h-screen bg-gradient-to-b from-[#1E3A8A] to-[#1E40AF] text-white p-4 mt-15"
 >
   <div class="social-links-surface">
@@ -12,6 +13,7 @@ import FacebookIcon from '@/assets/facebook.svg';
       target="_blank"
       rel="noopener noreferrer"
       class="ui-icon-link ui-icon-link--social"
+      aria-label="Visit Earth Mama's Kitchen on Instagram"
     >
       <InstagramIcon class="size-5" />
     </a>
@@ -20,13 +22,16 @@ import FacebookIcon from '@/assets/facebook.svg';
       target="_blank"
       rel="noopener noreferrer"
       class="ui-icon-link ui-icon-link--social"
+      aria-label="Visit Earth Mama's Kitchen on Facebook"
     >
       <FacebookIcon class="size-5" />
     </a>
   </div>
   <div class="flex flex-row items-center justify-center max-w-4/5 p-4 mb-4">
     <img src="/favicon.png" alt="Earth Mama kitchen" class="size-20" />
-    <h2 class="text-3xl font-bold">Earth Mama`s Kitchen</h2>
+    <h2 id="general-contact-heading" class="text-3xl font-bold">
+      Earth Mama`s Kitchen
+    </h2>
   </div>
   <h3 class="font-merienda text-3xl">Bake like you mean it.</h3>
   <p class="text-2xl text-center mb-4 w-4/5">

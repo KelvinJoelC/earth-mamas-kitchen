@@ -77,6 +77,10 @@ import CartIcon from '@/assets/cart.svg';
     const el = document.getElementById('cartCount');
     if (!el) return;
     el.textContent = String(count);
+    el.closest('a')?.setAttribute(
+      'aria-label',
+      `Cart, ${count} saved preorder configuration${count === 1 ? '' : 's'}`,
+    );
   }
 
   function refreshFromStorage() {
