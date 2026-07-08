@@ -37,22 +37,35 @@ import { EXPLORE } from '@/consts/explore';
   </section>
   <section id="cart-resumen" class="w-full p-3 mb-5">
     <div class="flex flex-col items-start w-full bg-white p-4 shadow-lg">
-      <div class="flex flex-col items-start w-full">
-        <h1 class="text-3xl text-black font-medium">Summary</h1>
-        <button
-          id="clearBtn"
-          type="reset"
-          class="text-xs font-medium cursor-pointer text-blue-500 hover:text-indigo-700 hover:underline rounded-2xl h-max"
-          >Delete all items</button
-        >
+      <div class="cart-summary-header">
+        <div>
+          <h1 class="text-3xl text-black font-medium">Summary</h1>
+          <p
+            id="cartCountSummary"
+            class="cart-count-summary"
+            aria-live="polite"
+          >
+            Loading saved preorder configurations...
+          </p>
+        </div>
+        <button id="clearBtn" type="button" class="cart-clear-button" hidden>
+          Clear cart
+        </button>
       </div>
-      <div id="cartRoot" class="flex flex-col w-full gap-2 mt-2"></div>
+      <div
+        id="cartRoot"
+        class="flex flex-col w-full gap-2 mt-2"
+        aria-live="polite"
+      >
+      </div>
     </div>
   </section>
   <RelatedProducts selection={EXPLORE} />
 
   <section
+    id="orderSubmission"
     class="flex flex-col items-center rounded-4xl transform -translate-y-10 bg-gradient-to-b from-[#1E3A8A] to-[#1E40AF] text-white p-4"
+    hidden
   >
     <img
       src="/favicon.png"
@@ -61,16 +74,18 @@ import { EXPLORE } from '@/consts/explore';
     />
     <h2 class="text-2xl font-bold mb-2">Confirm Your Order</h2>
     <p class="mb-4 text-center">
-      Complete the order providing your name and phone number. An email with all
-      the details will be sent. We will contact you as soon as possible.
+      Complete the preorder request with your name, phone number and collection
+      preference. Your email client will open with a prepared message for you to
+      review and send manually.
     </p>
     <form id="contactForm" class="w-full p-2 flex flex-col gap-2">
       <input
         required
         type="text"
         name="name"
-        maxlength="20"
-        placeholder="Type your name here"
+        autocomplete="name"
+        maxlength="80"
+        placeholder="Full name"
         class="form-control"
       />
       <input
@@ -78,12 +93,47 @@ import { EXPLORE } from '@/consts/explore';
         type="tel"
         name="phone"
         maxlength="10"
-        placeholder="e.g.: 0412345678 o 0212345678"
+        inputmode="numeric"
+        autocomplete="tel"
+        pattern="04[0-9]{8}"
+        placeholder="Australian mobile e.g. 0412345678"
         class="form-control"
       />
-      <button type="submit" class="ui-button ui-button--primary"
-        >Send Email</button
+      <select required name="collectionPreference" class="form-control">
+        <option value="">Select collection preference</option>
+        <option value="Weekday morning pickup, 9am-12pm">
+          Weekday morning pickup, 9am-12pm
+        </option>
+        <option value="Weekday afternoon pickup, 12pm-4pm">
+          Weekday afternoon pickup, 12pm-4pm
+        </option>
+        <option value="Flexible pickup time"> Flexible pickup time </option>
+      </select>
+      <div
+        id="preorderEmailStatus"
+        class="preorder-email-status"
+        role="status"
+        aria-live="polite"
       >
+      </div>
+      <textarea
+        id="preorderEmailFallback"
+        class="preorder-email-fallback"
+        readonly
+        hidden
+        aria-label="Prepared preorder email"></textarea>
+      <div class="preorder-email-actions">
+        <button type="submit" class="ui-button ui-button--primary">
+          Prepare Email
+        </button>
+        <button
+          id="copyPreorderEmail"
+          type="button"
+          class="ui-button ui-button--secondary"
+        >
+          Copy preorder email
+        </button>
+      </div>
     </form>
   </section>
 </Layout>

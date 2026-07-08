@@ -25,5 +25,199 @@ const { offering } = Astro.props as {
       This is an initial enquiry pathway. Availability, requirements and final
       pricing are confirmed personally after consultation.
     </p>
+
+    <form
+      id="eventsCateringForm"
+      class="surface-card grid w-full gap-4 text-left"
+      novalidate
+    >
+      <p class="text-sm text-slate-600">
+        This form prepares an Events & Catering enquiry email in your own email
+        client. Please review and send it manually. Sending the enquiry does not
+        confirm availability, pricing or booking.
+      </p>
+
+      <div class="service-field">
+        <label for="event-name" class="form-label">Name *</label>
+        <input
+          id="event-name"
+          name="name"
+          required
+          maxlength="100"
+          type="text"
+          autocomplete="name"
+          class="form-control"
+          aria-describedby="event-name-error"
+        />
+        <p id="event-name-error" class="service-error"></p>
+      </div>
+
+      <div class="service-field">
+        <label for="event-email" class="form-label">Email *</label>
+        <input
+          id="event-email"
+          name="email"
+          required
+          maxlength="254"
+          type="email"
+          autocomplete="email"
+          class="form-control"
+          aria-describedby="event-email-error"
+        />
+        <p id="event-email-error" class="service-error"></p>
+      </div>
+
+      <div class="service-field">
+        <label for="event-phone" class="form-label">Phone Number *</label>
+        <input
+          id="event-phone"
+          name="phone"
+          required
+          maxlength="30"
+          type="tel"
+          autocomplete="tel"
+          class="form-control"
+          aria-describedby="event-phone-help event-phone-error"
+        />
+        <p id="event-phone-help" class="service-help">
+          Used only so the bakery can contact you personally about the enquiry.
+        </p>
+        <p id="event-phone-error" class="service-error"></p>
+      </div>
+
+      <div class="service-field">
+        <label for="event-type" class="form-label">Event Type *</label>
+        <select
+          id="event-type"
+          name="eventType"
+          required
+          class="form-control"
+          aria-describedby="event-type-error"
+        >
+          <option value="">Select an option</option>
+          <option value="Wedding">Wedding</option>
+          <option value="Corporate Event">Corporate Event</option>
+          <option value="Birthday">Birthday</option>
+          <option value="Baby Shower">Baby Shower</option>
+          <option value="Anniversary">Anniversary</option>
+          <option value="Community Event">Community Event</option>
+          <option value="Other">Other</option>
+        </select>
+        <p id="event-type-error" class="service-error"></p>
+      </div>
+
+      <div class="service-field">
+        <label for="preferred-event-date" class="form-label">
+          Preferred Event Date
+          <span class="font-normal text-slate-500">(optional)</span>
+        </label>
+        <input
+          id="preferred-event-date"
+          name="preferredEventDate"
+          type="date"
+          class="form-control"
+        />
+      </div>
+
+      <div class="service-field">
+        <label for="event-message" class="form-label">Message *</label>
+        <textarea
+          id="event-message"
+          name="message"
+          required
+          maxlength="1000"
+          rows="6"
+          class="form-control"
+          placeholder="Briefly describe your event, initial ideas and anything important."
+          aria-describedby="event-message-help event-message-error"></textarea>
+        <p id="event-message-help" class="service-help">
+          Maximum 1,000 characters.
+        </p>
+        <p id="event-message-error" class="service-error"></p>
+      </div>
+
+      <div
+        id="eventsCateringStatus"
+        class="service-status"
+        role="status"
+        aria-live="polite"
+      >
+      </div>
+
+      <textarea
+        id="eventsCateringFallback"
+        class="form-control service-fallback"
+        readonly
+        hidden
+        aria-label="Prepared Events and Catering enquiry email"></textarea>
+
+      <div class="service-actions">
+        <button type="submit" class="ui-button ui-button--primary">
+          Prepare Email
+        </button>
+        <button
+          id="copyEventsCateringMessage"
+          type="button"
+          class="ui-button ui-button--secondary"
+        >
+          Copy message
+        </button>
+      </div>
+    </form>
   </section>
 </Layout>
+
+<script>
+  import '@/browser/events-catering-form.js';
+</script>
+
+<style>
+  .service-field {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .service-help {
+    font-size: 0.8rem;
+    color: rgb(71 85 105);
+  }
+
+  .service-error {
+    min-height: 1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #991b1b;
+  }
+
+  .service-status {
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    background-color: rgb(241 245 249);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .service-status:empty {
+    display: none;
+  }
+
+  .service-status[data-status='error'] {
+    background-color: #fef2f2;
+    color: #991b1b;
+  }
+
+  .service-status[data-status='success'] {
+    background-color: #ecfdf5;
+    color: #065f46;
+  }
+
+  .service-fallback {
+    min-height: 14rem;
+    resize: vertical;
+  }
+
+  .service-actions {
+    display: grid;
+    gap: 0.75rem;
+  }
+</style>

@@ -1,96 +1,330 @@
 import { updateCartResumen } from './cart.js';
 import { clearCart, readCart } from './cart-state.js';
 
+const BAKERY_EMAIL = 'earthmamaskitchen@gmail.com';
+const AU_LOCAL_MOBILE_PATTERN = /^04\d{8}$/;
+
+const currencyFormatter = new Intl.NumberFormat('en-AU', {
+  style: 'currency',
+  currency: 'AUD',
+});
+
 export function initConfirmOrderForm() {
   const form = document.getElementById('contactForm');
+  if (!form || form.dataset.cartFormInitialized === 'true') return;
+
+  form.dataset.cartFormInitialized = 'true';
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const formData = new FormData(form);
-    const name = formData.get('name');
-    const phone = formData.get('phone');
+    const result = buildPreorderEmailFromForm(form);
+    if (!result.ok) {
+      showPreorderEmailStatus(result.message, 'error');
+      return;
+    }
 
-    const emailText = jsonToEmailText();
-
-    const subject = encodeURIComponent(`${name} - New Order`);
-    const body = encodeURIComponent(
-      `G'day, My name is ${name}.\nMy phone number is ${phone}.\n I would like to order a cake... \n\n${emailText}`,
+    openPreorderMailto(result.subject, result.body);
+    showPreorderEmailStatus(
+      'Email draft prepared. Your email client has been opened. Please review the message, attach any reference images if required, then press Send. The bakery has not yet received your preorder.',
+      'success',
     );
-
-    window.location.href = `mailto:earthmamaskitchen@gmail.com?subject=${subject}&body=${body}`;
   });
-}
 
-function jsonToEmailText() {
-  let text = 'ORDER DETAILS\n------------------------\n\n';
+  const copyButton = document.getElementById('copyPreorderEmail');
+  if (copyButton?.dataset.copyInitialized === 'true') return;
 
-  const data = readCart();
-  Object.values(data).forEach((item) => {
-    text += `${item.product}\n`;
-    if (item.offeringId) text += `Offering ID: ${item.offeringId}\n`;
-    if (item.workflowId) text += `Workflow: ${item.workflowId}\n`;
-
-    text += 'Selections:\n';
-    Object.entries(item.options ?? {}).forEach(([optionKey, optionValue]) => {
-      if (!optionValue || optionValue.length === 0) return;
-
-      if (optionKey === 'addOns') {
-        const addOnLabels = item.labels?.addOns ?? [];
-        const selectedAddOns = Object.values(optionValue)
-          .map((addOnId) => {
-            const addOn = addOnLabels.find(
-              (label) => label.addOnId === addOnId,
-            );
-            return addOn?.customerInput
-              ? `${addOn.label} (${addOn.customerInput})`
-              : (addOn?.label ?? addOnId);
-          })
-          .join(', ');
-
-        if (selectedAddOns) text += `  - Add-ons: ${selectedAddOns}\n`;
+  if (copyButton) {
+    copyButton.dataset.copyInitialized = 'true';
+    copyButton.addEventListener('click', async () => {
+      const result = buildPreorderEmailFromForm(form);
+      if (!result.ok) {
+        showPreorderEmailStatus(result.message, 'error');
         return;
       }
 
-      const label = item.labels?.options?.[optionKey]?.label ?? optionKey;
-      const value = item.labels?.options?.[optionKey]?.value ?? optionValue;
-      text += `  - ${label}: ${Array.isArray(value) ? value.join(', ') : value}\n`;
+      const copied = await copyPreorderEmail(result.subject, result.body);
+      showPreorderEmailStatus(
+        copied
+          ? 'Preorder email copied. Please paste it into your email client, attach any reference images if required, and send it manually.'
+          : 'Copy was not available in this browser. The complete preorder email is shown below so you can copy it manually.',
+        copied ? 'success' : 'error',
+      );
     });
-
-    if (item.estimatedPrice?.amount) {
-      text += `Estimated Price: ${new Intl.NumberFormat('en-AU', {
-        style: 'currency',
-        currency: 'AUD',
-      }).format(item.estimatedPrice.amount / 100)}\n`;
-    }
-
-    if (item.containsAllergens?.length) {
-      text += `Contains: ${item.containsAllergens.join(', ')}\n`;
-    }
-
-    if (item.requiresReview) {
-      text += 'Review: Final quotation requires bakery review.\n';
-    }
-
-    if (item.referenceImageInstructions) {
-      text += `${item.referenceImageInstructions}\n`;
-    }
-
-    text += `\n------------------------\n`;
-  });
-  return text;
+  }
 }
 
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('#clearBtn');
-  if (!btn) return;
-  clearCart();
-});
+function buildPreorderEmailFromForm(form) {
+  const formData = new FormData(form);
+  const customer = {
+    name: normalizeText(formData.get('name')),
+    phone: normalizeText(formData.get('phone')),
+    collectionPreference: normalizeText(formData.get('collectionPreference')),
+  };
+  const cart = readCart();
+  const validationError = validatePreorderRequest(customer, cart);
 
-document.addEventListener('astro:page-load', () => {
+  if (validationError) {
+    return { ok: false, message: validationError };
+  }
+
+  return {
+    ok: true,
+    subject: `Preorder request - ${customer.name}`,
+    body: buildPreorderEmailBody(customer, cart),
+  };
+}
+
+function validatePreorderRequest(customer, cart) {
+  if (!customer.name) {
+    return 'Please enter your full name.';
+  }
+
+  if (!customer.name.includes(' ')) {
+    return 'Please enter your full name, including first and last name.';
+  }
+
+  if (!AU_LOCAL_MOBILE_PATTERN.test(customer.phone)) {
+    return 'Please enter a local Australian mobile number in the format 0412345678.';
+  }
+
+  if (!customer.collectionPreference) {
+    return 'Please select a collection preference.';
+  }
+
+  if (!cart.length) {
+    return 'Please add at least one preorder configuration before preparing the email.';
+  }
+
+  return '';
+}
+
+function buildPreorderEmailBody(customer, cart) {
+  return [
+    'PREORDER REQUEST',
+    '================',
+    '',
+    "Hello Earth Mama's Kitchen,",
+    '',
+    'I would like to submit the following preorder request for review.',
+    '',
+    'CUSTOMER DETAILS',
+    '----------------',
+    `Full name: ${customer.name}`,
+    `Mobile: ${customer.phone}`,
+    `Collection preference: ${customer.collectionPreference}`,
+    '',
+    'IMPORTANT',
+    '---------',
+    'This is a preorder request only.',
+    'Submitting this email does not confirm availability, pricing, payment, collection time or booking.',
+    'The final quotation and confirmation will be provided after the bakery reviews the request.',
+    '',
+    'PRODUCT CONFIGURATIONS',
+    '----------------------',
+    ...cart.flatMap((item, index) => formatCartItem(item, index)),
+    '',
+    'ESTIMATED PRICE NOTICE',
+    '----------------------',
+    'Estimated prices are based on the current selected options and predefined add-ons.',
+    'They do not include subjective design complexity, artistic interpretation, special requests or manual review adjustments.',
+    'The final quotation will be confirmed by the bakery after review.',
+    '',
+    'ALLERGEN NOTICE',
+    '---------------',
+    'Products are prepared in a shared kitchen environment and cannot be guaranteed to be free from allergens or cross-contamination.',
+    '',
+    'REFERENCE IMAGES',
+    '----------------',
+    hasReferenceImageReminder(cart)
+      ? 'I understand that reference images are not uploaded through the website. I will attach any reference images manually to this email before sending.'
+      : 'No reference images are attached through the website. If the bakery needs visual references, I understand they can be provided manually by email.',
+    '',
+    'NEXT STEP',
+    '---------',
+    'Please review this preorder request and contact me to confirm availability, final pricing, payment details and collection arrangements.',
+    '',
+    'Kind regards,',
+    customer.name,
+  ].join('\n');
+}
+
+function formatCartItem(item, index) {
+  const lines = [
+    `${index + 1}. ${item.product}`,
+    item.offeringId ? `   Offering ID: ${item.offeringId}` : '',
+    item.workflowId ? `   Workflow: ${item.workflowId}` : '',
+    '   Selected options:',
+    ...formatSelectedOptions(item),
+  ].filter(Boolean);
+
+  if (item.estimatedPrice?.amount) {
+    lines.push(
+      `   Estimated price: ${currencyFormatter.format(
+        item.estimatedPrice.amount / 100,
+      )}`,
+    );
+  }
+
+  if (item.containsAllergens?.length) {
+    lines.push(`   Contains: ${item.containsAllergens.join(', ')}`);
+  }
+
+  if (item.requiresReview) {
+    lines.push('   Review notice: Final quotation requires bakery review.');
+  }
+
+  if (item.referenceImageInstructions) {
+    lines.push(
+      `   Reference image reminder: ${item.referenceImageInstructions}`,
+    );
+  }
+
+  lines.push('');
+  return lines;
+}
+
+function formatSelectedOptions(item) {
+  const optionLines = [];
+
+  Object.entries(item.options ?? {}).forEach(([optionKey, optionValue]) => {
+    if (!hasDisplayValue(optionValue)) return;
+
+    if (optionKey === 'addOns') {
+      const selectedAddOns = formatSelectedAddOns(
+        optionValue,
+        item.labels?.addOns ?? [],
+      );
+
+      if (selectedAddOns) optionLines.push(`   - Add-ons: ${selectedAddOns}`);
+      return;
+    }
+
+    const label =
+      item.labels?.options?.[optionKey]?.label ?? formatLabel(optionKey);
+    const value = item.labels?.options?.[optionKey]?.value ?? optionValue;
+    optionLines.push(`   - ${label}: ${formatValue(value)}`);
+  });
+
+  return optionLines.length ? optionLines : ['   - No options recorded.'];
+}
+
+function formatSelectedAddOns(optionValue, addOnLabels) {
+  return Object.values(optionValue)
+    .map((addOnId) => {
+      const addOn = addOnLabels.find((label) => label.addOnId === addOnId);
+
+      if (!addOn) return addOnId;
+
+      return addOn.customerInput
+        ? `${addOn.label} (${addOn.customerInput})`
+        : addOn.label;
+    })
+    .filter(Boolean)
+    .join(', ');
+}
+
+function openPreorderMailto(subject, body) {
+  const href = `mailto:${BAKERY_EMAIL}?subject=${encodeURIComponent(
+    subject,
+  )}&body=${encodeURIComponent(body)}`;
+
+  window.location.href = href;
+}
+
+async function copyPreorderEmail(subject, body) {
+  const text = `To: ${BAKERY_EMAIL}\nSubject: ${subject}\n\n${body}`;
+  hideManualCopyFallback();
+
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (err) {
+    console.error('clipboard write error', err);
+  }
+
+  showManualCopyFallback(text);
+  return false;
+}
+
+function showManualCopyFallback(text) {
+  const textarea = document.getElementById('preorderEmailFallback');
+  if (!(textarea instanceof HTMLTextAreaElement)) return;
+
+  textarea.value = text;
+  textarea.hidden = false;
+  textarea.select();
+}
+
+function hideManualCopyFallback() {
+  const textarea = document.getElementById('preorderEmailFallback');
+  if (!(textarea instanceof HTMLTextAreaElement)) return;
+
+  textarea.value = '';
+  textarea.hidden = true;
+}
+
+function showPreorderEmailStatus(message, type) {
+  const status = document.getElementById('preorderEmailStatus');
+  if (!status) return;
+
+  status.textContent = message;
+  status.dataset.status = type;
+}
+
+function normalizeText(value) {
+  return typeof value === 'string' ? value.trim().replace(/\s+/g, ' ') : '';
+}
+
+function hasReferenceImageReminder(cart) {
+  return cart.some((item) => Boolean(item.referenceImageInstructions));
+}
+
+function hasDisplayValue(value) {
+  return Boolean(value) && (!Array.isArray(value) || value.length > 0);
+}
+
+function formatValue(value) {
+  return Array.isArray(value) ? value.join(', ') : value;
+}
+
+function formatLabel(key) {
+  return key
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/[-_]/g, ' ')
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+if (!window.__orderCartClearInitialized) {
+  window.__orderCartClearInitialized = true;
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('#clearBtn');
+    if (!btn) return;
+
+    const shouldClear = confirm(
+      'Clear all saved preorder configurations from your cart?',
+    );
+
+    if (!shouldClear) return;
+    clearCart();
+  });
+}
+
+function initCartPage() {
   if (!document.querySelector('#cart-resumen')) return;
   updateCartResumen();
   initConfirmOrderForm();
-});
+}
 
-window.addEventListener('cart:update', () => updateCartResumen());
+if (!window.__orderCartPageInitialized) {
+  window.__orderCartPageInitialized = true;
+  document.addEventListener('astro:page-load', initCartPage);
+}
+
+if (!window.__orderCartUpdateInitialized) {
+  window.__orderCartUpdateInitialized = true;
+  window.addEventListener('cart:update', () => updateCartResumen());
+}
