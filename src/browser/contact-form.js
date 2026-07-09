@@ -191,18 +191,23 @@ function clearContactErrors(form) {
 }
 
 function showContactErrors(form, errors) {
+  let firstInvalidField = null;
+
   Object.entries(errors).forEach(([fieldName, message]) => {
     const field = form.elements.namedItem(fieldName);
     const error = document.getElementById(`contact-${fieldName}-error`);
 
     if (field instanceof HTMLElement) {
       field.setAttribute('aria-invalid', 'true');
+      firstInvalidField ??= field;
     }
 
     if (error) {
       error.textContent = message;
     }
   });
+
+  firstInvalidField?.focus();
 }
 
 function showContactStatus(message, type) {
@@ -211,6 +216,11 @@ function showContactStatus(message, type) {
 
   status.textContent = message;
   status.dataset.status = type;
+
+  if (type === 'success') {
+    status.setAttribute('tabindex', '-1');
+    status.focus();
+  }
 }
 
 function normalizeText(value) {

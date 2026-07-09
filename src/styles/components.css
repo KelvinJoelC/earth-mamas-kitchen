@@ -16,6 +16,11 @@
   outline-offset: 2px;
 }
 
+:where(a, button, summary, input, select, textarea):focus-visible {
+  outline: 3px solid var(--ui-color-focus-default);
+  outline-offset: 2px;
+}
+
 .skip-link {
   position: fixed;
   top: var(--ui-space-4);
@@ -45,6 +50,25 @@
 .ui-button[aria-disabled='true'] {
   cursor: not-allowed;
   opacity: 0.55;
+}
+
+.carousel-toggle {
+  border: 1px solid var(--ui-color-brand-strong);
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-color-surface-default);
+  padding: var(--ui-space-2) var(--ui-space-4);
+  color: var(--ui-color-brand-strong);
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition:
+    background-color var(--ui-transition-default),
+    color var(--ui-transition-default);
+}
+
+.carousel-toggle:hover,
+.carousel-toggle[aria-pressed='true'] {
+  background: var(--ui-color-brand-strong);
+  color: var(--ui-color-text-inverse);
 }
 
 .ui-button--primary {
