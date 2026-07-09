@@ -1,8 +1,12 @@
 .ui-button {
   display: inline-flex;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
   cursor: pointer;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  overflow-wrap: anywhere;
   transition:
     background-color var(--ui-transition-default),
     border-color var(--ui-transition-default),
@@ -53,6 +57,7 @@
 }
 
 .carousel-toggle {
+  min-height: 2.75rem;
   border: 1px solid var(--ui-color-brand-strong);
   border-radius: var(--ui-radius-pill);
   background: var(--ui-color-surface-default);
@@ -90,6 +95,7 @@
 
 .form-control {
   width: 100%;
+  min-height: 2.75rem;
   border: 1px solid var(--ui-color-border-default);
   border-radius: var(--ui-radius-control);
   background: transparent;
@@ -140,6 +146,7 @@
   background: var(--ui-color-surface-default);
   padding: var(--ui-space-4);
   box-shadow: var(--ui-shadow-surface);
+  overflow-wrap: anywhere;
 }
 
 .social-links-surface {
@@ -153,6 +160,8 @@
 
 .ui-icon-link {
   display: inline-flex;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
   align-items: center;
   justify-content: center;
   transition:

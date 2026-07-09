@@ -26,10 +26,10 @@ const products = selection as ProductList;
             props: { h, padding, bg },
             img,
           }) => (
-            <div class="embla__slide mx-2 flex-none w-max">
+            <div class="embla__slide mx-2 flex-none w-[min(82vw,18rem)]">
               <div
                 style={{ height: `${parseInt(h) + 100}px` }}
-                class="slide my-6 flex flex-col relative min-w-[250px] w-2xs overflow-hidden text-center items-center justify-end group"
+                class="slide my-6 flex flex-col relative min-w-0 w-full overflow-hidden text-center items-center justify-end group"
               >
                 <div
                   style={{ height: `${h}px` }}
@@ -60,7 +60,7 @@ const products = selection as ProductList;
                     </p>
                     <a
                       href={productOfferingPaths[offeringId]}
-                      class="flex py-1 mt-5 items-center justify-center border rounded-3xl bg-purple-400 text-white font-bold"
+                      class="flex min-h-11 px-4 py-2.5 mt-5 items-center justify-center border rounded-3xl bg-purple-400 text-white font-bold"
                     >
                       View More
                     </a>

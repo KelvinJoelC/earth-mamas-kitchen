@@ -144,11 +144,12 @@ const preorderConfigJson = JSON.stringify(preorderConfig);
             <hr class="my-2 border-pink-400" />
           </summary>
           <div class="text-sm text-slate-700">
-            {
-              selection.options.allergens
-                ? selection.options.allergens.join(', ')
-                : 'No allergens information available.'
-            }
+            <p>
+              <span class="font-semibold">Contains:</span>
+              <span id="containsAllergens" aria-live="polite">
+                Select options to show allergen information.
+              </span>
+            </p>
           </div>
         </details>
       </div>
@@ -183,17 +184,27 @@ const preorderConfigJson = JSON.stringify(preorderConfig);
           ></textarea>
         </div>
 
+        <div class="surface-card col-span-full">
+          <h3 class="form-label">Important Allergen Notice</h3>
+          <p
+            id="crossContaminationWarning"
+            class="form-message form-message--help"
+          >
+            {allergenPolicy.crossContaminationWarning}
+          </p>
+        </div>
+
         <div class="flex gap-2 justify-end pt-2 col-span-full">
           <button
             type="reset"
-            class="ui-button text-xs px-3 py-2 rounded-full border border-slate-200 text-slate-500 hover:bg-slate-50"
+            class="ui-button min-h-11 text-sm px-4 py-2 rounded-full border border-slate-200 text-slate-500 hover:bg-slate-50"
           >
             Clean
           </button>
 
           <button
             type="submit"
-            class="ui-button text-xs px-4 py-2 rounded-full bg-green-500 text-white font-semibold hover:bg-verde-medio shadow-sm"
+            class="ui-button min-h-11 text-sm px-5 py-2 rounded-full bg-green-500 text-white font-semibold hover:bg-verde-medio shadow-sm"
           >
             Confirm
           </button>

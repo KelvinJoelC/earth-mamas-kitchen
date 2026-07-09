@@ -5,6 +5,12 @@
 @import './tokens.css';
 @import './components.css';
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 @theme {
   --font-calistoga: 'Calistoga', 'sans-serif';
   --font-dancing: 'Dancing Script Variable', 'sans-serif';

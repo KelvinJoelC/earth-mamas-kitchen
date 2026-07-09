@@ -69,7 +69,14 @@ function applyCollectionDateLimit(form, config) {
   const minimumDate = new Date();
   minimumDate.setDate(minimumDate.getDate() + config.leadTime.minimum);
 
-  collectionDate.min = minimumDate.toISOString().slice(0, 10);
+  const firstAvailableDate = minimumDate.toISOString().slice(0, 10);
+
+  collectionDate.min = firstAvailableDate;
+
+  if (!collectionDate.value || collectionDate.value < firstAvailableDate) {
+    collectionDate.value = firstAvailableDate;
+  }
+
   setMessage(
     'collection-date',
     `Minimum notice: ${config.leadTime.minimum} calendar days.`,
@@ -177,9 +184,6 @@ function applySelectionLimits(form, config) {
       const checkboxes = [
         ...form.querySelectorAll(`[name="${CSS.escape(group.id)}"]`),
       ];
-      const selectedCount = checkboxes.filter(
-        (checkbox) => checkbox.checked,
-      ).length;
       const maximumSelections = getActiveMaximumSelections(
         form,
         group,
@@ -187,6 +191,19 @@ function applySelectionLimits(form, config) {
       );
       const minimumSelections = group.minimumSelections ?? 0;
       const firstCheckbox = checkboxes[0];
+      const selectedCheckboxes = checkboxes.filter(
+        (checkbox) => checkbox.checked,
+      );
+
+      if (maximumSelections && selectedCheckboxes.length > maximumSelections) {
+        selectedCheckboxes.slice(maximumSelections).forEach((checkbox) => {
+          checkbox.checked = false;
+        });
+      }
+
+      const selectedCount = checkboxes.filter(
+        (checkbox) => checkbox.checked,
+      ).length;
 
       checkboxes.forEach((checkbox) => {
         checkbox.disabled =

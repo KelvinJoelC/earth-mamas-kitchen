@@ -34,6 +34,7 @@ export interface SingleSelectOptionGroup<
 > extends OptionGroupBase<TId> {
   readonly kind: 'single-select';
   readonly options: readonly SelectOption<TValueId>[];
+  readonly defaultValue?: TValueId;
 }
 
 export interface MultiSelectOptionGroup<
@@ -52,6 +53,7 @@ export interface PricedSingleSelectOptionGroup<
 > extends OptionGroupBase<TId> {
   readonly kind: 'priced-single-select';
   readonly options: readonly PricedSelectOption<TValueId>[];
+  readonly defaultValue?: TValueId;
 }
 
 export interface TextOptionGroup<

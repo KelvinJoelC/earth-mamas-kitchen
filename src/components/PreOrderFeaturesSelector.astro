@@ -66,20 +66,35 @@ function describedBy(group: OptionGroup) {
 
 {
   optionGroups.map((group) => (
-    <div class="surface-card group w-full">
-      <p id={fieldLabelId(group)} class="form-label">
-        {group.label}
-        {group.required && <span class="sr-only"> required</span>}
-      </p>
-      {group.description && (
+    <div class="surface-card group w-full space-y-4">
+      <div class="space-y-2">
         <p
-          id={fieldDescriptionId(group)}
-          class="form-message form-message--help"
+          id={fieldLabelId(group)}
+          class="form-label flex flex-wrap items-center gap-2"
         >
-          {group.description}
+          <span>{group.label}</span>
+          {group.required && (
+            <>
+              <span class="sr-only"> required</span>
+              <span
+                aria-hidden="true"
+                class="rounded-full bg-rosa-claro px-2.5 py-1 text-xs font-semibold text-slate-700"
+              >
+                Required
+              </span>
+            </>
+          )}
         </p>
-      )}
-      <hr class="my-2 border-pink-400" />
+        {group.description && (
+          <p
+            id={fieldDescriptionId(group)}
+            class="form-message form-message--help"
+          >
+            {group.description}
+          </p>
+        )}
+      </div>
+      <hr class="border-pink-400" />
 
       {(() => {
         switch (group.kind) {
@@ -96,10 +111,13 @@ function describedBy(group: OptionGroup) {
                 aria-labelledby={fieldLabelId(group)}
                 aria-describedby={describedBy(group)}
               >
-                <option value="">Select an option</option>
+                {!group.defaultValue && (
+                  <option value="">Select an option</option>
+                )}
                 {group.options.map((option) => (
                   <option
                     value={option.value}
+                    selected={group.defaultValue === option.value}
                     data-label={option.label}
                     data-price={'price' in option ? option.price : undefined}
                   >
@@ -114,7 +132,7 @@ function describedBy(group: OptionGroup) {
           case 'multi-select':
             return (
               <div
-                class="space-y-2"
+                class="grid gap-3 sm:grid-cols-2"
                 role="group"
                 aria-labelledby={fieldLabelId(group)}
                 aria-describedby={describedBy(group)}
@@ -124,7 +142,7 @@ function describedBy(group: OptionGroup) {
                 data-maximum-selections={group.maximumSelections}
               >
                 {group.options.map((option) => (
-                  <label class="inline-flex items-center gap-2 text-xs text-slate-700">
+                  <label class="inline-flex min-h-11 items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition hover:border-pink-300 hover:bg-rosa-claro/40 has-disabled:text-slate-400">
                     <input
                       type="checkbox"
                       name={group.id}
@@ -187,7 +205,7 @@ function describedBy(group: OptionGroup) {
 
       <p
         id={fieldMessageId(group)}
-        class="form-message form-message--help"
+        class="form-message form-message--help pt-1"
         data-field-message={group.id}
         aria-live="polite"
       />
@@ -279,17 +297,6 @@ function describedBy(group: OptionGroup) {
     This estimate is based on your current selections. Your final quotation will
     be confirmed after review.
   </p>
-</div>
-
-<div class="surface-card w-full sm:col-span-2">
-  <h3 class="form-label">Allergen Information</h3>
-  <p class="text-sm text-slate-700">
-    <span class="font-semibold">Contains:</span>
-    <span id="containsAllergens" aria-live="polite">
-      Select options to show allergen information.
-    </span>
-  </p>
-  <p id="crossContaminationWarning" class="form-message form-message--help"></p>
 </div>
 
 {
