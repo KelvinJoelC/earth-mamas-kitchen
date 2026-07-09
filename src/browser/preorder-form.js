@@ -253,12 +253,6 @@ function collectSelections(form, config) {
     };
   });
 
-  const notes = getControl(form, 'notes')?.value.trim();
-  if (notes) {
-    selections.notes = notes;
-    labels.notes = { label: 'Notes', value: notes };
-  }
-
   return { selections, labels };
 }
 
