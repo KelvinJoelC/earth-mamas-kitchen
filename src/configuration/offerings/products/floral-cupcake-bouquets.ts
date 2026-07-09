@@ -24,6 +24,7 @@ export const floralCupcakeBouquets = {
       label: 'Bouquet Size',
       required: true,
       displayOrder: 10,
+      defaultValue: 'small-bouquet',
       options: [
         {
           value: 'small-bouquet',
