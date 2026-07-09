@@ -216,18 +216,23 @@ function clearEventsErrors(form) {
 }
 
 function showEventsErrors(form, errors) {
+  let firstInvalidField = null;
+
   Object.entries(errors).forEach(([fieldName, message]) => {
     const field = form.elements.namedItem(fieldName);
     const error = document.getElementById(errorIdFor(fieldName));
 
     if (field instanceof HTMLElement) {
       field.setAttribute('aria-invalid', 'true');
+      firstInvalidField ??= field;
     }
 
     if (error) {
       error.textContent = message;
     }
   });
+
+  firstInvalidField?.focus();
 }
 
 function errorIdFor(fieldName) {
@@ -248,6 +253,11 @@ function showEventsStatus(message, type) {
 
   status.textContent = message;
   status.dataset.status = type;
+
+  if (type === 'success') {
+    status.setAttribute('tabindex', '-1');
+    status.focus();
+  }
 }
 
 function normalizeText(value) {

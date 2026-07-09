@@ -15,7 +15,21 @@ import { AWARDS } from '@/content/awards';
       </span>
     </div>
   </div>
-  <div class="embla autoplayCarousel overflow-hidden w-full">
+  <div class="flex justify-center px-6 pb-3">
+    <button
+      type="button"
+      class="carousel-toggle"
+      data-carousel-toggle
+      aria-pressed="false"
+    >
+      Pause awards carousel
+    </button>
+  </div>
+  <div
+    class="embla autoplayCarousel overflow-hidden w-full"
+    role="region"
+    aria-label="Awards carousel"
+  >
     <div class="embla__container flex">
       {
         AWARDS.map(({ id, event, position, description, title }) => (

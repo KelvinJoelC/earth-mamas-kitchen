@@ -86,11 +86,15 @@ function applyAddOnInputs(form) {
     if (!inputWrapper) return;
 
     const input = inputWrapper.querySelector('input, textarea');
-    inputWrapper.classList.toggle('hidden', !checkbox.checked);
+    const isSelected = checkbox.checked;
+    inputWrapper.classList.toggle('hidden', !isSelected);
+    inputWrapper.hidden = !isSelected;
+    inputWrapper.setAttribute('aria-hidden', String(!isSelected));
 
     if (input) {
-      input.required = checkbox.checked;
-      if (!checkbox.checked) input.value = '';
+      input.disabled = !isSelected;
+      input.required = isSelected;
+      if (!isSelected) input.value = '';
     }
   });
 }

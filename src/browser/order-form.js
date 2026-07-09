@@ -21,6 +21,7 @@ export function initConfirmOrderForm() {
     const result = buildPreorderEmailFromForm(form);
     if (!result.ok) {
       showPreorderEmailStatus(result.message, 'error');
+      focusPreorderIssue(form, result.message);
       return;
     }
 
@@ -40,6 +41,7 @@ export function initConfirmOrderForm() {
       const result = buildPreorderEmailFromForm(form);
       if (!result.ok) {
         showPreorderEmailStatus(result.message, 'error');
+        focusPreorderIssue(form, result.message);
         return;
       }
 
@@ -272,6 +274,32 @@ function showPreorderEmailStatus(message, type) {
 
   status.textContent = message;
   status.dataset.status = type;
+
+  if (type === 'success') {
+    status.setAttribute('tabindex', '-1');
+    status.focus();
+  }
+}
+
+function focusPreorderIssue(form, message) {
+  const fieldName = getFieldNameForPreorderMessage(message);
+  const field = fieldName ? form.elements.namedItem(fieldName) : null;
+
+  if (field instanceof HTMLElement) {
+    field.focus();
+    return;
+  }
+
+  const status = document.getElementById('preorderEmailStatus');
+  status?.setAttribute('tabindex', '-1');
+  status?.focus();
+}
+
+function getFieldNameForPreorderMessage(message) {
+  if (message.includes('full name')) return 'name';
+  if (message.includes('mobile number')) return 'phone';
+  if (message.includes('collection preference')) return 'collectionPreference';
+  return '';
 }
 
 function normalizeText(value) {
