@@ -22,7 +22,8 @@ export const guidedPreorderWorkflow = {
       id: 'custom-colours-description',
       kind: 'text',
       label: 'Custom Colours',
-      description: 'Describe your preferred colour combination.',
+      description:
+        'Describe your custom colours. This field is required when "Custom Colours" is selected.',
       required: false,
       displayOrder: 40,
       multiline: false,

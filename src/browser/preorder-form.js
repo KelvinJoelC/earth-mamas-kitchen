@@ -5,6 +5,9 @@ const currencyFormatter = new Intl.NumberFormat('en-AU', {
   currency: 'AUD',
 });
 
+const conditionalPanelHideTimers = new WeakMap();
+const optionalPanelHideTimers = new WeakMap();
+
 function readPreorderConfig(form) {
   if (!form?.dataset.preorderConfig) return null;
 
@@ -22,6 +25,34 @@ function formatAud(cents) {
 
 function getControl(form, groupId) {
   return form.querySelector(`[name="${CSS.escape(groupId)}"]`);
+}
+
+function getControls(form, groupId) {
+  return [...form.querySelectorAll(`[name="${CSS.escape(groupId)}"]`)];
+}
+
+function getOptionGroupPanel(form, groupId) {
+  return form.querySelector(
+    `[data-option-group-panel="${CSS.escape(groupId)}"]`,
+  );
+}
+
+function getOptionalFieldPanel(form, groupId) {
+  return form.querySelector(
+    `[data-optional-field-panel="${CSS.escape(groupId)}"]`,
+  );
+}
+
+function getOptionalFieldToggle(form, groupId) {
+  return form.querySelector(
+    `[data-optional-field-toggle="${CSS.escape(groupId)}"]`,
+  );
+}
+
+function getOptionalFieldContent(form, groupId) {
+  return form.querySelector(
+    `[data-optional-field-content="${CSS.escape(groupId)}"]`,
+  );
 }
 
 function getSelectedValues(form, groupId) {
@@ -110,16 +141,124 @@ function applyRequiredRules(form, rules) {
   rules
     .filter((rule) => rule.kind === 'requires')
     .forEach((rule) => {
-      const target = getControl(form, rule.targetGroupId);
-      if (!target) return;
+      const targets = getControls(form, rule.targetGroupId);
+      if (!targets.length) return;
 
       const active = conditionMatches(form, rule.when);
-      target.required = active;
+      const panel = getOptionGroupPanel(form, rule.targetGroupId);
+
+      targets.forEach((target) => {
+        target.required = active;
+        target.disabled = !active;
+
+        if (!active) {
+          if (target.type === 'checkbox' || target.type === 'radio') {
+            target.checked = false;
+          } else {
+            target.value = '';
+          }
+        }
+      });
+
+      setConditionalPanelVisibility(panel, active);
+      if (active) {
+        setOptionalFieldExpanded(form, rule.targetGroupId, true);
+      }
       setMessage(
         rule.targetGroupId,
         active ? 'Required based on your current selection.' : '',
       );
     });
+}
+
+function setConditionalPanelVisibility(panel, visible) {
+  if (!panel) return;
+
+  const existingTimer = conditionalPanelHideTimers.get(panel);
+  if (existingTimer) {
+    window.clearTimeout(existingTimer);
+    conditionalPanelHideTimers.delete(panel);
+  }
+
+  panel.setAttribute('aria-hidden', String(!visible));
+
+  if (visible) {
+    panel.hidden = false;
+    window.requestAnimationFrame(() => {
+      panel.classList.remove('conditional-field-panel--hidden');
+    });
+    return;
+  }
+
+  panel.classList.add('conditional-field-panel--hidden');
+
+  const hideTimer = window.setTimeout(() => {
+    panel.hidden = true;
+    conditionalPanelHideTimers.delete(panel);
+  }, 250);
+
+  conditionalPanelHideTimers.set(panel, hideTimer);
+}
+
+function fieldHasValue(form, groupId) {
+  return getControls(form, groupId).some((control) => {
+    if (control.type === 'checkbox' || control.type === 'radio') {
+      return control.checked;
+    }
+
+    return Boolean(control.value?.trim());
+  });
+}
+
+function setOptionalFieldExpanded(form, groupId, expanded) {
+  const panel = getOptionalFieldPanel(form, groupId);
+  const toggle = getOptionalFieldToggle(form, groupId);
+  const content = getOptionalFieldContent(form, groupId);
+
+  if (!panel || !toggle || !content) return;
+
+  const existingTimer = optionalPanelHideTimers.get(content);
+  if (existingTimer) {
+    window.clearTimeout(existingTimer);
+    optionalPanelHideTimers.delete(content);
+  }
+
+  toggle.setAttribute('aria-expanded', String(expanded));
+  panel.classList.toggle('optional-field-card--collapsed', !expanded);
+
+  if (expanded) {
+    content.hidden = false;
+    window.requestAnimationFrame(() => {
+      content.classList.remove('optional-field-content--collapsed');
+    });
+    return;
+  }
+
+  content.classList.add('optional-field-content--collapsed');
+
+  const hideTimer = window.setTimeout(() => {
+    content.hidden = true;
+    optionalPanelHideTimers.delete(content);
+  }, 250);
+
+  optionalPanelHideTimers.set(content, hideTimer);
+}
+
+function initOptionalFields(form) {
+  form.querySelectorAll('[data-optional-field-toggle]').forEach((toggle) => {
+    const groupId = toggle.dataset.optionalFieldToggle;
+    if (!groupId) return;
+
+    if (!toggle.dataset.bound) {
+      toggle.dataset.bound = 'true';
+      toggle.addEventListener('click', () => {
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        setOptionalFieldExpanded(form, groupId, !expanded);
+      });
+    }
+
+    setOptionalFieldExpanded(form, groupId, fieldHasValue(form, groupId));
+  });
 }
 
 function applyExclusionRules(form, rules) {
@@ -245,6 +384,8 @@ function collectSelections(form, config) {
     }
 
     const control = getControl(form, group.id);
+    if (!control || control.disabled) return;
+
     selections[group.id] = control?.value ?? '';
     labels[group.id] = {
       label: group.label,
@@ -252,12 +393,6 @@ function collectSelections(form, config) {
         control?.selectedOptions?.[0]?.dataset.label ?? control?.value ?? '',
     };
   });
-
-  const notes = getControl(form, 'notes')?.value.trim();
-  if (notes) {
-    selections.notes = notes;
-    labels.notes = { label: 'Notes', value: notes };
-  }
 
   return { selections, labels };
 }
@@ -438,6 +573,7 @@ function initPreOrderForm() {
 
   form.dataset.bound = 'true';
   applyCollectionDateLimit(form, config);
+  initOptionalFields(form);
   refreshFormState(form, config);
 
   form.addEventListener('change', () => refreshFormState(form, config));
