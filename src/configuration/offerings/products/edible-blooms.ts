@@ -11,6 +11,37 @@ import { audCents } from '@/domain/money';
 import type { OptionGroup } from '@/domain/option-groups';
 import type { ProductOfferingDefinition } from '@/domain/offerings';
 
+const edibleBloomBoxSizeOptions = [
+  {
+    value: 'small-box',
+    label: 'Small Box',
+    description: '6 cupcakes',
+    price: audCents(3500),
+    attributes: { cupcakeCount: 6 },
+  },
+  {
+    value: 'standard-box',
+    label: 'Standard Box',
+    description: '12 cupcakes',
+    price: audCents(6500),
+    attributes: { cupcakeCount: 12 },
+  },
+  {
+    value: 'party-box',
+    label: 'Party Box',
+    description: '24 cupcakes',
+    price: audCents(12000),
+    attributes: { cupcakeCount: 24 },
+  },
+  {
+    value: 'celebration-box',
+    label: 'Celebration Box',
+    description: '48 cupcakes',
+    price: audCents(22000),
+    attributes: { cupcakeCount: 48 },
+  },
+] as const;
+
 export const edibleBlooms = {
   id: 'edible-blooms',
   slug: 'edible-blooms',
@@ -25,36 +56,8 @@ export const edibleBlooms = {
       label: 'Box Size',
       required: true,
       displayOrder: 10,
-      options: [
-        {
-          value: 'small-box',
-          label: 'Small Box',
-          description: '6 cupcakes',
-          price: audCents(3500),
-          attributes: { cupcakeCount: 6 },
-        },
-        {
-          value: 'standard-box',
-          label: 'Standard Box',
-          description: '12 cupcakes',
-          price: audCents(6500),
-          attributes: { cupcakeCount: 12 },
-        },
-        {
-          value: 'party-box',
-          label: 'Party Box',
-          description: '24 cupcakes',
-          price: audCents(12000),
-          attributes: { cupcakeCount: 24 },
-        },
-        {
-          value: 'celebration-box',
-          label: 'Celebration Box',
-          description: '48 cupcakes',
-          price: audCents(22000),
-          attributes: { cupcakeCount: 48 },
-        },
-      ],
+      defaultValue: edibleBloomBoxSizeOptions[0].value,
+      options: edibleBloomBoxSizeOptions,
     },
     {
       id: 'cupcake-flavours',
