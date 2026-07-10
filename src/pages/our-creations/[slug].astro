@@ -97,68 +97,62 @@ const preorderConfigJson = JSON.stringify(preorderConfig);
 
 <Layout title={selection.title} description={selection.description}>
   <section
-    class="flex flex-col items-center justify-center pt-30 lg:pt-20 gap-10 text-center"
+    class="product-page-shell flex flex-col items-center justify-center pt-30 lg:pt-20 gap-12 text-center"
     style={{ background: selection.props.bg }}
   >
-    <h1 class="font-calistoga text-5xl lg:text-6xl mx-2 px-6">
-      {selection.title}
-    </h1>
-    <div
-      class="grid md:grid-cols-2 max-w-4xl mx-auto px-6 place-items-center items-start"
-    >
-      <Image
-        src={`${selection.img}.webp`}
-        class="animate-slideIn w-9/12 md:max-w-[320px] object-contain"
-        alt={selection.title}
-        width={300}
-        height={300}
-      />
-      <div
-        class="p-4 rounded-xl space-y-6 text-black text-left w-full max-w-3xl
-           transition-all duration-500 ease-in-out"
-      >
-        <div class="surface-card">
-          <h2 class="font-calistoga text-2xl pb-3 font-bold">
+    <div class="product-hero-layout">
+      <div class="product-hero-media">
+        <Image
+          src={`${selection.img}.webp`}
+          class="product-hero-image"
+          alt={selection.title}
+          width={420}
+          height={420}
+        />
+      </div>
+
+      <div class="product-hero-content">
+        <div class="product-hero-summary">
+          <p class="configuration-kicker">Made to order</p>
+          <h1 class="font-calistoga text-5xl lg:text-6xl leading-tight">
             {selection.title}
-          </h2>
-          <div class="flex flex-row justify-between font-bold py-1">
-            {
-              selection.priceFrom && (
-                <p class="text-lg">From: {selection.priceFrom}$</p>
-              )
-            }
-            {
-              selection.leadTimeDays && (
-                <p class="text-md">Lead time: {selection.leadTimeDays} days</p>
-              )
-            }
+          </h1>
+          <div class="product-hero-description-card">
+            <p class="product-hero-description">
+              {selection.description}
+            </p>
           </div>
-          <p class="text-xl text-left">{selection.description}</p>
+          <div class="product-hero-guide">
+            <span aria-hidden="true">1</span>
+            <p>Choose your options</p>
+            <span aria-hidden="true">2</span>
+            <p>Review your estimate</p>
+            <span aria-hidden="true">3</span>
+            <p>Save to cart</p>
+          </div>
         </div>
-        <details class="surface-card">
+
+        <details class="product-info-disclosure">
           <summary
-            class="flex items-center bg-white text-2xl pb-2 font-bold
-        text-black cursor-pointer hover:bg-violeta-medio transition"
+            class="flex cursor-pointer items-center justify-between gap-4 text-lg font-semibold text-black transition hover:text-violeta-oscuro"
           >
-            {OPTION_LABELS['allergens']}
-            <hr class="my-2 border-pink-400" />
+            <span>{OPTION_LABELS['allergens']}</span>
+            <span aria-hidden="true">&#9662;</span>
           </summary>
-          <div class="text-sm text-slate-700">
+          <div class="pt-4 text-sm text-slate-700">
             <p>
-              <span class="font-semibold">Contains:</span>
               <span id="containsAllergens" aria-live="polite">
-                Select options to show allergen information.
+                <strong>
+                  Select your flavours to view the allergen information.
+                </strong>
               </span>
             </p>
           </div>
         </details>
       </div>
     </div>
-    <div
-      class="w-full sm:max-w-4xl px-6 bg-white p-6 rounded-3xl shadow text-black -mb-5 lg:mb-20"
-    >
-      <h2 class="text-3xl font-bold mb-4">Pre-order Now</h2>
 
+    <div class="product-configurator-page w-full text-black -mb-5 lg:mb-20">
       <form
         id="preOrderForm"
         method="POST"
@@ -166,37 +160,44 @@ const preorderConfigJson = JSON.stringify(preorderConfig);
         data-offering-id={offering.id}
         data-workflow-id={offering.workflowId}
         data-preorder-config={preorderConfigJson}
-        class="text-black w-full grid grid-cols-1 gap-4"
+        class="text-black w-full"
       >
-        <div class="grid sm:grid-cols-2 gap-4">
-          <PreOrderFeaturesSelector offering={offering} />
-        </div>
+        <PreOrderFeaturesSelector offering={offering} />
 
-        <div class="surface-card col-span-full">
-          <h3 class="form-label">Important Allergen Notice</h3>
-          <p
-            id="crossContaminationWarning"
-            class="form-message form-message--help"
-          >
-            {allergenPolicy.crossContaminationWarning}
-          </p>
-        </div>
+        <section
+          class="configuration-section configuration-section--notice"
+          aria-labelledby="allergen-notice-heading"
+        >
+          <div class="configuration-note-card">
+            <h3 id="allergen-notice-heading" class="form-label">
+              Important Allergen Notice
+            </h3>
+            <p
+              id="crossContaminationWarning"
+              class="form-message form-message--help"
+            >
+              {allergenPolicy.crossContaminationWarning}
+            </p>
+          </div>
+        </section>
 
-        <div class="flex gap-2 justify-end pt-2 col-span-full">
-          <button
-            type="reset"
-            class="ui-button min-h-11 text-sm px-4 py-2 rounded-full border border-slate-200 text-slate-500 hover:bg-slate-50"
-          >
-            Clean
-          </button>
+        <section class="configuration-action-section">
+          <div class="configuration-actions">
+            <button
+              type="reset"
+              class="ui-button min-h-11 text-sm px-5 py-2 rounded-full border border-slate-200 text-slate-500 hover:bg-slate-50"
+            >
+              Clean
+            </button>
 
-          <button
-            type="submit"
-            class="ui-button min-h-11 text-sm px-5 py-2 rounded-full bg-green-500 text-white font-semibold hover:bg-verde-medio shadow-sm"
-          >
-            Confirm
-          </button>
-        </div>
+            <button
+              type="submit"
+              class="ui-button min-h-11 text-sm px-6 py-2 rounded-full bg-green-500 text-white font-semibold hover:bg-verde-medio shadow-sm"
+            >
+              Confirm
+            </button>
+          </div>
+        </section>
       </form>
     </div>
   </section>

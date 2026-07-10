@@ -16,124 +16,252 @@ const { offering } = Astro.props as {
 ---
 
 <Layout title={offering.name} description={offering.summary}>
-  <section
-    class="mx-auto flex min-h-[70vh] max-w-3xl flex-col items-center justify-center gap-6 px-6 py-24 text-center"
-  >
-    <h1 class="font-calistoga text-5xl sm:text-6xl">{offering.name}</h1>
-    <p class="max-w-2xl text-xl sm:text-2xl">{offering.summary}</p>
-    <p class="max-w-2xl text-lg">
-      This is an initial enquiry pathway. Availability, requirements and final
-      pricing are confirmed personally after consultation.
-    </p>
-
-    <form
-      id="eventsCateringForm"
-      class="surface-card grid w-full gap-4 text-left"
-      novalidate
-    >
-      <p class="text-sm text-slate-600">
-        This form prepares an Events & Catering enquiry email in your own email
-        client. Please review and send it manually. Sending the enquiry does not
-        confirm availability, pricing or booking.
-      </p>
-
-      <div class="service-field">
-        <label for="event-name" class="form-label">Name *</label>
-        <input
-          id="event-name"
-          name="name"
-          required
-          maxlength="100"
-          type="text"
-          autocomplete="name"
-          class="form-control"
-          aria-describedby="event-name-error"
-        />
-        <p id="event-name-error" class="service-error"></p>
-      </div>
-
-      <div class="service-field">
-        <label for="event-email" class="form-label">Email *</label>
-        <input
-          id="event-email"
-          name="email"
-          required
-          maxlength="254"
-          type="email"
-          autocomplete="email"
-          class="form-control"
-          aria-describedby="event-email-error"
-        />
-        <p id="event-email-error" class="service-error"></p>
-      </div>
-
-      <div class="service-field">
-        <label for="event-phone" class="form-label">Phone Number *</label>
-        <input
-          id="event-phone"
-          name="phone"
-          required
-          maxlength="30"
-          type="tel"
-          autocomplete="tel"
-          class="form-control"
-          aria-describedby="event-phone-help event-phone-error"
-        />
-        <p id="event-phone-help" class="service-help">
-          Used only so the bakery can contact you personally about the enquiry.
+  <section class="service-page-shell">
+    <div class="service-hero">
+      <div class="service-hero-content">
+        <p class="configuration-kicker">Custom enquiry pathway</p>
+        <h1 class="font-calistoga text-5xl leading-tight sm:text-6xl">
+          {offering.name}
+        </h1>
+        <p class="service-hero-summary">{offering.summary}</p>
+        <p class="service-hero-note">
+          This is an initial enquiry pathway. Availability, requirements and
+          final pricing are confirmed personally after consultation.
         </p>
-        <p id="event-phone-error" class="service-error"></p>
       </div>
 
-      <div class="service-field">
-        <label for="event-type" class="form-label">Event Type *</label>
-        <select
-          id="event-type"
-          name="eventType"
-          required
-          class="form-control"
-          aria-describedby="event-type-error"
-        >
-          <option value="">Select an option</option>
-          <option value="Wedding">Wedding</option>
-          <option value="Corporate Event">Corporate Event</option>
-          <option value="Birthday">Birthday</option>
-          <option value="Baby Shower">Baby Shower</option>
-          <option value="Anniversary">Anniversary</option>
-          <option value="Community Event">Community Event</option>
-          <option value="Other">Other</option>
-        </select>
-        <p id="event-type-error" class="service-error"></p>
+      <div
+        class="service-hero-panel"
+        aria-label="Events and catering enquiry overview"
+      >
+        <div>
+          <span aria-hidden="true">1</span>
+          <p>Share your event idea</p>
+        </div>
+        <div>
+          <span aria-hidden="true">2</span>
+          <p>Prepare your enquiry email</p>
+        </div>
+        <div>
+          <span aria-hidden="true">3</span>
+          <p>Confirm details personally</p>
+        </div>
       </div>
+    </div>
 
-      <div class="service-field">
-        <label for="preferred-event-date" class="form-label">
-          Preferred Event Date
-          <span class="font-normal text-slate-500">(optional)</span>
-        </label>
-        <input
-          id="preferred-event-date"
-          name="preferredEventDate"
-          type="date"
-          class="form-control"
-        />
-      </div>
-
-      <div class="service-field">
-        <label for="event-message" class="form-label">Message *</label>
-        <textarea
-          id="event-message"
-          name="message"
-          required
-          maxlength="1000"
-          rows="6"
-          class="form-control"
-          placeholder="Briefly describe your event, initial ideas and anything important."
-          aria-describedby="event-message-help event-message-error"></textarea>
-        <p id="event-message-help" class="service-help">
-          Maximum 1,000 characters.
+    <form id="eventsCateringForm" class="service-enquiry-form" novalidate>
+      <div class="service-form-intro">
+        <p class="configuration-kicker">Start the conversation</p>
+        <h2 class="configuration-title">Request a personalised consultation</h2>
+        <p class="configuration-description">
+          This form prepares an Events & Catering enquiry email in your own
+          email client. Please review and send it manually. Sending the enquiry
+          does not confirm availability, pricing or booking.
         </p>
-        <p id="event-message-error" class="service-error"></p>
+      </div>
+
+      <div class="configuration-grid service-form-grid">
+        <div class="configuration-field">
+          <label
+            for="event-name"
+            class="configuration-field-title flex flex-wrap items-center gap-2"
+          >
+            <span>Name</span>
+            <span class="sr-only"> required</span>
+            <span
+              aria-hidden="true"
+              class="rounded-full bg-rosa-claro px-2.5 py-1 text-xs font-semibold text-slate-700"
+            >
+              Required
+            </span>
+          </label>
+          <hr class="configuration-field-divider" />
+          <div class="configuration-field-body">
+            <input
+              id="event-name"
+              name="name"
+              required
+              maxlength="100"
+              type="text"
+              autocomplete="name"
+              class="form-control form-control--soft text-sm"
+              aria-describedby="event-name-error"
+            />
+            <p
+              id="event-name-error"
+              class="form-message form-message--error service-error"
+            >
+            </p>
+          </div>
+        </div>
+
+        <div class="configuration-field">
+          <label
+            for="event-email"
+            class="configuration-field-title flex flex-wrap items-center gap-2"
+          >
+            <span>Email</span>
+            <span class="sr-only"> required</span>
+            <span
+              aria-hidden="true"
+              class="rounded-full bg-rosa-claro px-2.5 py-1 text-xs font-semibold text-slate-700"
+            >
+              Required
+            </span>
+          </label>
+          <hr class="configuration-field-divider" />
+          <div class="configuration-field-body">
+            <input
+              id="event-email"
+              name="email"
+              required
+              maxlength="254"
+              type="email"
+              autocomplete="email"
+              class="form-control form-control--soft text-sm"
+              aria-describedby="event-email-error"
+            />
+            <p
+              id="event-email-error"
+              class="form-message form-message--error service-error"
+            >
+            </p>
+          </div>
+        </div>
+
+        <div class="configuration-field">
+          <label
+            for="event-phone"
+            class="configuration-field-title flex flex-wrap items-center gap-2"
+          >
+            <span>Phone Number</span>
+            <span class="sr-only"> required</span>
+            <span
+              aria-hidden="true"
+              class="rounded-full bg-rosa-claro px-2.5 py-1 text-xs font-semibold text-slate-700"
+            >
+              Required
+            </span>
+          </label>
+          <hr class="configuration-field-divider" />
+          <div class="configuration-field-body">
+            <input
+              id="event-phone"
+              name="phone"
+              required
+              maxlength="30"
+              type="tel"
+              autocomplete="tel"
+              class="form-control form-control--soft text-sm"
+              aria-describedby="event-phone-help event-phone-error"
+            />
+            <p id="event-phone-help" class="form-message form-message--help">
+              Used only so the bakery can contact you personally about the
+              enquiry.
+            </p>
+            <p
+              id="event-phone-error"
+              class="form-message form-message--error service-error"
+            >
+            </p>
+          </div>
+        </div>
+
+        <div class="configuration-field">
+          <label
+            for="event-type"
+            class="configuration-field-title flex flex-wrap items-center gap-2"
+          >
+            <span>Event Type</span>
+            <span class="sr-only"> required</span>
+            <span
+              aria-hidden="true"
+              class="rounded-full bg-rosa-claro px-2.5 py-1 text-xs font-semibold text-slate-700"
+            >
+              Required
+            </span>
+          </label>
+          <hr class="configuration-field-divider" />
+          <div class="configuration-field-body">
+            <select
+              id="event-type"
+              name="eventType"
+              required
+              class="form-control form-control--soft text-sm"
+              aria-describedby="event-type-error"
+            >
+              <option value="">Select an option</option>
+              <option value="Wedding">Wedding</option>
+              <option value="Corporate Event">Corporate Event</option>
+              <option value="Birthday">Birthday</option>
+              <option value="Baby Shower">Baby Shower</option>
+              <option value="Anniversary">Anniversary</option>
+              <option value="Community Event">Community Event</option>
+              <option value="Other">Other</option>
+            </select>
+            <p
+              id="event-type-error"
+              class="form-message form-message--error service-error"
+            >
+            </p>
+          </div>
+        </div>
+
+        <div class="configuration-field">
+          <label
+            for="preferred-event-date"
+            class="configuration-field-title flex flex-wrap items-center gap-2"
+          >
+            <span>Preferred Event Date</span>
+            <span class="font-normal text-slate-500">(optional)</span>
+          </label>
+          <hr class="configuration-field-divider" />
+          <div class="configuration-field-body">
+            <input
+              id="preferred-event-date"
+              name="preferredEventDate"
+              type="date"
+              class="form-control form-control--soft text-sm"
+            />
+          </div>
+        </div>
+
+        <div class="configuration-field service-field--message">
+          <label
+            for="event-message"
+            class="configuration-field-title flex flex-wrap items-center gap-2"
+          >
+            <span>Message</span>
+            <span class="sr-only"> required</span>
+            <span
+              aria-hidden="true"
+              class="rounded-full bg-rosa-claro px-2.5 py-1 text-xs font-semibold text-slate-700"
+            >
+              Required
+            </span>
+          </label>
+          <hr class="configuration-field-divider" />
+          <div class="configuration-field-body">
+            <textarea
+              id="event-message"
+              name="message"
+              required
+              maxlength="1000"
+              rows="6"
+              class="form-control form-control--soft resize-none text-sm"
+              placeholder="Briefly describe your event, initial ideas and anything important."
+              aria-describedby="event-message-help event-message-error"
+            ></textarea>
+            <p id="event-message-help" class="form-message form-message--help">
+              Maximum 1,000 characters.
+            </p>
+            <p
+              id="event-message-error"
+              class="form-message form-message--error service-error"
+            >
+            </p>
+          </div>
+        </div>
       </div>
 
       <div
@@ -146,7 +274,7 @@ const { offering } = Astro.props as {
 
       <textarea
         id="eventsCateringFallback"
-        class="form-control service-fallback"
+        class="form-control form-control--soft service-fallback"
         readonly
         hidden
         aria-label="Prepared Events and Catering enquiry email"></textarea>
@@ -172,21 +300,130 @@ const { offering } = Astro.props as {
 </script>
 
 <style>
-  .service-field {
-    display: grid;
-    gap: 0.35rem;
+  .service-page-shell {
+    overflow: hidden;
+    background:
+      radial-gradient(
+        circle at 12% 10%,
+        rgb(253 224 233 / 54%),
+        transparent 28rem
+      ),
+      radial-gradient(
+        circle at 88% 24%,
+        rgb(233 213 255 / 32%),
+        transparent 26rem
+      ),
+      linear-gradient(180deg, rgb(255 250 252 / 92%), rgb(255 255 255));
+    color: var(--ui-color-text-default);
+    text-align: left;
   }
 
-  .service-help {
+  .service-hero {
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    width: min(100% - 3rem, 72rem);
+    margin-inline: auto;
+    padding-block: clamp(7rem, 12vw, 10rem) clamp(3.5rem, 8vw, 6rem);
+  }
+
+  .service-hero-content {
+    display: grid;
+    gap: var(--ui-space-4);
+    max-width: 45rem;
+  }
+
+  .service-hero-summary {
+    max-width: 42rem;
+    color: rgb(30 41 59);
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    line-height: 1.45;
+  }
+
+  .service-hero-note {
+    max-width: 38rem;
+    border-left: 4px solid rgb(190 24 93);
+    padding-left: var(--ui-space-4);
+    color: var(--ui-color-text-muted);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .service-hero-panel {
+    display: grid;
+    gap: var(--ui-space-3);
+    align-self: end;
+    border: 1px solid rgb(255 255 255 / 72%);
+    border-radius: clamp(1.75rem, 4vw, 2.75rem);
+    background: rgb(255 255 255 / 78%);
+    padding: clamp(1.25rem, 3vw, 2rem);
+    box-shadow: 0 20px 60px rgb(15 23 42 / 8%);
+    backdrop-filter: blur(10px);
+  }
+
+  .service-hero-panel div {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--ui-space-3);
+    align-items: center;
+  }
+
+  .service-hero-panel span {
+    display: inline-grid;
+    width: 2rem;
+    height: 2rem;
+    place-items: center;
+    border-radius: var(--ui-radius-pill);
+    background: rgb(190 24 93);
+    color: #ffffff;
     font-size: 0.8rem;
-    color: rgb(71 85 105);
+    font-weight: 800;
+  }
+
+  .service-hero-panel p {
+    color: rgb(51 65 85);
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  .service-enquiry-form {
+    display: grid;
+    gap: clamp(1.25rem, 3vw, 2rem);
+    width: 100%;
+    padding-block: clamp(3.5rem, 8vw, 6.5rem);
+    background:
+      radial-gradient(
+        circle at 84% 18%,
+        rgb(249 168 212 / 18%),
+        transparent 24rem
+      ),
+      linear-gradient(180deg, rgb(255 255 255 / 95%), rgb(255 247 250 / 78%));
+  }
+
+  .service-form-intro,
+  .service-form-grid,
+  .service-status,
+  .service-fallback,
+  .service-actions {
+    width: min(100% - 3rem, 72rem);
+    margin-inline: auto;
+  }
+
+  .service-form-intro {
+    display: grid;
+    gap: var(--ui-space-2);
+  }
+
+  .service-form-grid {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .service-field--message {
+    min-height: 100%;
   }
 
   .service-error {
     min-height: 1rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: #991b1b;
   }
 
   .service-status {
@@ -217,7 +454,24 @@ const { offering } = Astro.props as {
   }
 
   .service-actions {
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
     gap: 0.75rem;
+    justify-content: flex-end;
+  }
+
+  @media (min-width: 768px) {
+    .service-hero {
+      grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 0.8fr);
+      align-items: end;
+    }
+
+    .service-form-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .service-field--message {
+      grid-column: 1 / -1;
+    }
   }
 </style>

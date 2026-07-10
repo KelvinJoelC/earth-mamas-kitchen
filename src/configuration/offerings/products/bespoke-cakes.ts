@@ -11,6 +11,38 @@ import { audCents } from '@/domain/money';
 import type { OptionGroup } from '@/domain/option-groups';
 import type { ProductOfferingDefinition } from '@/domain/offerings';
 
+const bespokeCakeSizeOptions = [
+  {
+    value: '6-inch-round',
+    label: '6" Round Cake',
+    description: 'Approximately 15â€“20 servings',
+    price: audCents(11000),
+    attributes: {
+      minimumServings: 15,
+      maximumServings: 20,
+      tierCount: 1,
+    },
+  },
+  {
+    value: '8-inch-round',
+    label: '8" Round Cake',
+    description: 'Approximately 40â€“50 servings',
+    price: audCents(17000),
+    attributes: {
+      minimumServings: 40,
+      maximumServings: 50,
+      tierCount: 1,
+    },
+  },
+  {
+    value: 'two-tier-6-and-8-inch',
+    label: '2-Tier Cake (6" + 8")',
+    description: 'Approximately 55 servings',
+    price: audCents(26000),
+    attributes: { approximateServings: 55, tierCount: 2 },
+  },
+] as const;
+
 export const bespokeCakes = {
   id: 'bespoke-cakes',
   slug: 'bespoke-cakes',
@@ -26,37 +58,8 @@ export const bespokeCakes = {
       label: 'Cake Size',
       required: true,
       displayOrder: 10,
-      options: [
-        {
-          value: '6-inch-round',
-          label: '6" Round Cake',
-          description: 'Approximately 15–20 servings',
-          price: audCents(11000),
-          attributes: {
-            minimumServings: 15,
-            maximumServings: 20,
-            tierCount: 1,
-          },
-        },
-        {
-          value: '8-inch-round',
-          label: '8" Round Cake',
-          description: 'Approximately 40–50 servings',
-          price: audCents(17000),
-          attributes: {
-            minimumServings: 40,
-            maximumServings: 50,
-            tierCount: 1,
-          },
-        },
-        {
-          value: 'two-tier-6-and-8-inch',
-          label: '2-Tier Cake (6" + 8")',
-          description: 'Approximately 55 servings',
-          price: audCents(26000),
-          attributes: { approximateServings: 55, tierCount: 2 },
-        },
-      ],
+      defaultValue: bespokeCakeSizeOptions[0].value,
+      options: bespokeCakeSizeOptions,
     },
     {
       id: 'sponge-flavour',
