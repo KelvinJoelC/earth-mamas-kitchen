@@ -149,6 +149,92 @@
   overflow-wrap: anywhere;
 }
 
+.conditional-field-panel {
+  max-height: 48rem;
+  overflow: hidden;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    max-height 240ms ease,
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+
+.conditional-field-panel--hidden {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-0.25rem);
+  pointer-events: none;
+}
+
+.optional-field-card {
+  border: 1px solid transparent;
+  transition:
+    border-color var(--ui-transition-default),
+    box-shadow var(--ui-transition-default);
+}
+
+.optional-field-card--collapsed {
+  border-color: var(--ui-color-border-soft);
+  box-shadow: none;
+}
+
+.optional-field-toggle {
+  display: flex;
+  min-height: 2.75rem;
+  width: 100%;
+  cursor: pointer;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  border-radius: var(--ui-radius-control-soft);
+  color: var(--ui-color-text-muted);
+  text-align: left;
+  font-size: 1.125rem;
+  font-weight: 600;
+  transition:
+    color var(--ui-transition-default),
+    background-color var(--ui-transition-default);
+}
+
+.optional-field-toggle:hover {
+  color: var(--ui-color-text-default);
+}
+
+.optional-field-toggle[aria-expanded='true'] {
+  color: var(--ui-color-text-default);
+}
+
+.optional-field-chevron {
+  flex: none;
+  font-size: 0.875rem;
+  line-height: 1;
+  transition: transform var(--ui-transition-default);
+}
+
+.optional-field-toggle[aria-expanded='true'] .optional-field-chevron {
+  transform: rotate(180deg);
+}
+
+.optional-field-content {
+  max-height: 48rem;
+  overflow: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    max-height 240ms ease,
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+
+.optional-field-content--collapsed {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-0.25rem);
+  pointer-events: none;
+}
+
 .social-links-surface {
   display: flex;
   gap: var(--ui-space-1);
@@ -186,4 +272,12 @@
 
 .ui-icon-link--muted:hover {
   color: var(--ui-color-text-hover-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .conditional-field-panel,
+  .optional-field-content,
+  .optional-field-chevron {
+    transition: none;
+  }
 }

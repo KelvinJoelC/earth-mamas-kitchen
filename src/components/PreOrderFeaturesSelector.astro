@@ -54,10 +54,30 @@ function fieldMessageId(group: OptionGroup) {
   return `${group.id}-message`;
 }
 
+function fieldContentId(group: OptionGroup) {
+  return `${group.id}-content`;
+}
+
+function hasFieldMessage(group: OptionGroup) {
+  return group.id !== 'custom-colours-description';
+}
+
+function isCollapsibleOptionalGroup(group: OptionGroup) {
+  return !group.required && group.id !== 'custom-colours-description';
+}
+
+const primaryOptionGroups = optionGroups.filter(
+  (group) => !isCollapsibleOptionalGroup(group),
+);
+
+const personalisationOptionGroups = optionGroups.filter((group) =>
+  isCollapsibleOptionalGroup(group),
+);
+
 function describedBy(group: OptionGroup) {
   return [
     group.description ? fieldDescriptionId(group) : undefined,
-    fieldMessageId(group),
+    hasFieldMessage(group) ? fieldMessageId(group) : undefined,
   ]
     .filter(Boolean)
     .join(' ');
@@ -65,152 +85,385 @@ function describedBy(group: OptionGroup) {
 ---
 
 {
-  optionGroups.map((group) => (
-    <div class="surface-card group w-full space-y-4">
-      <div class="space-y-2">
-        <p
-          id={fieldLabelId(group)}
-          class="form-label flex flex-wrap items-center gap-2"
-        >
-          <span>{group.label}</span>
-          {group.required && (
-            <>
-              <span class="sr-only"> required</span>
-              <span
-                aria-hidden="true"
-                class="rounded-full bg-rosa-claro px-2.5 py-1 text-xs font-semibold text-slate-700"
-              >
-                Required
-              </span>
-            </>
-          )}
-        </p>
-        {group.description && (
-          <p
-            id={fieldDescriptionId(group)}
-            class="form-message form-message--help"
-          >
-            {group.description}
-          </p>
-        )}
+  primaryOptionGroups.length > 0 && (
+    <section
+      class="w-full space-y-4 sm:col-span-2"
+      aria-labelledby="product-configuration-heading"
+    >
+      <div class="space-y-1">
+        <h3 id="product-configuration-heading" class="form-label">
+          Product Configuration
+        </h3>
       </div>
-      <hr class="border-pink-400" />
 
-      {(() => {
-        switch (group.kind) {
-          case 'single-select':
-          case 'priced-single-select':
-            return (
-              <select
-                id={fieldId(group)}
-                name={group.id}
-                required={group.required}
-                class="form-control form-control--soft text-sm"
-                data-option-group={group.id}
-                data-option-kind={group.kind}
-                aria-labelledby={fieldLabelId(group)}
-                aria-describedby={describedBy(group)}
+      <div class="grid gap-4 sm:grid-cols-2">
+        {primaryOptionGroups.map((group) => (
+          <div
+            class={`surface-card group w-full space-y-4 conditional-field-panel ${
+              group.id === 'custom-colours-description'
+                ? 'conditional-field-panel--hidden'
+                : ''
+            }`}
+            data-option-group-panel={group.id}
+            hidden={group.id === 'custom-colours-description'}
+            aria-hidden={
+              group.id === 'custom-colours-description' ? 'true' : undefined
+            }
+          >
+            <div class="space-y-2">
+              <p
+                id={fieldLabelId(group)}
+                class="form-label flex flex-wrap items-center gap-2"
               >
-                {!group.defaultValue && (
-                  <option value="">Select an option</option>
+                <span>{group.label}</span>
+                {group.required && (
+                  <>
+                    <span class="sr-only"> required</span>
+                    <span
+                      aria-hidden="true"
+                      class="rounded-full bg-rosa-claro px-2.5 py-1 text-xs font-semibold text-slate-700"
+                    >
+                      Required
+                    </span>
+                  </>
                 )}
-                {group.options.map((option) => (
-                  <option
-                    value={option.value}
-                    selected={group.defaultValue === option.value}
-                    data-label={option.label}
-                    data-price={'price' in option ? option.price : undefined}
-                  >
-                    {option.label}
-                    {'price' in option ? ` - ${formatAud(option.price)}` : ''}
-                    {option.description ? ` (${option.description})` : ''}
-                  </option>
-                ))}
-              </select>
-            );
+              </p>
+            </div>
 
-          case 'multi-select':
-            return (
-              <div
-                class="grid gap-3 sm:grid-cols-2"
-                role="group"
-                aria-labelledby={fieldLabelId(group)}
-                aria-describedby={describedBy(group)}
-                data-option-group={group.id}
-                data-option-kind={group.kind}
-                data-minimum-selections={group.minimumSelections}
-                data-maximum-selections={group.maximumSelections}
-              >
-                {group.options.map((option) => (
-                  <label class="inline-flex min-h-11 items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition hover:border-pink-300 hover:bg-rosa-claro/40 has-disabled:text-slate-400">
-                    <input
-                      type="checkbox"
-                      name={group.id}
-                      value={option.value}
-                      data-label={option.label}
-                      class="rounded border-slate-300"
-                      aria-describedby={describedBy(group)}
-                    />
-                    <span>{option.label}</span>
-                  </label>
-                ))}
-              </div>
-            );
+            <div id={fieldContentId(group)} class="space-y-4">
+              {group.description && (
+                <p
+                  id={fieldDescriptionId(group)}
+                  class="form-message form-message--help"
+                >
+                  {group.description}
+                </p>
+              )}
+              <hr class="border-pink-400" />
 
-          case 'text':
-            return group.multiline ? (
-              <textarea
-                id={fieldId(group)}
-                name={group.id}
-                required={group.required}
-                maxlength={group.maxLength}
-                rows="3"
-                class="form-control form-control--soft text-sm resize-none"
-                data-option-group={group.id}
-                data-option-kind={group.kind}
-                aria-labelledby={fieldLabelId(group)}
-                aria-describedby={describedBy(group)}
-              />
-            ) : (
-              <input
-                id={fieldId(group)}
-                type="text"
-                name={group.id}
-                required={group.required}
-                maxlength={group.maxLength}
-                class="form-control form-control--soft text-sm"
-                data-option-group={group.id}
-                data-option-kind={group.kind}
-                aria-labelledby={fieldLabelId(group)}
-                aria-describedby={describedBy(group)}
-              />
-            );
+              {(() => {
+                switch (group.kind) {
+                  case 'single-select':
+                  case 'priced-single-select':
+                    return (
+                      <select
+                        id={fieldId(group)}
+                        name={group.id}
+                        required={group.required}
+                        class="form-control form-control--soft text-sm"
+                        data-option-group={group.id}
+                        data-option-kind={group.kind}
+                        aria-labelledby={fieldLabelId(group)}
+                        aria-describedby={describedBy(group)}
+                      >
+                        {!group.defaultValue && (
+                          <option value="">Select an option</option>
+                        )}
+                        {group.options.map((option) => (
+                          <option
+                            value={option.value}
+                            selected={group.defaultValue === option.value}
+                            data-label={option.label}
+                            data-price={
+                              'price' in option ? option.price : undefined
+                            }
+                          >
+                            {option.label}
+                            {'price' in option
+                              ? ` - ${formatAud(option.price)}`
+                              : ''}
+                            {option.description
+                              ? ` (${option.description})`
+                              : ''}
+                          </option>
+                        ))}
+                      </select>
+                    );
 
-          case 'date':
-            return (
-              <input
-                id={fieldId(group)}
-                type="date"
-                name={group.id}
-                required={group.required}
-                class="form-control form-control--soft text-sm"
-                data-option-group={group.id}
-                data-option-kind={group.kind}
-                aria-labelledby={fieldLabelId(group)}
-                aria-describedby={describedBy(group)}
-              />
-            );
-        }
-      })()}
+                  case 'multi-select':
+                    return (
+                      <div
+                        class="space-x-3"
+                        role="group"
+                        aria-labelledby={fieldLabelId(group)}
+                        aria-describedby={describedBy(group)}
+                        data-option-group={group.id}
+                        data-option-kind={group.kind}
+                        data-minimum-selections={group.minimumSelections}
+                        data-maximum-selections={group.maximumSelections}
+                      >
+                        {group.options.map((option) => (
+                          <label class="inline-flex items-center gap-1 text-sm text-slate-700 transition hover:text-slate-900 has-disabled:text-slate-400">
+                            <input
+                              type="checkbox"
+                              name={group.id}
+                              value={option.value}
+                              data-label={option.label}
+                              class="rounded border-slate-300"
+                              aria-describedby={describedBy(group)}
+                            />
+                            <span>{option.label}</span>
+                          </label>
+                        ))}
+                      </div>
+                    );
 
-      <p
-        id={fieldMessageId(group)}
-        class="form-message form-message--help pt-1"
-        data-field-message={group.id}
-        aria-live="polite"
-      />
-    </div>
-  ))
+                  case 'text':
+                    return group.multiline ? (
+                      <textarea
+                        id={fieldId(group)}
+                        name={group.id}
+                        required={group.required}
+                        maxlength={group.maxLength}
+                        rows="3"
+                        class="form-control form-control--soft text-sm resize-none"
+                        data-option-group={group.id}
+                        data-option-kind={group.kind}
+                        aria-labelledby={fieldLabelId(group)}
+                        aria-describedby={describedBy(group)}
+                      />
+                    ) : (
+                      <input
+                        id={fieldId(group)}
+                        type="text"
+                        name={group.id}
+                        required={group.required}
+                        maxlength={group.maxLength}
+                        class="form-control form-control--soft text-sm"
+                        data-option-group={group.id}
+                        data-option-kind={group.kind}
+                        aria-labelledby={fieldLabelId(group)}
+                        aria-describedby={describedBy(group)}
+                      />
+                    );
+
+                  case 'date':
+                    return (
+                      <input
+                        id={fieldId(group)}
+                        type="date"
+                        name={group.id}
+                        required={group.required}
+                        class="form-control form-control--soft text-sm"
+                        data-option-group={group.id}
+                        data-option-kind={group.kind}
+                        aria-labelledby={fieldLabelId(group)}
+                        aria-describedby={describedBy(group)}
+                      />
+                    );
+                }
+              })()}
+
+              {hasFieldMessage(group) && (
+                <p
+                  id={fieldMessageId(group)}
+                  class="form-message form-message--help pt-1"
+                  data-field-message={group.id}
+                  aria-live="polite"
+                />
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+{
+  personalisationOptionGroups.length > 0 && (
+    <section
+      class="w-full space-y-4 sm:col-span-2"
+      aria-labelledby="personalisation-details-heading"
+    >
+      <div class="space-y-1">
+        <h3 id="personalisation-details-heading" class="form-label">
+          Personalisation Details
+        </h3>
+        <p class="form-message form-message--help">
+          Add extra details only when they help us understand your preferred
+          design, message or finishing touches.
+        </p>
+      </div>
+
+      <div class="space-y-3">
+        {personalisationOptionGroups.map((group) => (
+          <div
+            class={`surface-card group w-full space-y-4 conditional-field-panel ${
+              isCollapsibleOptionalGroup(group)
+                ? 'optional-field-card optional-field-card--collapsed'
+                : ''
+            } ${
+              group.id === 'custom-colours-description'
+                ? 'conditional-field-panel--hidden'
+                : ''
+            }`}
+            data-option-group-panel={group.id}
+            data-optional-field-panel={
+              isCollapsibleOptionalGroup(group) ? group.id : undefined
+            }
+            hidden={group.id === 'custom-colours-description'}
+            aria-hidden={
+              group.id === 'custom-colours-description' ? 'true' : undefined
+            }
+          >
+            <button
+              id={fieldLabelId(group)}
+              type="button"
+              class="optional-field-toggle"
+              aria-expanded="false"
+              aria-controls={fieldContentId(group)}
+              data-optional-field-toggle={group.id}
+            >
+              <span>{group.label}</span>
+              <span class="optional-field-chevron" aria-hidden="true">
+                ▾
+              </span>
+            </button>
+
+            <div
+              id={fieldContentId(group)}
+              class="optional-field-content optional-field-content--collapsed space-y-4"
+              data-optional-field-content={group.id}
+              hidden
+            >
+              {group.description && (
+                <p
+                  id={fieldDescriptionId(group)}
+                  class="form-message form-message--help"
+                >
+                  {group.description}
+                </p>
+              )}
+              <hr class="border-pink-400" />
+
+              {(() => {
+                switch (group.kind) {
+                  case 'single-select':
+                  case 'priced-single-select':
+                    return (
+                      <select
+                        id={fieldId(group)}
+                        name={group.id}
+                        required={group.required}
+                        class="form-control form-control--soft text-sm"
+                        data-option-group={group.id}
+                        data-option-kind={group.kind}
+                        aria-labelledby={fieldLabelId(group)}
+                        aria-describedby={describedBy(group)}
+                      >
+                        {!group.defaultValue && (
+                          <option value="">Select an option</option>
+                        )}
+                        {group.options.map((option) => (
+                          <option
+                            value={option.value}
+                            selected={group.defaultValue === option.value}
+                            data-label={option.label}
+                            data-price={
+                              'price' in option ? option.price : undefined
+                            }
+                          >
+                            {option.label}
+                            {'price' in option
+                              ? ` - ${formatAud(option.price)}`
+                              : ''}
+                            {option.description
+                              ? ` (${option.description})`
+                              : ''}
+                          </option>
+                        ))}
+                      </select>
+                    );
+
+                  case 'multi-select':
+                    return (
+                      <div
+                        class="space-x-3"
+                        role="group"
+                        aria-labelledby={fieldLabelId(group)}
+                        aria-describedby={describedBy(group)}
+                        data-option-group={group.id}
+                        data-option-kind={group.kind}
+                        data-minimum-selections={group.minimumSelections}
+                        data-maximum-selections={group.maximumSelections}
+                      >
+                        {group.options.map((option) => (
+                          <label class="inline-flex items-center gap-1 text-sm text-slate-700 transition hover:text-slate-900 has-disabled:text-slate-400">
+                            <input
+                              type="checkbox"
+                              name={group.id}
+                              value={option.value}
+                              data-label={option.label}
+                              class="rounded border-slate-300"
+                              aria-describedby={describedBy(group)}
+                            />
+                            <span>{option.label}</span>
+                          </label>
+                        ))}
+                      </div>
+                    );
+
+                  case 'text':
+                    return group.multiline ? (
+                      <textarea
+                        id={fieldId(group)}
+                        name={group.id}
+                        required={group.required}
+                        maxlength={group.maxLength}
+                        rows="3"
+                        class="form-control form-control--soft text-sm resize-none"
+                        data-option-group={group.id}
+                        data-option-kind={group.kind}
+                        aria-labelledby={fieldLabelId(group)}
+                        aria-describedby={describedBy(group)}
+                      />
+                    ) : (
+                      <input
+                        id={fieldId(group)}
+                        type="text"
+                        name={group.id}
+                        required={group.required}
+                        maxlength={group.maxLength}
+                        class="form-control form-control--soft text-sm"
+                        data-option-group={group.id}
+                        data-option-kind={group.kind}
+                        aria-labelledby={fieldLabelId(group)}
+                        aria-describedby={describedBy(group)}
+                      />
+                    );
+
+                  case 'date':
+                    return (
+                      <input
+                        id={fieldId(group)}
+                        type="date"
+                        name={group.id}
+                        required={group.required}
+                        class="form-control form-control--soft text-sm"
+                        data-option-group={group.id}
+                        data-option-kind={group.kind}
+                        aria-labelledby={fieldLabelId(group)}
+                        aria-describedby={describedBy(group)}
+                      />
+                    );
+                }
+              })()}
+
+              {hasFieldMessage(group) && (
+                <p
+                  id={fieldMessageId(group)}
+                  class="form-message form-message--help pt-1"
+                  data-field-message={group.id}
+                  aria-live="polite"
+                />
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
 }
 
 {
