@@ -84,6 +84,7 @@ function initCarousels() {
 if (!window.carouselInitialized) {
   document.addEventListener('DOMContentLoaded', initCarousels, { once: true });
   document.addEventListener('astro:page-load', initCarousels);
+  document.addEventListener('cart:related-products-rendered', initCarousels);
   window.addEventListener('load', initCarousels, { once: true });
   window.carouselInitialized = true;
 }

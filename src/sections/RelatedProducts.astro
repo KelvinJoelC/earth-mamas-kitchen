@@ -2,79 +2,98 @@
 import type { ProductList } from '@/models/product.model';
 import { productOfferingPaths } from '@/configuration/offerings/offering-paths';
 
-const { selection } = Astro.props;
-const products = selection as ProductList;
+interface Props {
+  selection: ProductList;
+}
+
+const { selection: products } = Astro.props as Props;
 ---
 
-<section
-  class="flex flex-col p-4 pb-12 -mt-5 justify-center items-center bg-white rounded-t-4xl transform"
->
-  <h2 class="text-4xl p-5 text-center text-black font-bold">
-    You Might Also Like
-  </h2>
-  <p class="text-center text-sm italic text-violet-700 -mb-20">
-    ✨ Crafted with Love & Nature ✨
-  </p>
-  <div class="embla overflow-hidden w-full">
-    <div class="embla__container flex">
-      {
-        products.map(
-          ({
-            offeringId,
-            title,
-            description,
-            props: { h, padding, bg },
-            img,
-          }) => (
-            <div class="embla__slide mx-2 flex-none w-[min(82vw,18rem)]">
-              <div
-                style={{ height: `${parseInt(h) + 100}px` }}
-                class="slide my-6 flex flex-col relative min-w-0 w-full overflow-hidden text-center items-center justify-end group"
-              >
+{
+  products.length > 0 && (
+    <section class="cart-related-products w-full min-w-0 overflow-hidden border-t border-slate-300 pt-5 text-slate-950">
+      <div class="grid gap-2">
+        <h2 class="font-calistoga text-2xl leading-tight text-slate-950">
+          You Might Also Like
+        </h2>
+        <p class="max-w-xl text-sm leading-relaxed text-slate-600">
+          Crafted with Love & Nature
+        </p>
+      </div>
+
+      <div class="embla mt-4 w-full min-w-0 overflow-hidden">
+        <div class="embla__container flex min-w-0">
+          {products.map(
+            ({
+              offeringId,
+              title,
+              description,
+              props: { h, padding, bg },
+              img,
+            }) => (
+              <div class="embla__slide cart-related-products__slide mr-3 flex-none w-[min(72vw,13rem)] sm:w-[12.5rem]">
                 <div
-                  style={{ height: `${h}px` }}
-                  class="card m-5  w-[98%] rounded-3xl border border-black flex flex-col justify-end items-center ease-in-out duration-700
-                group-hover:shadow-md
-                group-hover:border-white
-                "
+                  style={{ height: `${parseInt(h) + 100}px` }}
+                  class="slide my-6 flex flex-col relative min-w-0 w-full overflow-hidden text-center items-center justify-end group"
                 >
                   <div
-                    style={{ background: bg }}
-                    class="relative h-full w-[90%] rounded-3xl bg-violet-100/70 mt-3 flex justify-center transition-all ease-in-out duration-700 select-none
-                  group-hover:w-full 
-                  group-hover:m-0"
+                    style={{ height: `${h}px` }}
+                    class="card m-5 w-[98%] rounded-3xl border border-black flex flex-col justify-end items-center ease-in-out duration-700 group-hover:shadow-md group-hover:border-white"
                   >
-                    <img
-                      style={{ padding: `${padding ?? 0}` }}
-                      class="absolute w-full h-max top-10 scale-110 transition-all ease-in-out duration-700
-                    group-hover:-top-15"
-                      src={`${img}.webp`}
-                      alt={title}
-                    />
-                  </div>
-                  <div class="relative mx-4 rounded-xl bg-white text-black text-left py-4">
-                    <h3 class="select-none text-md font-bold mb-2"> {title}</h3>
-                    <p class=" select-none text-sm text-zinc-700 leading-snug">
-                      {' '}
-                      {description}
-                    </p>
-                    <a
-                      href={productOfferingPaths[offeringId]}
-                      class="flex min-h-11 px-4 py-2.5 mt-5 items-center justify-center border rounded-3xl bg-purple-400 text-white font-bold"
+                    <div
+                      style={{ background: bg }}
+                      class="relative h-full w-[90%] rounded-3xl bg-violet-100/70 mt-3 flex justify-center transition-all ease-in-out duration-700 select-none group-hover:w-full group-hover:m-0"
                     >
-                      View More
-                    </a>
+                      <img
+                        style={{ padding: `${padding ?? 0}` }}
+                        class="absolute w-full h-max top-10 scale-110 transition-all ease-in-out duration-700 group-hover:-top-15"
+                        src={`${img}.webp`}
+                        alt={title}
+                      />
+                    </div>
+                    <div class="relative mx-4 rounded-xl bg-white text-black text-left py-4">
+                      <h3 class="select-none text-md font-bold mb-2">
+                        {title}
+                      </h3>
+                      <p class="select-none text-sm text-zinc-700 leading-snug">
+                        {description}
+                      </p>
+                      <a
+                        href={productOfferingPaths[offeringId]}
+                        class="flex min-h-11 px-4 py-2.5 mt-5 items-center justify-center border rounded-3xl bg-purple-400 text-white font-bold"
+                      >
+                        View More
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ),
-        )
-      }
-    </div>
-  </div>
-</section>
+            ),
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}
 
 <script>
   import '@/browser/carousel.js';
 </script>
+
+<style>
+  .cart-related-products {
+    --cart-related-gap: 0.75rem;
+  }
+
+  @media (min-width: 1180px) {
+    .cart-related-products :global(.embla__container) {
+      gap: var(--cart-related-gap);
+    }
+
+    .cart-related-products :global(.cart-related-products__slide) {
+      margin-right: 0;
+      width: auto;
+      flex-basis: calc((100% - (2 * var(--cart-related-gap))) / 3);
+    }
+  }
+</style>
