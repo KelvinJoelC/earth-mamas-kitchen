@@ -8,11 +8,244 @@ import { EXPLORE } from '@/consts/explore';
   title="Order"
   description="Review your Earth Mama's Kitchen preorder enquiry"
   showStickyOrderButton={false}
+  showCartLink={false}
 >
-  <template id="orderRelatedProductsTemplate">
-    <RelatedProducts selection={EXPLORE} />
-  </template>
-  <div id="orderRoot"></div>
+  <section
+    class="bg-gradient-to-b from-white via-pink-50 to-white text-slate-950"
+  >
+    <div
+      id="orderLayout"
+      data-empty="true"
+      class="mx-auto grid w-[min(100%-2rem,76rem)] gap-8 overflow-visible pb-10 pt-24 lg:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)] lg:items-start data-[empty=true]:lg:grid-cols-1"
+    >
+      <main class="grid min-w-0 gap-5 overflow-visible">
+        <header
+          class="grid min-w-0 gap-2 border-b border-pink-200 pb-5 text-left"
+        >
+          <p class="configuration-kicker">Order review</p>
+          <h1 class="font-calistoga text-4xl leading-tight md:text-5xl">
+            Curated order review
+          </h1>
+          <p class="max-w-2xl text-base leading-relaxed text-slate-700">
+            Review your selected creations before sending your enquiry to Earth
+            Mama's Kitchen.
+          </p>
+        </header>
+
+        <section
+          id="orderItems"
+          class="grid min-w-0 gap-4"
+          aria-label="Saved preorder configurations"
+        >
+        </section>
+
+        <section
+          id="orderEmptyState"
+          class="mx-auto grid min-h-80 w-full place-items-center gap-5 border-y border-pink-200 py-16 text-center"
+          aria-labelledby="empty-order-title"
+          hidden
+        >
+          <h2
+            id="empty-order-title"
+            class="font-calistoga text-4xl text-slate-950"
+          >
+            Your order is waiting for a creation
+          </h2>
+          <p class="max-w-xl text-slate-600">
+            Start with the catalogue, customise a product, then return here to
+            prepare your enquiry.
+          </p>
+          <a href="/" class="ui-button ui-button--primary rounded-full px-6">
+            Explore creations
+          </a>
+        </section>
+
+        <div id="orderRelatedProducts" class="min-w-0">
+          <RelatedProducts selection={EXPLORE} />
+        </div>
+      </main>
+
+      <aside
+        id="orderAside"
+        class="grid h-fit min-w-0 self-start overflow-visible lg:sticky lg:top-24"
+      >
+        <section
+          class="grid gap-4 border-y border-slate-300 py-4"
+          aria-labelledby="order-enquiry-title"
+        >
+          <div class="grid gap-2.5">
+            <h2
+              id="order-enquiry-title"
+              class="font-calistoga text-3xl text-slate-950"
+            >
+              Send your order enquiry
+            </h2>
+            <p class="max-w-xl text-[0.9375rem] leading-relaxed text-slate-600">
+              Choose the channel that feels easiest. These actions prepare your
+              enquiry; they do not confirm availability, payment or booking.
+            </p>
+
+            <div class="grid gap-1.5">
+              <p
+                class="text-xs font-bold uppercase tracking-[0.14em] text-pink-800"
+              >
+                Estimated total
+              </p>
+              <p
+                id="orderEstimatedTotal"
+                class="text-4xl font-black leading-none text-slate-950"
+                aria-live="polite"
+              >
+                $0.00
+              </p>
+              <p
+                class="max-w-2xl text-[0.8125rem] leading-relaxed text-slate-600"
+              >
+                No payment is required today. We'll confirm availability, final
+                pricing and collection details before your order is booked.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid content-start border-t border-slate-300">
+            <div class="cart-inline-email-group border-b border-slate-300">
+              <button
+                id="orderEmailToggle"
+                type="button"
+                class="cart-contact-action flex min-h-12 w-full items-center justify-between gap-3 border-b border-slate-300 px-0 py-2.5 text-slate-900 transition hover:text-pink-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700 data-[primary=true]:font-bold"
+                aria-expanded="false"
+                aria-controls="order-email-form"
+              >
+                <span class="grid gap-0.5 text-left">
+                  <span class="text-sm font-bold">Email</span>
+                  <span
+                    class="text-[0.6875rem] font-normal leading-snug text-slate-600"
+                  >
+                    Best for detailed orders and event enquiries.
+                  </span>
+                </span>
+                <span
+                  id="orderEmailToggleIcon"
+                  class="text-lg"
+                  aria-hidden="true"
+                >
+                  +
+                </span>
+              </button>
+
+              <form
+                id="order-email-form"
+                class="grid gap-2.5 pb-3"
+                hidden
+                novalidate
+              >
+                <div class="grid gap-1.5">
+                  <label
+                    for="order-customer-name"
+                    class="text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-slate-500"
+                  >
+                    Your name
+                  </label>
+                  <input
+                    id="order-customer-name"
+                    name="name"
+                    type="text"
+                    required
+                    autocomplete="name"
+                    placeholder="Name of the person placing the enquiry"
+                    aria-describedby="order-customer-name-error"
+                    class="min-h-10 w-full border-b border-slate-300 bg-transparent px-0 py-2 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 hover:border-slate-500 focus:border-pink-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700"
+                  />
+                  <p
+                    id="order-customer-name-error"
+                    class="hidden text-xs leading-snug text-red-700"
+                  >
+                    Please enter your name.
+                  </p>
+                </div>
+
+                <div class="grid gap-1.5">
+                  <label
+                    for="order-customer-phone"
+                    class="text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-slate-500"
+                  >
+                    Phone number
+                  </label>
+                  <input
+                    id="order-customer-phone"
+                    name="phone"
+                    type="tel"
+                    required
+                    autocomplete="tel"
+                    placeholder="Your preferred contact number"
+                    aria-describedby="order-customer-phone-error"
+                    class="min-h-10 w-full border-b border-slate-300 bg-transparent px-0 py-2 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 hover:border-slate-500 focus:border-pink-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700"
+                  />
+                  <p
+                    id="order-customer-phone-error"
+                    class="hidden text-xs leading-snug text-red-700"
+                  >
+                    Please enter a phone number.
+                  </p>
+                </div>
+
+                <button
+                  type="submit"
+                  class="cart-send-action ui-button w-full border border-slate-300 px-4 py-2.5 text-sm font-bold text-slate-950 transition hover:border-pink-400 hover:text-pink-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  Send enquiry
+                </button>
+              </form>
+            </div>
+
+            <a
+              href="https://www.instagram.com/earthmamaskitchen"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="cart-contact-action flex min-h-12 w-full items-center justify-between gap-3 border-b border-slate-300 px-0 py-2.5 text-slate-900 transition hover:text-pink-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700 data-[primary=true]:font-bold"
+              aria-label="Visit Earth Mama's Kitchen on Instagram"
+            >
+              <span class="grid gap-0.5 text-left">
+                <span class="text-sm font-bold">Instagram</span>
+                <span
+                  class="text-[0.6875rem] font-normal leading-snug text-slate-600"
+                >
+                  Share visual inspiration with us.
+                </span>
+              </span>
+              <span class="text-lg" aria-hidden="true">→</span>
+            </a>
+
+            <a
+              href="https://www.facebook.com/profile.php?id=100067897911008"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="cart-contact-action flex min-h-12 w-full items-center justify-between gap-3 border-b border-slate-300 px-0 py-2.5 text-slate-900 transition hover:text-pink-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700 data-[primary=true]:font-bold"
+              aria-label="Visit Earth Mama's Kitchen on Facebook"
+            >
+              <span class="grid gap-0.5 text-left">
+                <span class="text-sm font-bold">Facebook</span>
+                <span
+                  class="text-[0.6875rem] font-normal leading-snug text-slate-600"
+                >
+                  Follow Earth Mama's Kitchen on Facebook.
+                </span>
+              </span>
+              <span class="text-lg" aria-hidden="true">→</span>
+            </a>
+          </div>
+
+          <p
+            id="orderEnquiryStatus"
+            class="sr-only"
+            role="status"
+            aria-live="polite"
+          >
+          </p>
+        </section>
+      </aside>
+    </div>
+  </section>
 </Layout>
 
 <script>

@@ -21,7 +21,7 @@ const { selection: products } = Astro.props as Props;
         </p>
       </div>
 
-      <div class="embla mt-4 w-full min-w-0 overflow-hidden">
+      <div class="embla -mt-10 w-full min-w-0 overflow-hidden">
         <div class="embla__container flex min-w-0">
           {products.map(
             ({
@@ -38,7 +38,7 @@ const { selection: products } = Astro.props as Props;
                 >
                   <div
                     style={{ height: `${h}px` }}
-                    class="card m-5 w-[98%] rounded-3xl border border-black flex flex-col justify-end items-center ease-in-out duration-700 group-hover:shadow-md group-hover:border-white"
+                    class="card m-5 w-[98%] rounded-3xl bg-white border border-black flex flex-col justify-end items-center ease-in-out duration-700 group-hover:shadow-md group-hover:border-white"
                   >
                     <div
                       style={{ background: bg }}

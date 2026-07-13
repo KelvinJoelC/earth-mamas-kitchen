@@ -1,5 +1,11 @@
 ---
 import CartIcon from '@/assets/cart.svg';
+
+interface Props {
+  showCartLink?: boolean;
+}
+
+const { showCartLink = true } = Astro.props;
 ---
 
 <header class="fixed top-0 w-full z-50">
@@ -20,22 +26,26 @@ import CartIcon from '@/assets/cart.svg';
         </div>
       </a>
     </div>
-    <div class="flex-shrink-0 m-3" aria-live="polite">
-      <a
-        href="/order"
-        class="relative inline-flex min-h-11 min-w-11 items-center justify-center"
-        aria-label="Cart"
-      >
-        <CartIcon class="h-8 w-8" />
-        <span
-          id="cartCount"
-          class="absolute -top-1.5 -right-2.5 bg-pink-500 text-white text-[11px] font-semibold
+    {
+      showCartLink && (
+        <div class="flex-shrink-0 m-3" aria-live="polite">
+          <a
+            href="/order"
+            class="relative inline-flex min-h-11 min-w-11 items-center justify-center"
+            aria-label="Cart"
+          >
+            <CartIcon class="h-8 w-8" />
+            <span
+              id="cartCount"
+              class="absolute -top-1.5 -right-2.5 bg-pink-500 text-white text-[11px] font-semibold
                  px-1.5 py-1 rounded-full min-w-[18px] text-center leading-none"
-        >
-          0
-        </span>
-      </a>
-    </div>
+            >
+              0
+            </span>
+          </a>
+        </div>
+      )
+    }
   </nav>
 </header>
 

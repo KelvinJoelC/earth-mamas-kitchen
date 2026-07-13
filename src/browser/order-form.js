@@ -1,7 +1,6 @@
 import { readCart, removeCartItem } from './cart-state.js';
 
 const BAKERY_EMAIL = 'earthmamaskitchen@gmail.com';
-const INSTAGRAM_URL = 'https://www.instagram.com/earthmamaskitchen';
 
 const currencyFormatter = new Intl.NumberFormat('en-AU', {
   style: 'currency',
@@ -15,116 +14,39 @@ const offeringImages = {
 };
 
 function renderOrderPage() {
-  const root = document.getElementById('orderRoot');
-  if (!root) return;
-
   const items = readCart();
-  root.replaceChildren(
-    items.length ? renderPopulatedOrder(items) : renderEmptyOrder(),
-  );
+
+  updateOrderVisibility(items);
+  renderOrderItems(items);
+  updateEstimatedTotal(items);
 }
 
-function renderPopulatedOrder(items) {
-  const page = createElement(
-    'section',
-    'bg-gradient-to-b from-white via-pink-50 to-white text-slate-950',
-  );
-  const columns = createElement(
-    'div',
-    'mx-auto grid w-[min(100%-2rem,76rem)] gap-8 overflow-visible pb-10 pt-24 lg:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)] lg:items-start',
-  );
-  const main = createElement('main', 'grid min-w-0 gap-5 overflow-visible');
-  main.append(renderOrderHero(), renderOrderItems(items));
+function updateOrderVisibility(items) {
+  const hasItems = items.length > 0;
+  const orderItems = document.getElementById('orderItems');
+  const orderLayout = document.getElementById('orderLayout');
+  const emptyState = document.getElementById('orderEmptyState');
+  const aside = document.getElementById('orderAside');
+  const relatedProducts = document.getElementById('orderRelatedProducts');
 
-  const relatedProducts = renderRelatedProducts();
-  if (relatedProducts) {
-    main.append(relatedProducts);
-    queueMicrotask(() => {
-      document.dispatchEvent(new Event('cart:related-products-rendered'));
-    });
-  }
-
-  const aside = createElement(
-    'aside',
-    'grid h-fit min-w-0 self-start overflow-visible lg:sticky lg:top-24',
-  );
-  aside.append(renderOrderEnquiryPanel(items));
-
-  columns.append(main, aside);
-  page.append(columns);
-  return page;
-}
-
-function renderEmptyOrder() {
-  const page = createElement(
-    'section',
-    'bg-gradient-to-b from-white via-pink-50 to-white text-slate-950',
-  );
-  const main = createElement(
-    'main',
-    'mx-auto grid w-[min(100%-2rem,76rem)] gap-6 pb-10 pt-24',
-  );
-  const empty = createElement(
-    'section',
-    'mx-auto grid min-h-80 w-full place-items-center gap-5 border-y border-pink-200 py-16 text-center',
-  );
-  empty.setAttribute('aria-labelledby', 'empty-order-title');
-
-  const title = createElement(
-    'h1',
-    'font-calistoga text-4xl text-slate-950',
-    'Your order is waiting for a creation',
-  );
-  title.id = 'empty-order-title';
-
-  empty.append(
-    title,
-    createElement(
-      'p',
-      'max-w-xl text-slate-600',
-      'Start with the catalogue, customise a product, then return here to prepare your enquiry.',
-    ),
-    createLink(
-      'ui-button ui-button--primary rounded-full px-6',
-      '/',
-      'Explore creations',
-    ),
-  );
-
-  main.append(empty);
-  page.append(main);
-  return page;
-}
-
-function renderOrderHero() {
-  const hero = createElement(
-    'header',
-    'grid gap-2 border-b border-pink-200 pb-5 text-left',
-  );
-  hero.append(
-    createElement('p', 'configuration-kicker', 'Order review'),
-    createElement(
-      'h1',
-      'font-calistoga text-4xl leading-tight md:text-5xl',
-      'Curated order review',
-    ),
-    createElement(
-      'p',
-      'max-w-2xl text-base leading-relaxed text-slate-700',
-      'Review your selected creations before sending your enquiry to Earth Mama’s Kitchen.',
-    ),
-  );
-  return hero;
+  if (orderLayout) orderLayout.dataset.empty = String(!hasItems);
+  if (orderItems) orderItems.hidden = !hasItems;
+  if (emptyState) emptyState.hidden = hasItems;
+  if (aside) aside.hidden = !hasItems;
+  if (relatedProducts) relatedProducts.hidden = !hasItems;
+  if (!hasItems) closeEmailForm();
 }
 
 function renderOrderItems(items) {
-  const section = createElement('section', 'grid gap-4');
-  section.setAttribute('aria-label', 'Saved preorder configurations');
+  const section = document.getElementById('orderItems');
+  if (!section) return;
+
+  const fragment = document.createDocumentFragment();
 
   items.forEach((item) => {
     const article = createElement(
       'article',
-      'cart-review-item grid gap-3.5 rounded-[1.5rem] bg-white/85 p-3 shadow-sm sm:grid-cols-[minmax(7.5rem,11.5rem)_1fr]',
+      'cart-review-item grid min-w-0 gap-3.5 rounded-[1.5rem] bg-white/85 p-3 shadow-sm sm:grid-cols-[minmax(7.5rem,11.5rem)_1fr]',
     );
     article.append(
       renderImage(
@@ -144,10 +66,10 @@ function renderOrderItems(items) {
 
     content.append(renderItemFooter(item));
     article.append(content);
-    section.append(article);
+    fragment.append(article);
   });
 
-  return section;
+  section.replaceChildren(fragment);
 }
 
 function renderImage(item, className) {
@@ -295,146 +217,73 @@ function renderItemFooter(item) {
   return footer;
 }
 
-function renderOrderEnquiryPanel(items) {
-  const section = createElement(
-    'section',
-    'grid gap-4 border-y border-slate-300 py-4',
-  );
-  section.setAttribute('aria-labelledby', 'order-enquiry-title');
-
-  const intro = createElement('div', 'grid gap-2.5');
-  const title = createElement(
-    'h2',
-    'font-calistoga text-3xl text-slate-950',
-    'Send your order enquiry',
-  );
-  title.id = 'order-enquiry-title';
-
-  intro.append(
-    title,
-    createElement(
-      'p',
-      'max-w-xl text-[0.9375rem] leading-relaxed text-slate-600',
-      'Choose the channel that feels easiest. These actions prepare your enquiry; they do not confirm availability, payment or booking.',
-    ),
-    renderTotalBlock(items),
-  );
-
-  const status = createElement('p', 'sr-only');
-  status.id = 'orderEnquiryStatus';
-  status.setAttribute('role', 'status');
-  status.setAttribute('aria-live', 'polite');
-
-  section.append(intro, renderInlineEmailActions(items), status);
-  return section;
+function updateEstimatedTotal(items) {
+  const amount = document.getElementById('orderEstimatedTotal');
+  if (amount) amount.textContent = formatAud(getEstimatedTotal(items));
 }
 
-function renderTotalBlock(items) {
-  const block = createElement('div', 'grid gap-1.5');
-  const amount = createElement(
-    'p',
-    'text-4xl font-black leading-none text-slate-950',
-    formatAud(getEstimatedTotal(items)),
-  );
-  amount.setAttribute('aria-live', 'polite');
-  block.append(
-    createElement(
-      'p',
-      'text-xs font-bold uppercase tracking-[0.14em] text-pink-800',
-      'Estimated total',
-    ),
-    amount,
-    createElement(
-      'p',
-      'max-w-2xl text-[0.8125rem] leading-relaxed text-slate-600',
-      "No payment is required today. We'll confirm availability, final pricing and collection details before your order is booked.",
-    ),
-  );
-  return block;
-}
+function initEmailForm() {
+  const toggle = document.getElementById('orderEmailToggle');
+  const toggleIcon = document.getElementById('orderEmailToggleIcon');
+  const form = document.getElementById('order-email-form');
+  const nameInput = document.getElementById('order-customer-name');
+  const phoneInput = document.getElementById('order-customer-phone');
+  const nameError = document.getElementById('order-customer-name-error');
+  const phoneError = document.getElementById('order-customer-phone-error');
 
-function renderInlineEmailActions(items) {
-  const actions = createElement(
-    'div',
-    'grid content-start border-t border-slate-300',
-  );
-  const formId = 'order-email-form';
-  const nameField = renderInlineContactField({
-    id: 'order-customer-name',
-    label: 'Your name',
-    name: 'name',
-    type: 'text',
-    autocomplete: 'name',
-    placeholder: 'Name of the person placing the enquiry',
-    error: 'Please enter your name.',
-  });
-  const phoneField = renderInlineContactField({
-    id: 'order-customer-phone',
-    label: 'Phone number',
-    name: 'phone',
-    type: 'tel',
-    autocomplete: 'tel',
-    placeholder: 'Your preferred contact number',
-    error: 'Please enter a phone number.',
-  });
+  if (
+    !(toggle instanceof HTMLButtonElement) ||
+    !(form instanceof HTMLFormElement) ||
+    !(nameInput instanceof HTMLInputElement) ||
+    !(phoneInput instanceof HTMLInputElement) ||
+    !(nameError instanceof HTMLElement) ||
+    !(phoneError instanceof HTMLElement)
+  ) {
+    return;
+  }
 
-  const emailGroup = createElement(
-    'div',
-    'cart-inline-email-group border-b border-slate-300',
-  );
-  const toggle = createElement(
-    'button',
-    'cart-contact-action flex min-h-12 w-full items-center justify-between gap-3 border-b border-slate-300 px-0 py-2.5 text-slate-900 transition hover:text-pink-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700 data-[primary=true]:font-bold',
-  );
-  toggle.type = 'button';
-  toggle.setAttribute('aria-expanded', 'false');
-  toggle.setAttribute('aria-controls', formId);
-  toggle.append(
-    renderContactActionContent(
-      'Email',
-      'Best for detailed orders and event enquiries.',
-    ),
-    createElement('span', 'text-lg', '+'),
-  );
+  if (toggle.dataset.initialized !== 'true') {
+    toggle.dataset.initialized = 'true';
+    toggle.addEventListener('click', () => {
+      const isOpen = !form.hidden;
+      form.hidden = isOpen;
+      toggle.setAttribute('aria-expanded', String(!isOpen));
+      if (toggleIcon) toggleIcon.textContent = isOpen ? '+' : '−';
+      if (!isOpen) nameInput.focus();
+    });
+  }
 
-  const form = createElement('form', 'grid gap-2.5 pb-3');
-  form.id = formId;
-  form.hidden = true;
-  form.noValidate = true;
+  if (form.dataset.initialized === 'true') return;
 
-  const submit = createElement(
-    'button',
-    'cart-send-action ui-button w-full border border-slate-300 px-4 py-2.5 text-sm font-bold text-slate-950 transition hover:border-pink-400 hover:text-pink-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700 disabled:cursor-not-allowed disabled:opacity-60',
-    'Send enquiry',
-  );
-  submit.type = 'submit';
-
-  form.append(nameField.wrapper, phoneField.wrapper, submit);
-  toggle.addEventListener('click', () => {
-    const isOpen = !form.hidden;
-    form.hidden = isOpen;
-    toggle.setAttribute('aria-expanded', String(!isOpen));
-    toggle.querySelector('span:last-child').textContent = isOpen ? '+' : '−';
-    if (!isOpen) nameField.input.focus();
-  });
-
+  form.dataset.initialized = 'true';
   form.addEventListener('submit', (event) => {
     event.preventDefault();
-    submit.disabled = true;
 
-    const hasName = validateInlineEmailField(nameField);
-    const hasPhone = validateInlineEmailField(phoneField);
+    const submit = form.querySelector('button[type="submit"]');
+    if (submit instanceof HTMLButtonElement) submit.disabled = true;
+
+    const hasName = validateEmailField(nameInput, nameError);
+    const hasPhone = validateEmailField(phoneInput, phoneError);
 
     if (!hasName || !hasPhone) {
-      submit.disabled = false;
-      if (!hasName) nameField.input.focus();
-      else phoneField.input.focus();
+      if (submit instanceof HTMLButtonElement) submit.disabled = false;
+      if (!hasName) nameInput.focus();
+      else phoneInput.focus();
+      return;
+    }
+
+    const items = readCart();
+    if (!items.length) {
+      announce(
+        'Please add at least one preorder configuration before sending an enquiry.',
+      );
+      if (submit instanceof HTMLButtonElement) submit.disabled = false;
       return;
     }
 
     const contactMessage = buildContactMessage(items, {
-      name: nameField.input.value.trim(),
-      phone: phoneField.input.value.trim(),
+      name: nameInput.value.trim(),
+      phone: phoneInput.value.trim(),
     });
     const subject = encodeURIComponent("Order enquiry - Earth Mama's Kitchen");
     const encodedMessage = encodeURIComponent(contactMessage);
@@ -442,89 +291,34 @@ function renderInlineEmailActions(items) {
     announce(
       'Your email draft has been prepared. Please review and send it manually.',
     );
-    submit.disabled = false;
+
+    if (submit instanceof HTMLButtonElement) submit.disabled = false;
   });
-
-  emailGroup.append(toggle, form);
-
-  const instagram = createLink(
-    'cart-contact-action flex min-h-12 w-full items-center justify-between gap-3 border-b border-slate-300 px-0 py-2.5 text-slate-900 transition hover:text-pink-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700 data-[primary=true]:font-bold',
-    INSTAGRAM_URL,
-    '',
-  );
-  instagram.target = '_blank';
-  instagram.rel = 'noopener noreferrer';
-  instagram.append(
-    renderContactActionContent(
-      'Instagram',
-      'Share visual inspiration with us.',
-    ),
-    createElement('span', 'text-lg', '→'),
-  );
-
-  actions.append(emailGroup, instagram);
-  return actions;
 }
 
-function renderInlineContactField({
-  id,
-  label,
-  name,
-  type,
-  autocomplete,
-  placeholder,
-  error,
-}) {
-  const wrapper = createElement('div', 'grid gap-1.5');
-  const errorId = `${id}-error`;
-  const labelElement = createElement(
-    'label',
-    'text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-slate-500',
-    label,
-  );
-  labelElement.htmlFor = id;
+function closeEmailForm() {
+  const toggle = document.getElementById('orderEmailToggle');
+  const toggleIcon = document.getElementById('orderEmailToggleIcon');
+  const form = document.getElementById('order-email-form');
 
-  const input = document.createElement('input');
-  input.id = id;
-  input.name = name;
-  input.type = type;
-  input.required = true;
-  input.autocomplete = autocomplete;
-  input.placeholder = placeholder;
-  input.setAttribute('aria-describedby', errorId);
-  input.className =
-    'min-h-10 w-full border-b border-slate-300 bg-transparent px-0 py-2 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 hover:border-slate-500 focus:border-pink-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700';
+  if (
+    !(toggle instanceof HTMLButtonElement) ||
+    !(form instanceof HTMLFormElement)
+  ) {
+    return;
+  }
 
-  const errorElement = createElement(
-    'p',
-    'hidden text-xs leading-snug text-red-700',
-    error,
-  );
-  errorElement.id = errorId;
-
-  wrapper.append(labelElement, input, errorElement);
-  return { wrapper, input, errorElement };
+  form.hidden = true;
+  toggle.setAttribute('aria-expanded', 'false');
+  if (toggleIcon) toggleIcon.textContent = '+';
 }
 
-function validateInlineEmailField(field) {
-  const isValid = field.input.value.trim().length > 0;
-  field.input.setAttribute('aria-invalid', String(!isValid));
-  field.errorElement.hidden = isValid;
-  field.errorElement.classList.toggle('hidden', isValid);
+function validateEmailField(input, errorElement) {
+  const isValid = input.value.trim().length > 0;
+  input.setAttribute('aria-invalid', String(!isValid));
+  errorElement.hidden = isValid;
+  errorElement.classList.toggle('hidden', isValid);
   return isValid;
-}
-
-function renderContactActionContent(title, description) {
-  const content = createElement('span', 'grid gap-0.5 text-left');
-  content.append(
-    createElement('span', 'text-sm font-bold', title),
-    createElement(
-      'span',
-      'text-[0.6875rem] font-normal leading-snug text-slate-600',
-      description,
-    ),
-  );
-  return content;
 }
 
 function buildContactMessage(items, contactDetails) {
@@ -650,19 +444,6 @@ function getAddOns(item) {
     .filter(Boolean);
 }
 
-function renderRelatedProducts() {
-  const template = document.getElementById('orderRelatedProductsTemplate');
-
-  if (
-    !(template instanceof HTMLTemplateElement) ||
-    !template.content.childElementCount
-  ) {
-    return null;
-  }
-
-  return template.content.cloneNode(true);
-}
-
 function isLongPersonalisationContent({ key, label, value }) {
   const combinedLabel = `${key} ${label}`;
   const longContentPattern =
@@ -705,18 +486,13 @@ function createElement(tag, className = '', text = '') {
   return element;
 }
 
-function createLink(className, href, text) {
-  const link = createElement('a', className, text);
-  link.href = href;
-  return link;
-}
-
 function announce(message) {
   const status = document.getElementById('orderEnquiryStatus');
   if (status) status.textContent = message;
 }
 
 function initOrderPage() {
+  initEmailForm();
   renderOrderPage();
 }
 

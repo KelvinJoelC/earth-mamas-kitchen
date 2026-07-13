@@ -9,6 +9,7 @@ interface Props {
   title?: string;
   description?: string;
   showStickyOrderButton?: boolean;
+  showCartLink?: boolean;
 }
 
 const defaultTitle =
@@ -20,6 +21,7 @@ const {
   title = defaultTitle,
   description = defaultDescription,
   showStickyOrderButton = true,
+  showCartLink = true,
 } = Astro.props;
 
 const pageTitle =
@@ -40,7 +42,7 @@ const pageTitle =
     class="m-0 w-full min-h-screen flex flex-col custom-gradient text-white"
   >
     <a href="#main-content" class="skip-link">Skip to main content</a>
-    <Header />
+    <Header showCartLink={showCartLink} />
     <main id="main-content" class="flex-1" tabindex="-1">
       <slot />
     </main>
