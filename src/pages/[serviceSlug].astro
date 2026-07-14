@@ -75,7 +75,7 @@ const { offering } = Astro.props as {
           />
           <p
             id="event-name-error"
-            class="form-message form-message--error service-error"
+            class="form-message form-message--error min-h-4"
           >
           </p>
         </FormFieldShell>
@@ -93,7 +93,7 @@ const { offering } = Astro.props as {
           />
           <p
             id="event-email-error"
-            class="form-message form-message--error service-error"
+            class="form-message form-message--error min-h-4"
           >
           </p>
         </FormFieldShell>
@@ -115,7 +115,7 @@ const { offering } = Astro.props as {
           </p>
           <p
             id="event-phone-error"
-            class="form-message form-message--error service-error"
+            class="form-message form-message--error min-h-4"
           >
           </p>
         </FormFieldShell>
@@ -139,7 +139,7 @@ const { offering } = Astro.props as {
           </select>
           <p
             id="event-type-error"
-            class="form-message form-message--error service-error"
+            class="form-message form-message--error min-h-4"
           >
           </p>
         </FormFieldShell>
@@ -178,7 +178,7 @@ const { offering } = Astro.props as {
           </p>
           <p
             id="event-message-error"
-            class="form-message form-message--error service-error"
+            class="form-message form-message--error min-h-4"
           >
           </p>
         </FormFieldShell>
@@ -186,7 +186,7 @@ const { offering } = Astro.props as {
 
       <div
         id="eventsCateringStatus"
-        class="service-status"
+        class="service-status empty:hidden rounded-xl bg-slate-100 p-3 text-sm font-semibold data-[status=error]:bg-red-50 data-[status=error]:text-red-800 data-[status=success]:bg-emerald-50 data-[status=success]:text-emerald-800"
         role="status"
         aria-live="polite"
       >
@@ -194,12 +194,12 @@ const { offering } = Astro.props as {
 
       <textarea
         id="eventsCateringFallback"
-        class="form-control form-control--soft service-fallback"
+        class="form-control form-control--soft service-fallback min-h-56 resize-y"
         readonly
         hidden
         aria-label="Prepared Events and Catering enquiry email"></textarea>
 
-      <div class="service-actions">
+      <div class="service-actions flex flex-wrap justify-end gap-3">
         <button type="submit" class="ui-button ui-button--primary">
           Prepare Email
         </button>
@@ -340,44 +340,6 @@ const { offering } = Astro.props as {
 
   .service-field--message {
     min-height: 100%;
-  }
-
-  .service-error {
-    min-height: 1rem;
-  }
-
-  .service-status {
-    border-radius: 0.75rem;
-    padding: 0.75rem;
-    background-color: rgb(241 245 249);
-    font-size: 0.875rem;
-    font-weight: 600;
-  }
-
-  .service-status:empty {
-    display: none;
-  }
-
-  .service-status[data-status='error'] {
-    background-color: #fef2f2;
-    color: #991b1b;
-  }
-
-  .service-status[data-status='success'] {
-    background-color: #ecfdf5;
-    color: #065f46;
-  }
-
-  .service-fallback {
-    min-height: 14rem;
-    resize: vertical;
-  }
-
-  .service-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    justify-content: flex-end;
   }
 
   @media (min-width: 768px) {
