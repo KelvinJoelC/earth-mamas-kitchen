@@ -15,7 +15,7 @@ const offeringImageAltText = {
 } as const;
 ---
 
-<section class="-mb-55">
+<section class="relative overflow-visible pb-10">
   <h2 class="sr-only">Product offerings</h2>
   {
     EXPLORE.map(
@@ -23,10 +23,10 @@ const offeringImageAltText = {
         <section
           style={{
             background: `${props.bg}`,
-            transform: `translateY(calc(-100px * ${index}))`,
-            marginBottom: index === EXPLORE.length - 1 ? '100px' : '0',
+            marginTop: index === 0 ? '0' : '-100px',
+            zIndex: index + 1,
           }}
-          class="flex flex-col px-6 py-12 justify-center items-center rounded-t-4xl transform text-center"
+          class="relative flex flex-col px-6 py-12 justify-center items-center rounded-t-4xl transform overflow-visible text-center"
         >
           <h3 class="font-calistoga text-5xl p-2 mt-6  ">{title}</h3>
           <p class="text-4xl sm:text-5xl font-dancing py-6 px-2 max-w-xl">
@@ -43,6 +43,7 @@ const offeringImageAltText = {
               src={`${img}.webp`}
               class="animate-slideIn"
               alt={offeringImageAltText[offeringId]}
+              transition:name={`offering-image-${offeringId}`}
               width={400}
               height={400}
             />
@@ -51,30 +52,39 @@ const offeringImageAltText = {
       ),
     )
   }
-  <aside
-    class="mx-6 flex flex-col items-center justify-center rounded-4xl bg-white/90 px-6 py-8 text-center text-black shadow-lg"
+  <section
     style={{
-      transform: `translateY(calc(-100px * ${EXPLORE.length}))`,
-      marginBottom: '100px',
+      background:
+        'linear-gradient(135deg, white 0%, #f8d7e6 28%, #dba2b1 58%, #a89bc0 82%, white 100%)',
+      marginTop: '-100px',
+      zIndex: EXPLORE.length + 1,
     }}
+    class="relative flex flex-col px-6 py-12 justify-center items-center rounded-t-4xl transform overflow-visible text-center"
   >
-    <p class="text-sm font-bold uppercase tracking-[0.2em] text-violet-700">
-      Service Offering
-    </p>
-    <h2 class="font-calistoga text-3xl sm:text-4xl mt-2">
+    <h3 class="font-calistoga text-5xl p-2 mt-6">
       {eventsCatering.name}
-    </h2>
-    <p class="max-w-2xl text-xl sm:text-2xl font-dancing py-4">
+    </h3>
+    <p class="text-4xl sm:text-5xl font-dancing py-6 px-2 max-w-xl">
       Large events, catering requests and complex celebrations are handled
       through a personal enquiry, not the standard preorder flow.
     </p>
     <a
       href={serviceOfferingPaths[eventsCatering.id]}
-      class="inline-flex items-center justify-center px-6 py-3 bg-violeta-medio text-white border border-white/70 font-bold rounded-full hover:bg-violeta-oscuro transition"
+      class="inline-flex items-center justify-center px-6 py-3 bg-white text-black border border-gray-300 font-bold rounded-full hover:bg-gray-100 transition"
     >
       Plan Your Event
     </a>
-  </aside>
+    <figure class="mt-4 flex justify-center">
+      <Image
+        src="/images/events.webp"
+        class="animate-slideIn"
+        alt="Earth Mama’s Kitchen events and catering presentation"
+        transition:name={`service-image-${eventsCatering.id}`}
+        width={400}
+        height={400}
+      />
+    </figure>
+  </section>
 </section>
 
 <style>

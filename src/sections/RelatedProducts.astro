@@ -49,6 +49,7 @@ const { selection: products } = Astro.props as Props;
                         class="absolute w-full h-max top-10 scale-110 transition-all ease-in-out duration-700 group-hover:-top-15"
                         src={`${img}.webp`}
                         alt={title}
+                        transition:name={`offering-image-${offeringId}`}
                       />
                     </div>
                     <div class="relative mx-4 rounded-xl bg-white text-black text-left py-4">
