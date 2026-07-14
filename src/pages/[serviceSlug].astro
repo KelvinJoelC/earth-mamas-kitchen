@@ -1,5 +1,6 @@
 ---
 import { serviceOfferings } from '@/configuration/offerings/service-offerings';
+import FormFieldShell from '@/components/FormFieldShell.astro';
 import Layout from '@/layouts/Layout.astro';
 import type { ServiceOfferingDefinition } from '@/domain/offerings';
 
@@ -61,207 +62,126 @@ const { offering } = Astro.props as {
       </div>
 
       <div class="configuration-grid service-form-grid">
-        <div class="configuration-field">
-          <label
-            for="event-name"
-            class="configuration-field-title flex flex-wrap items-center gap-2"
+        <FormFieldShell label="Name" forId="event-name" required>
+          <input
+            id="event-name"
+            name="name"
+            required
+            maxlength="100"
+            type="text"
+            autocomplete="name"
+            class="form-control form-control--soft text-sm"
+            aria-describedby="event-name-error"
+          />
+          <p
+            id="event-name-error"
+            class="form-message form-message--error service-error"
           >
-            <span>Name</span>
-            <span class="sr-only"> required</span>
-            <span
-              aria-hidden="true"
-              class="rounded-full bg-rosa-claro px-2.5 py-1 text-xs font-semibold text-slate-700"
-            >
-              Required
-            </span>
-          </label>
-          <hr class="configuration-field-divider" />
-          <div class="configuration-field-body">
-            <input
-              id="event-name"
-              name="name"
-              required
-              maxlength="100"
-              type="text"
-              autocomplete="name"
-              class="form-control form-control--soft text-sm"
-              aria-describedby="event-name-error"
-            />
-            <p
-              id="event-name-error"
-              class="form-message form-message--error service-error"
-            >
-            </p>
-          </div>
-        </div>
+          </p>
+        </FormFieldShell>
 
-        <div class="configuration-field">
-          <label
-            for="event-email"
-            class="configuration-field-title flex flex-wrap items-center gap-2"
+        <FormFieldShell label="Email" forId="event-email" required>
+          <input
+            id="event-email"
+            name="email"
+            required
+            maxlength="254"
+            type="email"
+            autocomplete="email"
+            class="form-control form-control--soft text-sm"
+            aria-describedby="event-email-error"
+          />
+          <p
+            id="event-email-error"
+            class="form-message form-message--error service-error"
           >
-            <span>Email</span>
-            <span class="sr-only"> required</span>
-            <span
-              aria-hidden="true"
-              class="rounded-full bg-rosa-claro px-2.5 py-1 text-xs font-semibold text-slate-700"
-            >
-              Required
-            </span>
-          </label>
-          <hr class="configuration-field-divider" />
-          <div class="configuration-field-body">
-            <input
-              id="event-email"
-              name="email"
-              required
-              maxlength="254"
-              type="email"
-              autocomplete="email"
-              class="form-control form-control--soft text-sm"
-              aria-describedby="event-email-error"
-            />
-            <p
-              id="event-email-error"
-              class="form-message form-message--error service-error"
-            >
-            </p>
-          </div>
-        </div>
+          </p>
+        </FormFieldShell>
 
-        <div class="configuration-field">
-          <label
-            for="event-phone"
-            class="configuration-field-title flex flex-wrap items-center gap-2"
+        <FormFieldShell label="Phone Number" forId="event-phone" required>
+          <input
+            id="event-phone"
+            name="phone"
+            required
+            maxlength="30"
+            type="tel"
+            autocomplete="tel"
+            class="form-control form-control--soft text-sm"
+            aria-describedby="event-phone-help event-phone-error"
+          />
+          <p id="event-phone-help" class="form-message form-message--help">
+            Used only so the bakery can contact you personally about the
+            enquiry.
+          </p>
+          <p
+            id="event-phone-error"
+            class="form-message form-message--error service-error"
           >
-            <span>Phone Number</span>
-            <span class="sr-only"> required</span>
-            <span
-              aria-hidden="true"
-              class="rounded-full bg-rosa-claro px-2.5 py-1 text-xs font-semibold text-slate-700"
-            >
-              Required
-            </span>
-          </label>
-          <hr class="configuration-field-divider" />
-          <div class="configuration-field-body">
-            <input
-              id="event-phone"
-              name="phone"
-              required
-              maxlength="30"
-              type="tel"
-              autocomplete="tel"
-              class="form-control form-control--soft text-sm"
-              aria-describedby="event-phone-help event-phone-error"
-            />
-            <p id="event-phone-help" class="form-message form-message--help">
-              Used only so the bakery can contact you personally about the
-              enquiry.
-            </p>
-            <p
-              id="event-phone-error"
-              class="form-message form-message--error service-error"
-            >
-            </p>
-          </div>
-        </div>
+          </p>
+        </FormFieldShell>
 
-        <div class="configuration-field">
-          <label
-            for="event-type"
-            class="configuration-field-title flex flex-wrap items-center gap-2"
+        <FormFieldShell label="Event Type" forId="event-type" required>
+          <select
+            id="event-type"
+            name="eventType"
+            required
+            class="form-control form-control--soft text-sm"
+            aria-describedby="event-type-error"
           >
-            <span>Event Type</span>
-            <span class="sr-only"> required</span>
-            <span
-              aria-hidden="true"
-              class="rounded-full bg-rosa-claro px-2.5 py-1 text-xs font-semibold text-slate-700"
-            >
-              Required
-            </span>
-          </label>
-          <hr class="configuration-field-divider" />
-          <div class="configuration-field-body">
-            <select
-              id="event-type"
-              name="eventType"
-              required
-              class="form-control form-control--soft text-sm"
-              aria-describedby="event-type-error"
-            >
-              <option value="">Select an option</option>
-              <option value="Wedding">Wedding</option>
-              <option value="Corporate Event">Corporate Event</option>
-              <option value="Birthday">Birthday</option>
-              <option value="Baby Shower">Baby Shower</option>
-              <option value="Anniversary">Anniversary</option>
-              <option value="Community Event">Community Event</option>
-              <option value="Other">Other</option>
-            </select>
-            <p
-              id="event-type-error"
-              class="form-message form-message--error service-error"
-            >
-            </p>
-          </div>
-        </div>
+            <option value="">Select an option</option>
+            <option value="Wedding">Wedding</option>
+            <option value="Corporate Event">Corporate Event</option>
+            <option value="Birthday">Birthday</option>
+            <option value="Baby Shower">Baby Shower</option>
+            <option value="Anniversary">Anniversary</option>
+            <option value="Community Event">Community Event</option>
+            <option value="Other">Other</option>
+          </select>
+          <p
+            id="event-type-error"
+            class="form-message form-message--error service-error"
+          >
+          </p>
+        </FormFieldShell>
 
-        <div class="configuration-field">
-          <label
-            for="preferred-event-date"
-            class="configuration-field-title flex flex-wrap items-center gap-2"
-          >
-            <span>Preferred Event Date</span>
-            <span class="font-normal text-slate-500">(optional)</span>
-          </label>
-          <hr class="configuration-field-divider" />
-          <div class="configuration-field-body">
-            <input
-              id="preferred-event-date"
-              name="preferredEventDate"
-              type="date"
-              class="form-control form-control--soft text-sm"
-            />
-          </div>
-        </div>
+        <FormFieldShell
+          label="Preferred Event Date"
+          forId="preferred-event-date"
+          optionalLabel="(optional)"
+        >
+          <input
+            id="preferred-event-date"
+            name="preferredEventDate"
+            type="date"
+            class="form-control form-control--soft text-sm"
+          />
+        </FormFieldShell>
 
-        <div class="configuration-field service-field--message">
-          <label
-            for="event-message"
-            class="configuration-field-title flex flex-wrap items-center gap-2"
+        <FormFieldShell
+          label="Message"
+          forId="event-message"
+          required
+          class="service-field--message"
+        >
+          <textarea
+            id="event-message"
+            name="message"
+            required
+            maxlength="1000"
+            rows="6"
+            class="form-control form-control--soft resize-none text-sm"
+            placeholder="Briefly describe your event, initial ideas and anything important."
+            aria-describedby="event-message-help event-message-error"
+          ></textarea>
+          <p id="event-message-help" class="form-message form-message--help">
+            Maximum 1,000 characters.
+          </p>
+          <p
+            id="event-message-error"
+            class="form-message form-message--error service-error"
           >
-            <span>Message</span>
-            <span class="sr-only"> required</span>
-            <span
-              aria-hidden="true"
-              class="rounded-full bg-rosa-claro px-2.5 py-1 text-xs font-semibold text-slate-700"
-            >
-              Required
-            </span>
-          </label>
-          <hr class="configuration-field-divider" />
-          <div class="configuration-field-body">
-            <textarea
-              id="event-message"
-              name="message"
-              required
-              maxlength="1000"
-              rows="6"
-              class="form-control form-control--soft resize-none text-sm"
-              placeholder="Briefly describe your event, initial ideas and anything important."
-              aria-describedby="event-message-help event-message-error"
-            ></textarea>
-            <p id="event-message-help" class="form-message form-message--help">
-              Maximum 1,000 characters.
-            </p>
-            <p
-              id="event-message-error"
-              class="form-message form-message--error service-error"
-            >
-            </p>
-          </div>
-        </div>
+          </p>
+        </FormFieldShell>
       </div>
 
       <div

@@ -1,0 +1,38 @@
+---
+import RequiredBadge from '@/components/RequiredBadge.astro';
+
+interface Props {
+  label: string;
+  forId: string;
+  required?: boolean;
+  optionalLabel?: string;
+  class?: string;
+}
+
+const {
+  label,
+  forId,
+  required = false,
+  optionalLabel,
+  class: className,
+} = Astro.props;
+---
+
+<div class:list={['configuration-field', className]}>
+  <label
+    for={forId}
+    class="configuration-field-title flex flex-wrap items-center gap-2"
+  >
+    <span>{label}</span>
+    {required && <RequiredBadge />}
+    {
+      optionalLabel && (
+        <span class="font-normal text-slate-500">{optionalLabel}</span>
+      )
+    }
+  </label>
+  <hr class="configuration-field-divider" />
+  <div class="configuration-field-body">
+    <slot />
+  </div>
+</div>
