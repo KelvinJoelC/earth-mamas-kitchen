@@ -50,8 +50,9 @@ import FacebookIcon from '@/assets/facebook.svg';
         website.
       </p>
 
-      <div class="contact-field">
-        <label for="contact-name" class="contact-label">Name *</label>
+      <div class="grid gap-[0.35rem]">
+        <label for="contact-name" class="text-[0.95rem] font-bold">Name *</label
+        >
         <input
           id="contact-name"
           name="name"
@@ -62,11 +63,17 @@ import FacebookIcon from '@/assets/facebook.svg';
           class="form-control"
           aria-describedby="contact-name-error"
         />
-        <p id="contact-name-error" class="contact-error"></p>
+        <p
+          id="contact-name-error"
+          class="min-h-4 text-[0.8rem] font-bold text-red-200"
+        >
+        </p>
       </div>
 
-      <div class="contact-field">
-        <label for="contact-email" class="contact-label">Email *</label>
+      <div class="grid gap-[0.35rem]">
+        <label for="contact-email" class="text-[0.95rem] font-bold"
+          >Email *</label
+        >
         <input
           id="contact-email"
           name="email"
@@ -77,11 +84,15 @@ import FacebookIcon from '@/assets/facebook.svg';
           class="form-control"
           aria-describedby="contact-email-error"
         />
-        <p id="contact-email-error" class="contact-error"></p>
+        <p
+          id="contact-email-error"
+          class="min-h-4 text-[0.8rem] font-bold text-red-200"
+        >
+        </p>
       </div>
 
-      <div class="contact-field">
-        <label for="contact-phone" class="contact-label">
+      <div class="grid gap-[0.35rem]">
+        <label for="contact-phone" class="text-[0.95rem] font-bold">
           Phone <span class="font-normal text-white/80">(optional)</span>
         </label>
         <input
@@ -93,13 +104,15 @@ import FacebookIcon from '@/assets/facebook.svg';
           class="form-control"
           aria-describedby="contact-phone-help"
         />
-        <p id="contact-phone-help" class="contact-help">
+        <p id="contact-phone-help" class="text-[0.8rem] text-white/80">
           Optional. Include this only if you are happy to be contacted by phone.
         </p>
       </div>
 
-      <div class="contact-field">
-        <label for="contact-message" class="contact-label">Message *</label>
+      <div class="grid gap-[0.35rem]">
+        <label for="contact-message" class="text-[0.95rem] font-bold"
+          >Message *</label
+        >
         <textarea
           id="contact-message"
           name="message"
@@ -110,15 +123,19 @@ import FacebookIcon from '@/assets/facebook.svg';
           class="form-control"
           aria-describedby="contact-message-help contact-message-error"
         ></textarea>
-        <p id="contact-message-help" class="contact-help">
+        <p id="contact-message-help" class="text-[0.8rem] text-white/80">
           Maximum 1,000 characters.
         </p>
-        <p id="contact-message-error" class="contact-error"></p>
+        <p
+          id="contact-message-error"
+          class="min-h-4 text-[0.8rem] font-bold text-red-200"
+        >
+        </p>
       </div>
 
       <div
         id="generalContactStatus"
-        class="contact-status"
+        class="empty:hidden rounded-xl bg-white/12 p-3 text-sm font-semibold data-[status=error]:bg-red-50 data-[status=error]:text-red-800 data-[status=success]:bg-emerald-50 data-[status=success]:text-emerald-800"
         role="status"
         aria-live="polite"
       >
@@ -126,12 +143,12 @@ import FacebookIcon from '@/assets/facebook.svg';
 
       <textarea
         id="generalContactFallback"
-        class="form-control contact-fallback"
+        class="form-control min-h-56 resize-y"
         readonly
         hidden
         aria-label="Prepared general enquiry email"></textarea>
 
-      <div class="contact-actions">
+      <div class="grid gap-3">
         <button type="submit" class="ui-button ui-button--primary">
           Prepare Email
         </button>
@@ -150,59 +167,3 @@ import FacebookIcon from '@/assets/facebook.svg';
 <script>
   import '@/browser/contact-form.js';
 </script>
-
-<style>
-  .contact-field {
-    display: grid;
-    gap: 0.35rem;
-  }
-
-  .contact-label {
-    font-size: 0.95rem;
-    font-weight: 700;
-  }
-
-  .contact-help {
-    font-size: 0.8rem;
-    color: rgb(255 255 255 / 0.8);
-  }
-
-  .contact-error {
-    min-height: 1rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: #fecaca;
-  }
-
-  .contact-status {
-    border-radius: 0.75rem;
-    padding: 0.75rem;
-    background-color: rgb(255 255 255 / 0.12);
-    font-size: 0.875rem;
-    font-weight: 600;
-  }
-
-  .contact-status:empty {
-    display: none;
-  }
-
-  .contact-status[data-status='error'] {
-    background-color: #fef2f2;
-    color: #991b1b;
-  }
-
-  .contact-status[data-status='success'] {
-    background-color: #ecfdf5;
-    color: #065f46;
-  }
-
-  .contact-fallback {
-    min-height: 14rem;
-    resize: vertical;
-  }
-
-  .contact-actions {
-    display: grid;
-    gap: 0.75rem;
-  }
-</style>

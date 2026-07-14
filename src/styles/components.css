@@ -141,14 +141,6 @@
   color: var(--ui-color-text-error);
 }
 
-.surface-card {
-  border-radius: var(--ui-radius-surface);
-  background: var(--ui-color-surface-default);
-  padding: var(--ui-space-4);
-  box-shadow: var(--ui-shadow-surface);
-  overflow-wrap: anywhere;
-}
-
 .product-page-shell {
   overflow: hidden;
 }
@@ -517,8 +509,7 @@
   line-height: 1;
 }
 
-.configuration-note-card,
-.configuration-notice {
+.configuration-note-card {
   border: 1px solid rgb(226 232 240 / 84%);
   border-radius: 1.5rem;
   background: rgb(248 250 252 / 72%);
