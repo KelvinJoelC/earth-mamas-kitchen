@@ -1,51 +1,67 @@
 const BAKERY_EMAIL = 'earthmamaskitchen@gmail.com';
 const MESSAGE_MAX_LENGTH = 1000;
 
+let eventsCateringFormController;
+
 export function initEventsCateringForm() {
   const form = document.getElementById('eventsCateringForm');
-  if (!form || form.dataset.eventsCateringInitialized === 'true') return;
+  if (!(form instanceof HTMLFormElement)) return;
 
-  form.dataset.eventsCateringInitialized = 'true';
+  cleanupEventsCateringForm();
+
+  eventsCateringFormController = new AbortController();
+  const { signal } = eventsCateringFormController;
   applyPreferredDateLimit(form);
 
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
+  form.addEventListener(
+    'submit',
+    (event) => {
+      event.preventDefault();
 
-    const result = buildEventsCateringEmail(form);
-    if (!result.ok) {
-      showEventsStatus(result.message, 'error');
-      return;
-    }
-
-    hideManualCopyFallback();
-    openEventsMailto(result.subject, result.body);
-    showEventsStatus(
-      'Your Events & Catering email draft has been prepared. Please review it in your email client and send it manually. The bakery will only see it after you send the email.',
-      'success',
-    );
-  });
-
-  const copyButton = document.getElementById('copyEventsCateringMessage');
-  if (copyButton?.dataset.copyInitialized === 'true') return;
-
-  if (copyButton) {
-    copyButton.dataset.copyInitialized = 'true';
-    copyButton.addEventListener('click', async () => {
       const result = buildEventsCateringEmail(form);
       if (!result.ok) {
         showEventsStatus(result.message, 'error');
         return;
       }
 
-      const copied = await copyEventsEmail(result.subject, result.body);
+      hideManualCopyFallback();
+      openEventsMailto(result.subject, result.body);
       showEventsStatus(
-        copied
-          ? 'Events & Catering enquiry copied. Please paste it into your email client, review it, and send it manually.'
-          : 'Copy was not available in this browser. The complete Events & Catering enquiry is shown below so you can copy it manually.',
-        copied ? 'success' : 'error',
+        'Your Events & Catering email draft has been prepared. Please review it in your email client and send it manually. The bakery will only see it after you send the email.',
+        'success',
       );
-    });
+    },
+    { signal },
+  );
+
+  const copyButton = document.getElementById('copyEventsCateringMessage');
+
+  if (copyButton instanceof HTMLButtonElement) {
+    copyButton.addEventListener(
+      'click',
+      async () => {
+        const result = buildEventsCateringEmail(form);
+        if (!result.ok) {
+          showEventsStatus(result.message, 'error');
+          return;
+        }
+
+        const copied = await copyEventsEmail(result.subject, result.body);
+        showEventsStatus(
+          copied
+            ? 'Events & Catering enquiry copied. Please paste it into your email client, review it, and send it manually.'
+            : 'Copy was not available in this browser. The complete Events & Catering enquiry is shown below so you can copy it manually.',
+          copied ? 'success' : 'error',
+        );
+      },
+      { signal },
+    );
   }
+}
+
+export function cleanupEventsCateringForm() {
+  eventsCateringFormController?.abort();
+  eventsCateringFormController = undefined;
 }
 
 function applyPreferredDateLimit(form) {
@@ -273,9 +289,10 @@ function initEventsSection() {
   initEventsCateringForm();
 }
 
-if (!window.__eventsCateringPageInitialized) {
-  window.__eventsCateringPageInitialized = true;
+function registerEventsLifecycle() {
   document.addEventListener('astro:page-load', initEventsSection);
+  document.addEventListener('astro:before-swap', cleanupEventsCateringForm);
 }
 
-initEventsSection();
+registerEventsLifecycle();
+queueMicrotask(initEventsSection);

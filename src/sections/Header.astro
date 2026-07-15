@@ -74,10 +74,15 @@ const { showCartLink = true } = Astro.props;
 </style>
 
 <script>
-  import { getCartCount, initCartSync } from '@/browser/cart-state.js';
+  import {
+    disposeCartSync,
+    getCartCount,
+    initCartSync,
+  } from '@/browser/cart-state.js';
 
   interface CartWindow extends Window {
     bcInitialized?: boolean;
+    cartSyncLifecycleInitialized?: boolean;
     cartUiInitialized?: boolean;
   }
 
@@ -115,10 +120,30 @@ const { showCartLink = true } = Astro.props;
     document.addEventListener('astro:after-swap', refreshFromStorage);
   }
 
-  if (!cartWindow.bcInitialized) {
+  function startCartSync() {
+    if (cartWindow.bcInitialized) return;
+
     initCartSync();
     cartWindow.bcInitialized = true;
   }
+
+  function stopCartSync() {
+    disposeCartSync();
+    cartWindow.bcInitialized = false;
+  }
+
+  function restoreCartSync() {
+    startCartSync();
+    refreshFromStorage();
+  }
+
+  if (!cartWindow.cartSyncLifecycleInitialized) {
+    window.addEventListener('pagehide', stopCartSync);
+    window.addEventListener('pageshow', restoreCartSync);
+    cartWindow.cartSyncLifecycleInitialized = true;
+  }
+
+  startCartSync();
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCartUI);

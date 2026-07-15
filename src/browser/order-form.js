@@ -13,6 +13,8 @@ const offeringImages = {
   'bespoke-cakes': '/images/cakes/mushroomLogCake.webp',
 };
 
+let orderPageController;
+
 function renderOrderPage() {
   const items = readCart();
 
@@ -492,14 +494,26 @@ function announce(message) {
 }
 
 function initOrderPage() {
+  if (!document.getElementById('orderLayout')) {
+    cleanupOrderPage();
+    return;
+  }
+
+  cleanupOrderPage();
+  orderPageController = new AbortController();
+
   initEmailForm();
   renderOrderPage();
+  window.addEventListener('cart:update', renderOrderPage, {
+    signal: orderPageController.signal,
+  });
 }
 
-if (!window.__orderPageInitialized) {
-  window.__orderPageInitialized = true;
-  document.addEventListener('astro:page-load', initOrderPage);
-  window.addEventListener('cart:update', renderOrderPage);
+function cleanupOrderPage() {
+  orderPageController?.abort();
+  orderPageController = undefined;
 }
 
+document.addEventListener('astro:page-load', initOrderPage);
+document.addEventListener('astro:before-swap', cleanupOrderPage);
 queueMicrotask(initOrderPage);

@@ -7,6 +7,7 @@ const CART_CHANNEL_NAME = 'myapp_cart';
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
 let broadcastChannel;
+let broadcastController;
 let syncInitialized = false;
 
 /**
@@ -374,18 +375,31 @@ export function initCartSync() {
   if (syncInitialized || !('BroadcastChannel' in window)) return;
 
   broadcastChannel = new BroadcastChannel(CART_CHANNEL_NAME);
+  broadcastController = new AbortController();
   syncInitialized = true;
 
-  broadcastChannel.addEventListener('message', (event) => {
-    if (event.data?.type !== 'cart:update') return;
+  broadcastChannel.addEventListener(
+    'message',
+    (event) => {
+      if (event.data?.type !== 'cart:update') return;
 
-    const { state, expired, malformed } = normalizeStoredState(
-      event.data.state,
-    );
-    if (expired || malformed) return;
+      const { state, expired, malformed } = normalizeStoredState(
+        event.data.state,
+      );
+      if (expired || malformed) return;
 
-    if (writeCartState(state)) {
-      notifyCartChange(state, 'broadcast');
-    }
-  });
+      if (writeCartState(state)) {
+        notifyCartChange(state, 'broadcast');
+      }
+    },
+    { signal: broadcastController.signal },
+  );
+}
+
+export function disposeCartSync() {
+  broadcastController?.abort();
+  broadcastController = undefined;
+  broadcastChannel?.close();
+  broadcastChannel = undefined;
+  syncInitialized = false;
 }
