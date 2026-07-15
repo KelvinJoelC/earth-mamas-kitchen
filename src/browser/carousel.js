@@ -2,10 +2,18 @@ import EmblaCarousel from 'embla-carousel';
 import Autoplay from 'embla-carousel-autoplay';
 
 const CAROUSEL_INITIALIZED_ATTR = 'data-carousel-initialized';
-const CAROUSEL_TOGGLE_INITIALIZED_ATTR = 'data-carousel-toggle-initialized';
+
+const carouselInstances = new Map();
+let lifecycleInitialized = false;
 
 function initCarousel(emblaNode) {
-  if (emblaNode.hasAttribute(CAROUSEL_INITIALIZED_ATTR)) return;
+  if (
+    !(emblaNode instanceof HTMLElement) ||
+    carouselInstances.has(emblaNode) ||
+    emblaNode.hasAttribute(CAROUSEL_INITIALIZED_ATTR)
+  ) {
+    return;
+  }
 
   const isAutoplay = emblaNode.classList.contains('autoplayCarousel');
   const reduceMotion = window.matchMedia(
@@ -18,6 +26,12 @@ function initCarousel(emblaNode) {
   const plugins = autoplay ? [autoplay] : [];
 
   const embla = EmblaCarousel(emblaNode, options, plugins);
+  const instance = {
+    embla,
+    toggleController: null,
+  };
+
+  carouselInstances.set(emblaNode, instance);
   emblaNode.setAttribute(CAROUSEL_INITIALIZED_ATTR, 'true');
   initAutoplayToggle(emblaNode, autoplay, reduceMotion);
 
@@ -29,16 +43,13 @@ function initCarousel(emblaNode) {
 function initAutoplayToggle(emblaNode, autoplay, reduceMotion) {
   const section = emblaNode.closest('section');
   const toggle = section?.querySelector('[data-carousel-toggle]');
+  const instance = carouselInstances.get(emblaNode);
 
-  if (
-    !(toggle instanceof HTMLButtonElement) ||
-    !autoplay ||
-    toggle.hasAttribute(CAROUSEL_TOGGLE_INITIALIZED_ATTR)
-  ) {
+  if (!(toggle instanceof HTMLButtonElement) || !autoplay || !instance) {
     return;
   }
 
-  toggle.setAttribute(CAROUSEL_TOGGLE_INITIALIZED_ATTR, 'true');
+  instance.toggleController?.abort();
 
   if (reduceMotion) {
     toggle.hidden = true;
@@ -61,18 +72,23 @@ function initAutoplayToggle(emblaNode, autoplay, reduceMotion) {
       : 'Play awards carousel';
   }
 
-  toggle.addEventListener('click', () => {
-    const isPlaying =
-      typeof autoplay.isPlaying === 'function' ? autoplay.isPlaying() : false;
+  instance.toggleController = new AbortController();
+  toggle.addEventListener(
+    'click',
+    () => {
+      const isPlaying =
+        typeof autoplay.isPlaying === 'function' ? autoplay.isPlaying() : false;
 
-    if (isPlaying) {
-      autoplay.stop();
-    } else {
-      autoplay.play();
-    }
+      if (isPlaying) {
+        autoplay.stop();
+      } else {
+        autoplay.play();
+      }
 
-    updateToggle();
-  });
+      updateToggle();
+    },
+    { signal: instance.toggleController.signal },
+  );
 
   updateToggle();
 }
@@ -81,11 +97,23 @@ function initCarousels() {
   document.querySelectorAll('.embla').forEach(initCarousel);
 }
 
-if (!window.carouselInitialized) {
-  document.addEventListener('DOMContentLoaded', initCarousels, { once: true });
-  document.addEventListener('astro:page-load', initCarousels);
-  window.addEventListener('load', initCarousels, { once: true });
-  window.carouselInitialized = true;
+function cleanupCarousels() {
+  carouselInstances.forEach(({ embla, toggleController }, emblaNode) => {
+    toggleController?.abort();
+    embla.destroy();
+    emblaNode.removeAttribute(CAROUSEL_INITIALIZED_ATTR);
+  });
+  carouselInstances.clear();
 }
 
+function registerCarouselLifecycle() {
+  if (lifecycleInitialized) return;
+
+  lifecycleInitialized = true;
+  document.addEventListener('DOMContentLoaded', initCarousels, { once: true });
+  document.addEventListener('astro:page-load', initCarousels);
+  document.addEventListener('astro:before-swap', cleanupCarousels);
+}
+
+registerCarouselLifecycle();
 queueMicrotask(initCarousels);

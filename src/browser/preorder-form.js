@@ -8,6 +8,8 @@ const currencyFormatter = new Intl.NumberFormat('en-AU', {
 const conditionalPanelHideTimers = new WeakMap();
 const optionalPanelHideTimers = new WeakMap();
 
+let preorderFormController;
+
 function readPreorderConfig(form) {
   if (!form?.dataset.preorderConfig) return null;
 
@@ -244,17 +246,21 @@ function setOptionalFieldExpanded(form, groupId, expanded) {
   optionalPanelHideTimers.set(content, hideTimer);
 }
 
-function initOptionalFields(form) {
+function initOptionalFields(form, signal) {
   form.querySelectorAll('[data-optional-field-toggle]').forEach((toggle) => {
     const groupId = toggle.dataset.optionalFieldToggle;
     if (!groupId) return;
 
     if (!toggle.dataset.bound) {
       toggle.dataset.bound = 'true';
-      toggle.addEventListener('click', () => {
-        const expanded = toggle.getAttribute('aria-expanded') === 'true';
-        setOptionalFieldExpanded(form, groupId, !expanded);
-      });
+      toggle.addEventListener(
+        'click',
+        () => {
+          const expanded = toggle.getAttribute('aria-expanded') === 'true';
+          setOptionalFieldExpanded(form, groupId, !expanded);
+        },
+        { signal },
+      );
     }
 
     setOptionalFieldExpanded(form, groupId, fieldHasValue(form, groupId));
@@ -572,32 +578,49 @@ function initPreOrderForm() {
   if (!form || !config || form.dataset.bound) return;
 
   form.dataset.bound = 'true';
+  preorderFormController = new AbortController();
+  const { signal } = preorderFormController;
+
   applyCollectionDateLimit(form, config);
-  initOptionalFields(form);
+  initOptionalFields(form, signal);
   refreshFormState(form, config);
 
-  form.addEventListener('change', () => refreshFormState(form, config));
-  form.addEventListener('input', () => refreshFormState(form, config));
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    refreshFormState(form, config);
-
-    if (!form.reportValidity()) return;
-
-    const result = addCartItem(buildCartItem(form, config));
-    if (!result.ok) {
-      const message =
-        result.reason === 'cart-limit-reached'
-          ? 'You can save up to three preorder configurations. Please remove one before adding another.'
-          : 'We could not save this preorder configuration. Please try again.';
-      window.alert(message);
-      return;
-    }
-
-    form.reset();
-    window.location.href = '/order';
+  form.addEventListener('change', () => refreshFormState(form, config), {
+    signal,
   });
+  form.addEventListener('input', () => refreshFormState(form, config), {
+    signal,
+  });
+
+  form.addEventListener(
+    'submit',
+    (e) => {
+      e.preventDefault();
+      refreshFormState(form, config);
+
+      if (!form.reportValidity()) return;
+
+      const result = addCartItem(buildCartItem(form, config));
+      if (!result.ok) {
+        const message =
+          result.reason === 'cart-limit-reached'
+            ? 'You can save up to three preorder configurations. Please remove one before adding another.'
+            : 'We could not save this preorder configuration. Please try again.';
+        window.alert(message);
+        return;
+      }
+
+      form.reset();
+      window.location.href = '/order';
+    },
+    { signal },
+  );
+}
+
+function cleanupPreOrderForm() {
+  preorderFormController?.abort();
+  preorderFormController = undefined;
 }
 
 document.addEventListener('astro:page-load', initPreOrderForm);
+document.addEventListener('astro:before-swap', cleanupPreOrderForm);

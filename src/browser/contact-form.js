@@ -1,51 +1,70 @@
 const BAKERY_EMAIL = 'earthmamaskitchen@gmail.com';
 const MESSAGE_MAX_LENGTH = 1000;
 
+let contactFormController;
+
 export function initGeneralContactForm() {
   const form = document.getElementById('generalContactForm');
-  if (!form || form.dataset.contactFormInitialized === 'true') return;
+  if (!(form instanceof HTMLFormElement)) return;
 
-  form.dataset.contactFormInitialized = 'true';
+  cleanupGeneralContactForm();
 
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
+  contactFormController = new AbortController();
+  const { signal } = contactFormController;
 
-    const result = buildGeneralEnquiryEmail(form);
-    if (!result.ok) {
-      showContactStatus(result.message, 'error');
-      return;
-    }
+  form.addEventListener(
+    'submit',
+    (event) => {
+      event.preventDefault();
 
-    hideManualCopyFallback();
-    openGeneralEnquiryMailto(result.subject, result.body);
-    showContactStatus(
-      'Your email draft has been prepared. Please review it in your email client and send it manually. The bakery will only see it after you send the email.',
-      'success',
-    );
-  });
-
-  const copyButton = document.getElementById('copyGeneralContactMessage');
-  if (copyButton?.dataset.copyInitialized === 'true') return;
-
-  if (copyButton) {
-    copyButton.dataset.copyInitialized = 'true';
-    copyButton.addEventListener('click', async () => {
       const result = buildGeneralEnquiryEmail(form);
       if (!result.ok) {
         showContactStatus(result.message, 'error');
         return;
       }
 
-      const copied = await copyGeneralEnquiryEmail(result.subject, result.body);
-
+      hideManualCopyFallback();
+      openGeneralEnquiryMailto(result.subject, result.body);
       showContactStatus(
-        copied
-          ? 'General enquiry email copied. Please paste it into your email client, review it, and send it manually.'
-          : 'Copy was not available in this browser. The complete general enquiry email is shown below so you can copy it manually.',
-        copied ? 'success' : 'error',
+        'Your email draft has been prepared. Please review it in your email client and send it manually. The bakery will only see it after you send the email.',
+        'success',
       );
-    });
+    },
+    { signal },
+  );
+
+  const copyButton = document.getElementById('copyGeneralContactMessage');
+
+  if (copyButton instanceof HTMLButtonElement) {
+    copyButton.addEventListener(
+      'click',
+      async () => {
+        const result = buildGeneralEnquiryEmail(form);
+        if (!result.ok) {
+          showContactStatus(result.message, 'error');
+          return;
+        }
+
+        const copied = await copyGeneralEnquiryEmail(
+          result.subject,
+          result.body,
+        );
+
+        showContactStatus(
+          copied
+            ? 'General enquiry email copied. Please paste it into your email client, review it, and send it manually.'
+            : 'Copy was not available in this browser. The complete general enquiry email is shown below so you can copy it manually.',
+          copied ? 'success' : 'error',
+        );
+      },
+      { signal },
+    );
   }
+}
+
+export function cleanupGeneralContactForm() {
+  contactFormController?.abort();
+  contactFormController = undefined;
 }
 
 function buildGeneralEnquiryEmail(form) {
@@ -236,9 +255,10 @@ function initContactSection() {
   initGeneralContactForm();
 }
 
-if (!window.__generalContactPageInitialized) {
-  window.__generalContactPageInitialized = true;
+function registerContactLifecycle() {
   document.addEventListener('astro:page-load', initContactSection);
+  document.addEventListener('astro:before-swap', cleanupGeneralContactForm);
 }
 
-initContactSection();
+registerContactLifecycle();
+queueMicrotask(initContactSection);
