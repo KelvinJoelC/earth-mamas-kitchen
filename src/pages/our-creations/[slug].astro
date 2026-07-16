@@ -17,6 +17,7 @@ import { fillingCatalogue } from '@/configuration/catalogues/fillings';
 import { frostingCatalogue } from '@/configuration/catalogues/frostings';
 import { addOnAllergenProfiles } from '@/configuration/catalogues/add-on-allergen-profiles';
 import { addOnCatalogue } from '@/configuration/catalogues/add-ons';
+import { getProductOfferingMetadata } from '@/configuration/metadata';
 
 export function getStaticPaths() {
   return productOfferings.map((offering) => {
@@ -93,9 +94,10 @@ const preorderConfig = {
 };
 
 const preorderConfigJson = JSON.stringify(preorderConfig);
+const metadata = getProductOfferingMetadata(offering, selection);
 ---
 
-<Layout title={selection.title} description={selection.description}>
+<Layout metadata={metadata}>
   <section
     class="product-page-shell flex flex-col items-center justify-center pt-30 lg:pt-20 gap-12 text-center"
     style={{ background: selection.props.bg }}

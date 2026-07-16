@@ -3,6 +3,7 @@ import { serviceOfferings } from '@/configuration/offerings/service-offerings';
 import FormFieldShell from '@/components/FormFieldShell.astro';
 import Layout from '@/layouts/Layout.astro';
 import type { ServiceOfferingDefinition } from '@/domain/offerings';
+import { getServiceOfferingMetadata } from '@/configuration/metadata';
 
 export function getStaticPaths() {
   return serviceOfferings.map((offering) => ({
@@ -14,9 +15,11 @@ export function getStaticPaths() {
 const { offering } = Astro.props as {
   offering: ServiceOfferingDefinition;
 };
+
+const metadata = getServiceOfferingMetadata(offering);
 ---
 
-<Layout title={offering.name} description={offering.summary}>
+<Layout metadata={metadata}>
   <section class="service-page-shell">
     <div class="service-hero">
       <div class="service-hero-content">

@@ -2,9 +2,10 @@
 import Layout from '@/layouts/Layout.astro';
 import Hero from '@/sections/Hero.astro';
 import Explore from '@/sections/Explore.astro';
+import { homeMetadata } from '@/configuration/metadata';
 ---
 
-<Layout>
+<Layout metadata={homeMetadata}>
   <Hero />
   <Explore />
 </Layout>
