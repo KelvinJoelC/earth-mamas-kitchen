@@ -46,6 +46,9 @@ const offeringImageAltText = {
               transition:name={`offering-image-${offeringId}`}
               width={400}
               height={400}
+              sizes="(min-width: 768px) 25rem, calc(100vw - 3rem)"
+              loading="lazy"
+              decoding="async"
             />
           </figure>
         </section>
@@ -82,6 +85,9 @@ const offeringImageAltText = {
         transition:name={`service-image-${eventsCatering.id}`}
         width={400}
         height={400}
+        sizes="(min-width: 768px) 25rem, calc(100vw - 3rem)"
+        loading="lazy"
+        decoding="async"
       />
     </figure>
   </section>

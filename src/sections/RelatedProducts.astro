@@ -7,6 +7,12 @@ interface Props {
 }
 
 const { selection: products } = Astro.props as Props;
+
+const productImageDimensions = {
+  'floral-cupcake-bouquets': { width: 783, height: 936 },
+  'edible-blooms': { width: 1024, height: 1024 },
+  'bespoke-cakes': { width: 1024, height: 1024 },
+} as const;
 ---
 
 {
@@ -49,6 +55,11 @@ const { selection: products } = Astro.props as Props;
                         class="absolute w-full h-max top-10 scale-110 transition-all ease-in-out duration-700 group-hover:-top-15"
                         src={`${img}.webp`}
                         alt={title}
+                        width={productImageDimensions[offeringId].width}
+                        height={productImageDimensions[offeringId].height}
+                        sizes="(min-width: 1180px) calc((100vw - 5rem) / 3), (min-width: 640px) 12.5rem, min(72vw, 13rem)"
+                        loading="lazy"
+                        decoding="async"
                         transition:name={`offering-image-${offeringId}`}
                       />
                     </div>
