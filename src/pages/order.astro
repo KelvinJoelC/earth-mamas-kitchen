@@ -2,11 +2,11 @@
 import Layout from '@/layouts/Layout.astro';
 import RelatedProducts from '@/sections/RelatedProducts.astro';
 import { EXPLORE } from '@/consts/explore';
+import { orderMetadata } from '@/configuration/metadata';
 ---
 
 <Layout
-  title="Order"
-  description="Review your Earth Mama's Kitchen preorder enquiry"
+  metadata={orderMetadata}
   showStickyOrderButton={false}
   showCartLink={false}
 >

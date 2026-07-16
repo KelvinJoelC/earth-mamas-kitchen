@@ -3,12 +3,13 @@ import Layout from '@/layouts/Layout.astro';
 import AboutMe from '@/sections/AboutMe.astro';
 import Awards from '@/sections/Awards.astro';
 import Contact from '@/sections/Contact.astro';
+import { aboutMetadata } from '@/configuration/metadata';
 ---
 
 <script
   src="https://cdn.jsdelivr.net/npm/@mirrorapp/iframe-bridge@latest/dist/index.umd.js"
 ></script>
-<Layout>
+<Layout metadata={aboutMetadata}>
   <AboutMe />
   <Awards />
   <section class="w-full flex flex-col justify-between items-center py-10">

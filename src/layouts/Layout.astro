@@ -4,28 +4,32 @@ import Footer from '@/sections/Footer.astro';
 import Header from '@/sections/Header.astro';
 import { ClientRouter } from 'astro:transitions';
 import StickyOrderButton from '@/components/StickyOrderButton.astro';
+import { siteMetadata, type PageMetadata } from '@/configuration/metadata';
 
 interface Props {
-  title?: string;
-  description?: string;
+  metadata: PageMetadata;
   showStickyOrderButton?: boolean;
   showCartLink?: boolean;
 }
 
-const defaultTitle =
-  'Earth Mamas Kitchen | Specialising in Floral Cupcake Bouquets and Bespoke Cakes 🎂 Scratch Baking 🍄 Edible Blooms and Art for any occasion 🌻 Love in every bite ❤️💋';
-const defaultDescription =
-  'Earth Mamas Kitchen | Specialising in Floral Cupcake Bouquets and Bespoke Cakes 🎂 Scratch Baking 🍄 Edible Blooms and Art for any occasion 🌻 Love in every bite ❤️💋';
-
 const {
-  title = defaultTitle,
-  description = defaultDescription,
+  metadata,
   showStickyOrderButton = true,
   showCartLink = true,
 } = Astro.props;
 
+if (!Astro.site) {
+  throw new Error('Missing Astro site configuration for SEO metadata.');
+}
+
 const pageTitle =
-  title === defaultTitle ? title : `${title} | Earth Mama's Kitchen`;
+  metadata.title === siteMetadata.name
+    ? metadata.title
+    : `${metadata.title} | ${siteMetadata.name}`;
+const canonicalUrl = new URL(metadata.canonicalPath, Astro.site).toString();
+const socialImage = metadata.image ?? siteMetadata.defaultImage;
+const socialImageUrl = new URL(socialImage.src, Astro.site).toString();
+const robotsContent = metadata.noindex ? 'noindex, follow' : 'index, follow';
 ---
 
 <!doctype html>
@@ -33,9 +37,23 @@ const pageTitle =
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.png" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <title>{pageTitle}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={metadata.description} />
+    <meta name="robots" content={robotsContent} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={metadata.description} />
+    <meta property="og:type" content={metadata.type ?? 'website'} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:image:alt" content={socialImage.alt} />
+    <meta property="og:site_name" content={siteMetadata.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={metadata.description} />
+    <meta name="twitter:image" content={socialImageUrl} />
+    <meta name="twitter:image:alt" content={socialImage.alt} />
     <ClientRouter />
   </head>
   <body
