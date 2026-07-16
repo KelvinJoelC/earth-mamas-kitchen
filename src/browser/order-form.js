@@ -78,8 +78,11 @@ function renderImage(item, className) {
   const image = document.createElement('img');
   image.src = offeringImages[item.offeringId] ?? '/favicon.png';
   image.alt = item.product;
+  image.width = 240;
+  image.height = 300;
   image.className = className;
   image.loading = 'lazy';
+  image.decoding = 'async';
   return image;
 }
 

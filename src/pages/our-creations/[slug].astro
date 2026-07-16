@@ -109,6 +109,9 @@ const preorderConfigJson = JSON.stringify(preorderConfig);
           transition:name={`offering-image-${offering.id}`}
           width={420}
           height={420}
+          sizes="(min-width: 768px) min(37vw, 25rem), min(90vw, 25rem)"
+          loading="eager"
+          fetchpriority="high"
         />
       </div>
 

@@ -19,7 +19,10 @@ import logo from '@/assets/images/favicon.png';
     <Image
       src={logo}
       alt="Earth Mama Kitchen logo"
-      width={250}
+      width={320}
+      sizes="(min-width: 768px) 20rem, 16rem"
+      loading="eager"
+      fetchpriority="high"
       class="w-64 md:w-80"
     />
   </figure>
