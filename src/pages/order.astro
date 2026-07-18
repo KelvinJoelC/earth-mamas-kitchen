@@ -30,6 +30,14 @@ import { orderMetadata } from '@/configuration/metadata';
             Review your selected creations before sending your enquiry to Earth
             Mama's Kitchen.
           </p>
+          <button
+            id="orderClearCart"
+            type="button"
+            class="ui-button w-fit rounded-full border border-red-200 px-4 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700"
+            hidden
+          >
+            Clear cart
+          </button>
         </header>
 
         <section
@@ -195,8 +203,22 @@ import { orderMetadata } from '@/configuration/metadata';
                 >
                   Send enquiry
                 </button>
+                <button
+                  id="copyOrderEnquiryMessage"
+                  type="button"
+                  class="cart-send-action ui-button w-full border border-slate-300 px-4 py-2.5 text-sm font-bold text-slate-950 transition hover:border-pink-400 hover:text-pink-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700"
+                >
+                  Copy message
+                </button>
               </form>
             </div>
+
+            <textarea
+              id="orderEnquiryFallback"
+              class="mt-3 min-h-56 w-full resize-y border border-slate-300 bg-white/70 p-3 text-sm text-slate-800"
+              readonly
+              hidden
+              aria-label="Prepared preorder enquiry email"></textarea>
 
             <a
               href="https://www.instagram.com/earthmamaskitchen"

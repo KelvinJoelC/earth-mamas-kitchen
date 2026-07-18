@@ -1,9 +1,10 @@
 import {
+  buildClipboardFallbackText,
   buildMailtoHref,
   buildPreorderEnquiryBody,
   buildPreorderEnquirySubject,
 } from './email-content.js';
-import { readCart, removeCartItem } from './cart-state.js';
+import { clearCart, readCart, removeCartItem } from './cart-state.js';
 
 const currencyFormatter = new Intl.NumberFormat('en-AU', {
   style: 'currency',
@@ -33,12 +34,14 @@ function updateOrderVisibility(items) {
   const emptyState = document.getElementById('orderEmptyState');
   const aside = document.getElementById('orderAside');
   const relatedProducts = document.getElementById('orderRelatedProducts');
+  const clearCartButton = document.getElementById('orderClearCart');
 
   if (orderLayout) orderLayout.dataset.empty = String(!hasItems);
   if (orderItems) orderItems.hidden = !hasItems;
   if (emptyState) emptyState.hidden = hasItems;
   if (aside) aside.hidden = !hasItems;
   if (relatedProducts) relatedProducts.hidden = !hasItems;
+  if (clearCartButton) clearCartButton.hidden = !hasItems;
   if (!hasItems) closeEmailForm();
 }
 
@@ -238,6 +241,7 @@ function initEmailForm() {
   const phoneInput = document.getElementById('order-customer-phone');
   const nameError = document.getElementById('order-customer-name-error');
   const phoneError = document.getElementById('order-customer-phone-error');
+  const copyButton = document.getElementById('copyOrderEnquiryMessage');
 
   if (
     !(toggle instanceof HTMLButtonElement) ||
@@ -293,6 +297,7 @@ function initEmailForm() {
       name: nameInput.value.trim(),
       phone: phoneInput.value.trim(),
     });
+    hideManualCopyFallback();
     window.location.href = buildMailtoHref(
       buildPreorderEnquirySubject(),
       contactMessage,
@@ -302,6 +307,71 @@ function initEmailForm() {
     );
 
     if (submit instanceof HTMLButtonElement) submit.disabled = false;
+  });
+
+  if (
+    copyButton instanceof HTMLButtonElement &&
+    copyButton.dataset.initialized !== 'true'
+  ) {
+    copyButton.dataset.initialized = 'true';
+    copyButton.addEventListener('click', async () => {
+      const hasName = validateEmailField(nameInput, nameError);
+      const hasPhone = validateEmailField(phoneInput, phoneError);
+
+      if (!hasName || !hasPhone) {
+        if (!hasName) nameInput.focus();
+        else phoneInput.focus();
+        return;
+      }
+
+      const items = readCart();
+      if (!items.length) {
+        announce(
+          'Please add at least one preorder configuration before copying an enquiry.',
+        );
+        return;
+      }
+
+      const contactMessage = buildPreorderEnquiryBody(items, {
+        name: nameInput.value.trim(),
+        phone: phoneInput.value.trim(),
+      });
+      const copied = await copyOrderEnquiryEmail(
+        buildPreorderEnquirySubject(),
+        contactMessage,
+      );
+
+      announce(
+        copied
+          ? 'Order enquiry copied. Please paste it into your email client, review it, and send it manually.'
+          : 'Copy was not available in this browser. The complete order enquiry is shown below so you can copy it manually.',
+      );
+    });
+  }
+}
+
+function initClearCartButton() {
+  const clearCartButton = document.getElementById('orderClearCart');
+  if (
+    !(clearCartButton instanceof HTMLButtonElement) ||
+    clearCartButton.dataset.initialized === 'true'
+  ) {
+    return;
+  }
+
+  clearCartButton.dataset.initialized = 'true';
+  clearCartButton.addEventListener('click', () => {
+    const confirmed = window.confirm(
+      'Clear all saved preorder configurations?',
+    );
+    if (!confirmed) return;
+
+    const result = clearCart();
+    announce(
+      result.ok
+        ? 'Your cart has been cleared.'
+        : 'We could not clear your cart. Please try again.',
+    );
   });
 }
 
@@ -320,6 +390,40 @@ function closeEmailForm() {
   form.hidden = true;
   toggle.setAttribute('aria-expanded', 'false');
   if (toggleIcon) toggleIcon.textContent = '+';
+}
+
+async function copyOrderEnquiryEmail(subject, body) {
+  const text = buildClipboardFallbackText(subject, body);
+  hideManualCopyFallback();
+
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (error) {
+    console.error('order clipboard write error', error);
+  }
+
+  showManualCopyFallback(text);
+  return false;
+}
+
+function showManualCopyFallback(text) {
+  const textarea = document.getElementById('orderEnquiryFallback');
+  if (!(textarea instanceof HTMLTextAreaElement)) return;
+
+  textarea.value = text;
+  textarea.hidden = false;
+  textarea.select();
+}
+
+function hideManualCopyFallback() {
+  const textarea = document.getElementById('orderEnquiryFallback');
+  if (!(textarea instanceof HTMLTextAreaElement)) return;
+
+  textarea.value = '';
+  textarea.hidden = true;
 }
 
 function validateEmailField(input, errorElement) {
@@ -405,6 +509,7 @@ function initOrderPage() {
   orderPageController = new AbortController();
 
   initEmailForm();
+  initClearCartButton();
   renderOrderPage();
   window.addEventListener('cart:update', renderOrderPage, {
     signal: orderPageController.signal,
