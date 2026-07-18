@@ -1,165 +1,249 @@
-# 🍰 Earth Mama's Kitchen
+# Earth Mama's Kitchen
 
-Earth Mama's Kitchen is a professional frontend portfolio case study built around a realistic artisanal bakery business. The original bakery and its visual identity remain useful inspiration, but this repository is no longer presented as an active client engagement or as software currently used by that business.
+Earth Mama's Kitchen is a realistic professional portfolio case study inspired by a bakery business.
 
-The project is being developed as a production-minded bakery preorder website using Astro, TypeScript, and Tailwind CSS.
+It models the frontend experience for a boutique bakery that offers handcrafted celebration products, guided preorder requests, and consultation-led event enquiries. The project is not presented as an active client engagement, a live commercial bakery operation, or software officially operated by a business.
 
-## Project direction
+## What the project demonstrates
 
-The goal of version 1.0.0 is to deliver a complete and credible customer experience that allows visitors to:
+The project is designed to show professional frontend engineering in a realistic product context:
 
-- browse three configurable Product Offerings;
-- understand product details, pricing guidance, lead times, and policies;
-- configure guided preorders and design briefs;
-- add configured offerings to a cart;
-- submit preorder requests for bakery review;
-- submit custom enquiries for Events & Catering;
-- contact the bakery.
+- configuration-driven Product Offering composition;
+- reusable catalogues and stable IDs;
+- declarative Business Rules;
+- typed domain modelling with TypeScript;
+- static Astro routing and page metadata;
+- accessible forms and keyboard-friendly interactions;
+- local cart persistence with expiry;
+- manual `mailto:` and clipboard handoff instead of a backend;
+- focused Vitest and Playwright coverage;
+- CI validation and Vercel deployment.
 
-This is not a tutorial or a claim of live commercial adoption. It is a realistic case study designed to demonstrate professional frontend engineering, product thinking, maintainable architecture, responsive UX, accessibility, SEO, performance, testing, documentation, and release discipline.
+## Business problem
 
-## Product ownership
+A custom bakery receives orders that depend on size, flavours, colours, add-ons, allergens, design notes, production lead time, and manual review. A basic contact form is too vague, but a fixed ecommerce checkout would overpromise pricing and availability.
 
-Kelvin Carreño Espin is the Product Owner and final decision-maker for the project.
+This case study solves that problem by guiding visitors through realistic preorder and enquiry journeys while keeping every request provisional until a human review happens.
 
-External client confirmation is not required. When real business information is unavailable, the project will use reasonable bakery-business assumptions. Material assumptions must be documented, applied consistently, and revisited when they affect user experience, business rules, content, or technical architecture.
+The application never claims that an order has been accepted, paid for, booked, or sent to a server.
 
-The original bakery context remains inspiration rather than a source of ongoing requirements or approval.
+## Product Owner and assumptions policy
+
+Kelvin Carreno Espin acts as the Product Owner for this portfolio case study.
+
+When a real commercial requirement is unavailable, decisions are made as documented assumptions. Assumptions must be:
+
+1. realistic for a boutique bakery;
+2. traceable to documentation or implementation;
+3. clearly separated from verified facts;
+4. revisited if they affect user experience, Business Rules, pricing, allergens, SEO, privacy, or technical architecture.
+
+Assumptions must not be presented as confirmed client requirements or legally verified operational facts.
 
 ## Domain terminology
 
-Version 1 uses the following terms consistently:
+The v1 catalogue uses the following terms consistently.
 
-- **Product Offering:** a configurable bakery product available through preorder.
-  - Floral Cupcake Bouquets
-  - Edible Blooms
-  - Bespoke Cakes
-- **Service Offering:** a consultation-led service rather than a standard configurable product.
-  - Events & Catering
-- **Option Groups:** reusable configuration concepts such as sizes, flavours, fillings, frostings, colour palettes, add-ons, design briefs, and enquiry fields.
-- **Workflow Type:** the customer journey assigned to an offering.
-  - `guided-preorder`
-  - `design-brief-preorder`
-  - `custom-enquiry`
+### Product Offerings
 
-The three Product Offerings are not categories containing multiple separately named products.
+- Floral Cupcake Bouquets
+- Edible Blooms
+- Bespoke Cakes
 
-## Domain architecture direction
+Product Offerings are configurable offerings. They are not product categories.
 
-The planned v1 architecture is configuration-driven without attempting to become a database or unrestricted form engine.
+### Service Offering
 
-Reusable catalogues define shared concepts such as flavours, fillings, frostings, colour palettes, add-ons, dietary adaptations, occasions, and workflow types. Product Offerings reference the catalogue entries they support and provide relationship-specific settings such as selection limits, availability, price adjustments, ordering, and review requirements.
+- Events & Catering
 
-### Add-on ownership model
+Events & Catering is a consultation pathway. It is not a Product Offering and is not added to the cart.
 
-The Global Add-on Catalogue is the single source of truth for add-on identity. Every global definition contains only:
+### Option Groups
 
-- stable ID;
-- customer-facing name;
-- description;
-- default price in AUD cents;
-- global availability;
-- default review requirement.
+Option Groups describe reusable configuration inputs such as sizes, flavours, fillings, frostings, colour palettes, add-ons, design brief fields, and enquiry fields.
 
-A Product Offering owns the relationship between itself and a supported add-on. Its configuration references the add-on ID and may define a product-specific price override, availability override, review override, display order, and compatibility rules.
+### Workflow Types
 
-Supported offerings, workflow compatibility, and display order are not duplicated in the global definition. This avoids bidirectional data that can drift out of sync.
+- `guided-preorder`
+- `design-brief-preorder`
+- `custom-enquiry`
 
-The approved v1 Global Add-on Catalogue contains:
+## Version 1 journeys
 
-- Gift Message
-- Personalised Acrylic Topper
-- Personalised Ribbon
-- Fairy Lights
-- Premium Bouquet Wrapping
-- Premium Gift Bag
-- Premium Cupcake Packaging
-- Custom Cupcake Toppers
-- Premium Cupcake Decorations
-- Edible Image
-- Chocolate Drip
-- Sugar Flowers
-- Fresh Flowers
-- Macarons
-- Edible Gold Leaf
+### Product Offering preorder journey
 
-Business rules use a limited set of typed, declarative operations—for example requirements, exclusions, automatic selections, selection limits, and redirects to custom enquiry. Global policies, workflow rules, offering rules, and compatibility rules remain separate.
+Visitors can:
 
-For v1, these contracts and catalogues can remain strongly typed TypeScript data. A database or CMS is not required.
+1. browse the homepage catalogue;
+2. open a canonical Product Offering route;
+3. configure supported Option Groups;
+4. trigger dynamic pricing, validation, allergen summaries, and Business Rules;
+5. add a valid configuration to the local cart;
+6. review, remove, or clear saved configurations;
+7. enter collection/contact details on `/order`;
+8. prepare a preorder email using `mailto:`;
+9. copy the generated message manually if the email client does not open.
 
-## Technology
+The website stores cart data in `localStorage` for seven days. It does not send preorder data to a backend.
 
-- **Astro** — static-first application architecture and performance
-- **TypeScript** — strong typing and maintainability
-- **Tailwind CSS** — responsive styling and shared design foundations
-- **Embla Carousel** — focused carousel behavior where justified
+### Events & Catering enquiry journey
 
-## Current status
+Visitors can open `/events-catering`, complete a short custom-enquiry form, and prepare a structured `mailto:` email. The journey starts a conversation only; it does not confirm availability, pricing, booking, payment, delivery, or setup.
 
-The repository contains an evolving catalogue, offering-detail routes, configurable preorder forms, a browser-persisted cart, and responsive presentation work.
+### General contact journey
 
-The current implementation is being upgraded toward the planned v1.0.0 domain model and quality standard. Until that release is complete, some workflows, terminology, and documentation may still be provisional.
+The About page includes a general contact form. It prepares a general-enquiry email and offers a manual copy fallback. It is separate from preorder and Events & Catering journeys.
 
-See the [GitHub Issues](https://github.com/KelvinJoelC/earth-mamas-kitchen/issues) for the ordered delivery backlog.
+## Technology stack
+
+- [Astro](https://astro.build/) for static-first page rendering and routing.
+- TypeScript for domain and configuration safety.
+- Tailwind CSS v4 through `@tailwindcss/vite`.
+- Astro Image where source assets are imported by Astro.
+- Embla Carousel for carousel behaviour where it is already justified.
+- Vitest for fast domain, configuration, cart, money, and email-content tests.
+- Playwright for critical rendered customer journeys.
+- ESLint, Prettier, Astro check, and GitHub Actions for quality gates.
+- Vercel for static deployment.
+
+## Local setup
+
+Requirements:
+
+- Node.js 22, matching CI.
+- npm, using the committed `package-lock.json`.
+
+Install dependencies:
+
+```bash
+npm ci
+```
+
+Start local development:
+
+```bash
+npm run dev
+```
+
+Install Playwright Chromium once before running E2E tests locally:
+
+```bash
+npx playwright install chromium
+```
+
+## Scripts
+
+| Command                | Purpose                                                           |
+| ---------------------- | ----------------------------------------------------------------- |
+| `npm run dev`          | Start the local Astro development server                          |
+| `npm run format`       | Format the repository with Prettier                               |
+| `npm run format:check` | Check formatting without modifying files                          |
+| `npm run lint`         | Run ESLint                                                        |
+| `npm run check`        | Run Astro diagnostics and TypeScript validation                   |
+| `npm run test`         | Run the Vitest suite                                              |
+| `npm run test:e2e`     | Run Playwright critical-journey tests                             |
+| `npm run build`        | Create a production build                                         |
+| `npm run quality`      | Run format check, lint, Astro check, Vitest, and production build |
+| `npm run preview`      | Preview the production build locally                              |
+
+CI runs `npm run quality`, installs Playwright Chromium, and then runs `npm run test:e2e`.
+
+## Routes
+
+Indexable public routes:
+
+- `/`
+- `/about`
+- `/events-catering`
+- `/our-creations/floral-cupcake-bouquets`
+- `/our-creations/edible-blooms`
+- `/our-creations/bespoke-cakes`
+
+Utility route:
+
+- `/order` is kept as `noindex, follow` because it is a local cart and preorder-review workflow, not a search landing page.
+
+There is no `/contact` route and no `/our-creations` landing route in v1.
 
 ## Project structure
 
 ```text
-public/                 Static public assets
 src/
-├── assets/             Source-managed visual assets
-├── components/         Reusable UI components
-├── consts/             Current static catalogue data
-├── layouts/            Shared page layouts
-├── models/             Current domain types
-├── pages/              Astro routes
-├── sections/           Page-level content sections
-└── styles/             Global and feature styles
+├── assets/          Assets imported into Astro/Vite
+├── browser/         Browser lifecycle, DOM integration, cart and mailto scripts
+├── components/      Reusable Astro components
+├── configuration/   Reusable catalogues, Product Offerings, Service Offerings, workflows and rules
+├── consts/          Transitional presentation data still used by the homepage catalogue
+├── content/         Editorial content such as awards
+├── domain/          Framework-independent types and business logic
+├── layouts/         Shared Astro layout shell
+├── models/          Transitional presentation model types
+├── pages/           Astro routes
+├── sections/        Page-level content sections
+└── styles/          Global styles, tokens and shared CSS foundations
 ```
 
-The current `consts` and `models` folders remain transitional until EMK-004. Browser entrypoints now live under `src/browser`, while editorial data lives under `src/content`.
+See [Application Architecture](docs/ARCHITECTURE.md) for dependency rules, ownership boundaries, and trade-offs.
 
-See [Application Architecture](docs/ARCHITECTURE.md) for ownership boundaries, dependency rules, naming conventions, import conventions, and the incremental migration strategy.
+## Documentation map
 
-## Local development
+- [Business requirements](BUSINESS_REQUIREMENTS.md)
+- [Application architecture](docs/ARCHITECTURE.md)
+- [Testing conventions](docs/TESTING.md)
+- [Deployment](docs/DEPLOYMENT.md)
+- [Contributing](docs/CONTRIBUTING.md)
+- [UI foundations](docs/UI_FOUNDATIONS.md)
+- [Accessibility audit](docs/ACCESSIBILITY_AUDIT.md)
+- [SEO metadata audit](docs/SEO_METADATA_AUDIT.md)
+- [Technical SEO audit](docs/TECHNICAL_SEO_AUDIT.md)
+- [Asset optimisation audit](docs/ASSET_OPTIMIZATION_AUDIT.md)
+- [Sprint 2 findings](docs/SPRINT_2_FINDINGS.md)
 
-```bash
-npm install
-npm run dev
-```
+## Deployment
 
-| Command                   | Purpose                                                                  |
-| ------------------------- | ------------------------------------------------------------------------ |
-| `npm run dev`             | Start the local Astro development server                                 |
-| `npm run format`          | Apply the project's Prettier formatting rules                            |
-| `npm run format:check`    | Check formatting without changing files                                  |
-| `npm run lint`            | Run ESLint across Astro, TypeScript, and JavaScript files                |
-| `npm run check`           | Run Astro diagnostics and TypeScript validation                          |
-| `npm run build`           | Create a production build                                                |
-| `npm run quality`         | Run formatting, linting, Astro/TypeScript checks, and a production build |
-| `npm run preview`         | Preview the production build locally                                     |
-| `npm run astro -- --help` | View available Astro commands                                            |
+The production URL is currently:
 
-Before opening or updating a pull request, run:
+[https://earth-mamas-kitchen.vercel.app](https://earth-mamas-kitchen.vercel.app)
 
-```bash
-npm run quality
-```
+The site is built as a static Astro application and deployed through Vercel. Canonical URLs, sitemap generation, robots policy, and social metadata use the configured production site URL.
 
-GitHub Actions runs the same quality gate for pull requests targeting `main` and for pushes to `main`.
+See [Deployment](docs/DEPLOYMENT.md) for details.
 
-### Known quality baseline
+## Environment variables
 
-The initial quality pass intentionally retains warnings for explicit `any` values in the legacy dynamic option renderers and non-blocking Astro hints in existing templates. These are visible in local output and CI rather than suppressed. They require product-domain typing or template changes that fall outside EMK-002 and should be resolved with the related implementation work.
+The current v1 implementation does not require project-specific environment variables.
 
-## Live demo
+Do not add secrets, API keys, email credentials, payment credentials, analytics tokens, or private business details to the repository.
 
-[earth-mamas-kitchen.vercel.app](https://earth-mamas-kitchen.vercel.app)
+## Limitations
 
-The deployed site may represent work in progress until v1.0.0 is released.
+This portfolio case study intentionally does not implement:
+
+- backend submission;
+- server-side email delivery;
+- database persistence;
+- image upload or file storage;
+- online payment;
+- checkout;
+- customer accounts;
+- admin dashboards;
+- real-time booking or capacity management;
+- analytics or advertising tracking.
+
+All pricing, dates, dietary requests, design interpretation, availability, and payment arrangements remain subject to manual review in the generated email workflow.
+
+## Quality and testing notes
+
+The automated suite is intentionally focused:
+
+- Vitest protects domain, configuration, cart-state, money, and email-content contracts.
+- Playwright protects high-value rendered customer journeys.
+- Tests do not call production services or send emails.
+
+If a branch shows unrelated repository-wide Prettier debt, do not mix broad formatting churn into feature work. Format the files changed by the current story unless the story explicitly owns repository-wide formatting.
 
 ## Developer
 
-Developed by **Kelvin Carreño Espin**, Frontend Developer and Product Owner.
+Developed by Kelvin Carreno Espin as a frontend portfolio case study.
 
-This repository is intended to show how a realistic business product can be taken from an early implementation to a documented, tested, accessible, and production-quality frontend release.
+The project is intended to demonstrate how realistic product requirements can be translated into a maintainable, tested, accessible, configuration-driven Astro frontend.
