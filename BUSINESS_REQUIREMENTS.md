@@ -651,19 +651,17 @@ All payment arrangements are discussed directly after review.
 
 The public site uses Australian English.
 
-Approved sitemap:
+Implemented public routes:
 
 - Home;
-- Our Creations;
 - Floral Cupcake Bouquets;
 - Edible Blooms;
 - Bespoke Cakes;
 - Events & Catering;
 - About;
-- FAQ;
-- Policies;
-- Privacy Notice;
 - Cart / Preorder Summary.
+
+There is no separate `/our-creations` landing route, `/contact` route, FAQ route, policies route, or privacy route in v1. Catalogue discovery remains on the homepage Explore section. General contact appears as the final section of the About page. Policy and privacy expectations are communicated through existing page copy and documentation rather than separate public legal-document routes.
 
 Home CTA hierarchy:
 
@@ -674,7 +672,7 @@ The site avoids Order Now language that could imply automatic acceptance.
 
 About retains Silvia as the original inspiration for the bakery story and clearly states that the current project is a portfolio case study, not a business operated by her.
 
-FAQ topics include:
+Customer guidance topics include:
 
 - how preorders work;
 - what submission means;
@@ -735,7 +733,7 @@ Key requirements include:
 
 The site uses no analytics, advertising pixels, or marketing cookies.
 
-The Privacy Notice explains:
+Privacy guidance explains:
 
 - cart data is stored locally in the customer's browser;
 - cart data expires after seven days;

@@ -80,12 +80,12 @@ This prevents machine-readable metadata from implying that Silvia currently oper
 
 ## Social profiles
 
-Only profiles already visible or approved in the project are included:
+The JSON-LD includes only developer/author profiles on the `Person` entity:
 
-- `https://www.instagram.com/earthmamaskitchen`
-- `https://www.facebook.com/profile.php?id=100067897911008`
 - `https://github.com/KelvinJoelC/earth-mamas-kitchen`
 - `https://www.linkedin.com/in/kcarrenoespin`
+
+Instagram and Facebook links for Earth Mama's Kitchen remain visible in the user interface where appropriate, but they are not included as `sameAs` on `WebSite`. The website entity represents a portfolio case study, while those social profiles represent the bakery brand inspiration; they are not the same Schema.org entity.
 
 ## Validation performed
 
