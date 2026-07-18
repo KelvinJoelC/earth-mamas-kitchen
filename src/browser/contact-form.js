@@ -1,4 +1,10 @@
-const BAKERY_EMAIL = 'earthmamaskitchen@gmail.com';
+import {
+  buildClipboardFallbackText,
+  buildGeneralEnquiryBody,
+  buildGeneralEnquirySubject,
+  buildMailtoHref,
+} from './email-content.js';
+
 const MESSAGE_MAX_LENGTH = 1000;
 
 let contactFormController;
@@ -90,7 +96,7 @@ function buildGeneralEnquiryEmail(form) {
 
   return {
     ok: true,
-    subject: "General Enquiry - Earth Mama's Kitchen",
+    subject: buildGeneralEnquirySubject(),
     body: buildGeneralEnquiryBody(enquiry),
   };
 }
@@ -121,47 +127,12 @@ function validateGeneralEnquiry(enquiry, form) {
   return errors;
 }
 
-function buildGeneralEnquiryBody(enquiry) {
-  return [
-    'GENERAL ENQUIRY',
-    '===============',
-    '',
-    "Hello Earth Mama's Kitchen,",
-    '',
-    'I would like to send the following general enquiry.',
-    '',
-    'ENQUIRY DETAILS',
-    '---------------',
-    'Enquiry type: General enquiry',
-    `Customer name: ${enquiry.name}`,
-    `Customer email: ${enquiry.email}`,
-    enquiry.phone
-      ? `Customer phone: ${enquiry.phone}`
-      : 'Customer phone: Not provided',
-    '',
-    'MESSAGE',
-    '-------',
-    enquiry.message,
-    '',
-    'MANUAL SEND ACKNOWLEDGEMENT',
-    '---------------------------',
-    'I understand this email was prepared by the website and must be sent manually from my own email client.',
-    '',
-    'Kind regards,',
-    enquiry.name,
-  ].join('\n');
-}
-
 function openGeneralEnquiryMailto(subject, body) {
-  const href = `mailto:${BAKERY_EMAIL}?subject=${encodeURIComponent(
-    subject,
-  )}&body=${encodeURIComponent(body)}`;
-
-  window.location.href = href;
+  window.location.href = buildMailtoHref(subject, body);
 }
 
 async function copyGeneralEnquiryEmail(subject, body) {
-  const text = `To: ${BAKERY_EMAIL}\nSubject: ${subject}\n\n${body}`;
+  const text = buildClipboardFallbackText(subject, body);
   hideManualCopyFallback();
 
   try {

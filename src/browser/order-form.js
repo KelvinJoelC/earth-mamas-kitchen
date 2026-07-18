@@ -1,6 +1,9 @@
+import {
+  buildMailtoHref,
+  buildPreorderEnquiryBody,
+  buildPreorderEnquirySubject,
+} from './email-content.js';
 import { readCart, removeCartItem } from './cart-state.js';
-
-const BAKERY_EMAIL = 'earthmamaskitchen@gmail.com';
 
 const currencyFormatter = new Intl.NumberFormat('en-AU', {
   style: 'currency',
@@ -286,13 +289,14 @@ function initEmailForm() {
       return;
     }
 
-    const contactMessage = buildContactMessage(items, {
+    const contactMessage = buildPreorderEnquiryBody(items, {
       name: nameInput.value.trim(),
       phone: phoneInput.value.trim(),
     });
-    const subject = encodeURIComponent("Order enquiry - Earth Mama's Kitchen");
-    const encodedMessage = encodeURIComponent(contactMessage);
-    window.location.href = `mailto:${BAKERY_EMAIL}?subject=${subject}&body=${encodedMessage}`;
+    window.location.href = buildMailtoHref(
+      buildPreorderEnquirySubject(),
+      contactMessage,
+    );
     announce(
       'Your email draft has been prepared. Please review and send it manually.',
     );
@@ -324,111 +328,6 @@ function validateEmailField(input, errorElement) {
   errorElement.hidden = isValid;
   errorElement.classList.toggle('hidden', isValid);
   return isValid;
-}
-
-function buildContactMessage(items, contactDetails) {
-  const lines = [
-    "Hi Earth Mama's Kitchen,",
-    '',
-    "I'd like to enquire about the following order.",
-    '',
-    'Contact details',
-    '',
-    `Name: ${contactDetails.name}`,
-    `Phone: ${contactDetails.phone}`,
-    '',
-    'Order',
-    '',
-  ];
-
-  items.forEach((item, index) => {
-    const highlights = getHighlights(item);
-
-    lines.push(`${index + 1}. ${item.product}`);
-    if (highlights.size) lines.push(`Size: ${highlights.size}`);
-    highlights.flavours.forEach((value) => lines.push(value));
-    highlights.coloursOrStyle.forEach((value) => lines.push(value));
-    if (highlights.addOns.length)
-      lines.push(`Extras: ${highlights.addOns.join(', ')}`);
-    highlights.notes.forEach((value) => lines.push(value));
-    if (highlights.date) lines.push(`Requested date: ${highlights.date}`);
-    if (item.estimatedPrice?.amount) {
-      lines.push(`Estimated price: ${formatAud(item.estimatedPrice.amount)}`);
-    }
-    if (item.containsAllergens?.length) {
-      lines.push(`Contains: ${item.containsAllergens.join(', ')}`);
-    }
-    if (item.requiresReview) {
-      lines.push('Review notice: Final quotation requires bakery review.');
-    }
-    if (item.referenceImageInstructions) {
-      lines.push(
-        `Reference image reminder: ${item.referenceImageInstructions}`,
-      );
-    }
-    lines.push('');
-  });
-
-  lines.push(`Estimated order total: ${formatAud(getEstimatedTotal(items))}`);
-  lines.push('');
-  lines.push(
-    'Could you please confirm availability, final pricing and collection details?',
-  );
-  lines.push('');
-  lines.push('Thank you.');
-
-  return lines.join('\n');
-}
-
-function getHighlights(item) {
-  const entries = getOptionEntries(item);
-  const addOns = getAddOns(item);
-
-  return {
-    size: getOptionValue(item, [/size/i, /box/i, /cake/i, /bouquet/i]),
-    flavours: entries
-      .filter(({ label, key }) =>
-        /flavou?r|sponge|filling|frosting/i.test(`${label} ${key}`),
-      )
-      .map(({ label, value }) => `${label}: ${value}`),
-    coloursOrStyle: entries
-      .filter(({ label, key }) =>
-        /colo(u)?r|palette|style|occasion|decoration/i.test(`${label} ${key}`),
-      )
-      .map(({ label, value }) => `${label}: ${value}`),
-    notes: entries
-      .filter(({ label, key }) =>
-        /note|description|message|avoid|brief|request/i.test(`${label} ${key}`),
-      )
-      .map(({ label, value }) => `${label}: ${value}`),
-    date: getOptionValue(item, [/date/i, /collection/i, /event/i]),
-    addOns,
-  };
-}
-
-function getOptionEntries(item) {
-  return Object.entries(item.options ?? {})
-    .filter(([key, value]) => key !== 'addOns' && hasDisplayValue(value))
-    .map(([key, value]) => {
-      const label = item.labels?.options?.[key]?.label ?? formatLabel(key);
-      const displayValue = item.labels?.options?.[key]?.value ?? value;
-
-      return {
-        key,
-        label,
-        value: Array.isArray(displayValue)
-          ? displayValue.join(', ')
-          : String(displayValue),
-      };
-    });
-}
-
-function getOptionValue(item, patterns) {
-  return (
-    getOptionEntries(item).find(({ label, key }) =>
-      patterns.some((pattern) => pattern.test(label) || pattern.test(key)),
-    )?.value ?? ''
-  );
 }
 
 function getAddOns(item) {
