@@ -1,4 +1,10 @@
-const BAKERY_EMAIL = 'earthmamaskitchen@gmail.com';
+import {
+  buildClipboardFallbackText,
+  buildEventsEnquiryBody,
+  buildEventsEnquirySubject,
+  buildMailtoHref,
+} from './email-content.js';
+
 const MESSAGE_MAX_LENGTH = 1000;
 
 let eventsCateringFormController;
@@ -96,8 +102,8 @@ function buildEventsCateringEmail(form) {
 
   return {
     ok: true,
-    subject: "Events & Catering Enquiry - Earth Mama's Kitchen",
-    body: buildEventsBody(enquiry),
+    subject: buildEventsEnquirySubject(),
+    body: buildEventsEnquiryBody(enquiry),
   };
 }
 
@@ -135,55 +141,12 @@ function validateEventsEnquiry(enquiry, form) {
   return errors;
 }
 
-function buildEventsBody(enquiry) {
-  return [
-    'EVENTS & CATERING ENQUIRY',
-    '========================',
-    '',
-    "Hello Earth Mama's Kitchen,",
-    '',
-    'I would like to enquire about Events & Catering.',
-    '',
-    'ENQUIRY DETAILS',
-    '---------------',
-    'Enquiry type: Events & Catering',
-    `Customer name: ${enquiry.name}`,
-    `Customer email: ${enquiry.email}`,
-    `Customer phone: ${enquiry.phone}`,
-    `Event type: ${enquiry.eventType}`,
-    enquiry.preferredEventDate
-      ? `Preferred event date: ${enquiry.preferredEventDate}`
-      : 'Preferred event date: Not provided',
-    '',
-    'MESSAGE',
-    '-------',
-    enquiry.message,
-    '',
-    'IMPORTANT',
-    '---------',
-    'This is an initial enquiry only.',
-    'It does not confirm availability, pricing, payment or booking.',
-    'The bakery will review the enquiry and contact me personally to discuss the event and prepare a tailored quotation.',
-    '',
-    'MANUAL SEND ACKNOWLEDGEMENT',
-    '---------------------------',
-    'I understand this email was prepared by the website and must be sent manually from my own email client.',
-    '',
-    'Kind regards,',
-    enquiry.name,
-  ].join('\n');
-}
-
 function openEventsMailto(subject, body) {
-  const href = `mailto:${BAKERY_EMAIL}?subject=${encodeURIComponent(
-    subject,
-  )}&body=${encodeURIComponent(body)}`;
-
-  window.location.href = href;
+  window.location.href = buildMailtoHref(subject, body);
 }
 
 async function copyEventsEmail(subject, body) {
-  const text = `To: ${BAKERY_EMAIL}\nSubject: ${subject}\n\n${body}`;
+  const text = buildClipboardFallbackText(subject, body);
   hideManualCopyFallback();
 
   try {

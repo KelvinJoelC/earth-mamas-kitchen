@@ -9,7 +9,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
-    "quality": "npm run format:check && npm run lint && npm run check && npm run build",
+    "test": "vitest run",
+    "quality": "npm run format:check && npm run lint && npm run check && npm run test && npm run build",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -32,6 +33,7 @@
     "prettier": "^3.9.4",
     "prettier-plugin-astro": "^0.14.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.62.1"
+    "typescript-eslint": "^8.62.1",
+    "vitest": "^4.1.10"
   }
 }
