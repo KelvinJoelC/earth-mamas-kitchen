@@ -5,6 +5,7 @@ import Header from '@/sections/Header.astro';
 import { ClientRouter } from 'astro:transitions';
 import StickyOrderButton from '@/components/StickyOrderButton.astro';
 import { siteMetadata, type PageMetadata } from '@/configuration/metadata';
+import { getGlobalStructuredData } from '@/configuration/structured-data';
 
 interface Props {
   metadata: PageMetadata;
@@ -30,6 +31,11 @@ const canonicalUrl = new URL(metadata.canonicalPath, Astro.site).toString();
 const socialImage = metadata.image ?? siteMetadata.defaultImage;
 const socialImageUrl = new URL(socialImage.src, Astro.site).toString();
 const robotsContent = metadata.noindex ? 'noindex, follow' : 'index, follow';
+const structuredData = getGlobalStructuredData(Astro.site);
+const serializedStructuredData = JSON.stringify(structuredData).replace(
+  /</g,
+  '\\u003c',
+);
 ---
 
 <!doctype html>
@@ -54,6 +60,11 @@ const robotsContent = metadata.noindex ? 'noindex, follow' : 'index, follow';
     <meta name="twitter:description" content={metadata.description} />
     <meta name="twitter:image" content={socialImageUrl} />
     <meta name="twitter:image:alt" content={socialImage.alt} />
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={serializedStructuredData}
+    />
     <ClientRouter />
   </head>
   <body
