@@ -233,6 +233,30 @@
   backdrop-filter: blur(8px);
 }
 
+.product-info-disclosure-content {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    max-height 220ms ease,
+    opacity 180ms ease;
+}
+
+.product-info-disclosure[open] .product-info-disclosure-content {
+  max-height: 14rem;
+  opacity: 1;
+}
+
+.product-info-disclosure.is-closing .product-info-disclosure-content {
+  opacity: 0;
+}
+
+.product-info-disclosure-inner {
+  padding-top: var(--ui-space-4);
+  color: rgb(51 65 85);
+  font-size: 0.875rem;
+}
+
 .product-configurator-page {
   background:
     radial-gradient(
@@ -477,6 +501,24 @@
   transform: translateY(-0.125rem);
 }
 
+.add-on-input-panel {
+  max-height: 16rem;
+  overflow: hidden;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    max-height 240ms ease,
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+
+.add-on-input-panel--hidden {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-0.25rem);
+  pointer-events: none;
+}
+
 .configuration-review-card {
   position: relative;
   display: grid;
@@ -682,13 +724,15 @@
 
 @media (prefers-reduced-motion: reduce) {
   .add-on-choice,
+  .add-on-input-panel,
   .conditional-field-panel,
   .configuration-field,
   .configuration-section,
   .configuration-review-card,
   .optional-field-card,
   .optional-field-content,
-  .optional-field-chevron {
+  .optional-field-chevron,
+  .product-info-disclosure-content {
     animation: none;
     transition: none;
   }

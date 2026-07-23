@@ -5,8 +5,18 @@ const currencyFormatter = new Intl.NumberFormat('en-AU', {
   currency: 'AUD',
 });
 
+const dateFormatter = new Intl.DateTimeFormat('en-AU', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+
 const conditionalPanelHideTimers = new WeakMap();
+const addOnInputHideTimers = new WeakMap();
 const optionalPanelHideTimers = new WeakMap();
+const reducedMotionQuery = window.matchMedia(
+  '(prefers-reduced-motion: reduce)',
+);
 
 let preorderFormController;
 
@@ -57,6 +67,132 @@ function getOptionalFieldContent(form, groupId) {
   );
 }
 
+function clearHideTimer(timerMap, element) {
+  const existingTimer = timerMap.get(element);
+  if (!existingTimer) return;
+
+  window.clearTimeout(existingTimer);
+  timerMap.delete(element);
+}
+
+function setExpandablePanelVisibility(
+  panel,
+  visible,
+  collapsedClass,
+  timerMap,
+) {
+  if (!(panel instanceof HTMLElement)) return;
+
+  clearHideTimer(timerMap, panel);
+
+  const expectedHiddenState = !visible;
+  if (
+    panel.dataset.expanded === String(visible) &&
+    panel.hidden === expectedHiddenState
+  ) {
+    return;
+  }
+
+  panel.dataset.expanded = String(visible);
+
+  if (reducedMotionQuery.matches) {
+    panel.classList.toggle(collapsedClass, !visible);
+    panel.hidden = !visible;
+    panel.style.maxHeight = '';
+    return;
+  }
+
+  if (visible) {
+    panel.hidden = false;
+    panel.style.maxHeight = '0px';
+    window.requestAnimationFrame(() => {
+      panel.classList.remove(collapsedClass);
+      panel.style.maxHeight = `${panel.scrollHeight}px`;
+    });
+    const clearExpandedHeight = (event) => {
+      if (event.propertyName !== 'max-height') return;
+
+      panel.style.maxHeight = '';
+      panel.removeEventListener('transitionend', clearExpandedHeight);
+    };
+    panel.addEventListener('transitionend', clearExpandedHeight);
+    return;
+  }
+
+  panel.style.maxHeight = `${panel.scrollHeight}px`;
+  window.requestAnimationFrame(() => {
+    panel.classList.add(collapsedClass);
+    panel.style.maxHeight = '0px';
+  });
+
+  const hideTimer = window.setTimeout(() => {
+    panel.hidden = true;
+    panel.style.maxHeight = '';
+    timerMap.delete(panel);
+  }, 260);
+
+  timerMap.set(panel, hideTimer);
+}
+
+function initAnimatedDetails(disclosure, signal) {
+  if (
+    !(disclosure instanceof HTMLDetailsElement) ||
+    disclosure.dataset.animated === 'true'
+  ) {
+    return;
+  }
+
+  const summary = disclosure.querySelector('summary');
+  const content = disclosure.querySelector('.product-info-disclosure-content');
+
+  if (!(summary instanceof HTMLElement) || !(content instanceof HTMLElement)) {
+    return;
+  }
+
+  disclosure.dataset.animated = 'true';
+  summary.addEventListener(
+    'click',
+    (event) => {
+      if (reducedMotionQuery.matches) return;
+
+      event.preventDefault();
+
+      if (!disclosure.open) {
+        disclosure.open = true;
+        content.style.maxHeight = '0px';
+        window.requestAnimationFrame(() => {
+          content.style.maxHeight = `${content.scrollHeight}px`;
+        });
+        const clearOpenHeight = (transitionEvent) => {
+          if (transitionEvent.propertyName !== 'max-height') return;
+
+          content.style.maxHeight = '';
+          content.removeEventListener('transitionend', clearOpenHeight);
+        };
+        content.addEventListener('transitionend', clearOpenHeight);
+        return;
+      }
+
+      disclosure.classList.add('is-closing');
+      content.style.maxHeight = `${content.scrollHeight}px`;
+      window.requestAnimationFrame(() => {
+        content.style.maxHeight = '0px';
+      });
+
+      const closeDisclosure = (transitionEvent) => {
+        if (transitionEvent.propertyName !== 'max-height') return;
+
+        disclosure.open = false;
+        disclosure.classList.remove('is-closing');
+        content.style.maxHeight = '';
+        content.removeEventListener('transitionend', closeDisclosure);
+      };
+      content.addEventListener('transitionend', closeDisclosure);
+    },
+    { signal },
+  );
+}
+
 function getSelectedValues(form, groupId) {
   const controls = [
     ...form.querySelectorAll(`[name="${CSS.escape(groupId)}"]`),
@@ -95,14 +231,35 @@ function setMessage(groupId, message) {
   if (messageElement) messageElement.textContent = message;
 }
 
-function applyCollectionDateLimit(form, config) {
-  const collectionDate = getControl(form, 'collection-date');
-  if (!collectionDate || config.leadTime?.unit !== 'calendar-days') return;
-
+function getFirstAvailableCollectionDate(config) {
+  if (config.leadTime?.unit !== 'calendar-days') return '';
   const minimumDate = new Date();
   minimumDate.setDate(minimumDate.getDate() + config.leadTime.minimum);
 
-  const firstAvailableDate = minimumDate.toISOString().slice(0, 10);
+  return minimumDate.toISOString().slice(0, 10);
+}
+
+function formatCollectionDate(dateValue) {
+  const [year, month, day] = dateValue.split('-').map(Number);
+  return dateFormatter.format(new Date(year, month - 1, day));
+}
+
+function setDateMessageState(groupId, message, isError) {
+  const messageElement = document.querySelector(
+    `[data-field-message="${CSS.escape(groupId)}"]`,
+  );
+
+  if (!messageElement) return;
+
+  messageElement.textContent = message;
+  messageElement.classList.toggle('form-message--error', isError);
+  messageElement.classList.toggle('form-message--help', !isError);
+}
+
+function applyCollectionDateLimit(form, config) {
+  const collectionDate = getControl(form, 'collection-date');
+  const firstAvailableDate = getFirstAvailableCollectionDate(config);
+  if (!collectionDate || !firstAvailableDate) return;
 
   collectionDate.min = firstAvailableDate;
 
@@ -116,6 +273,26 @@ function applyCollectionDateLimit(form, config) {
   );
 }
 
+function validateCollectionDate(form, config) {
+  const collectionDate = getControl(form, 'collection-date');
+  const firstAvailableDate =
+    collectionDate?.min || getFirstAvailableCollectionDate(config);
+
+  if (!collectionDate || !firstAvailableDate) return;
+
+  const isUnavailableDate =
+    Boolean(collectionDate.value) && collectionDate.value < firstAvailableDate;
+  const message = isUnavailableDate
+    ? `Please choose a collection date on or after ${formatCollectionDate(
+        firstAvailableDate,
+      )}.`
+    : `Minimum notice: ${config.leadTime.minimum} calendar days.`;
+
+  collectionDate.setCustomValidity(isUnavailableDate ? message : '');
+  collectionDate.toggleAttribute('aria-invalid', isUnavailableDate);
+  setDateMessageState('collection-date', message, isUnavailableDate);
+}
+
 function applyAddOnInputs(form) {
   const addOnCheckboxes = [...form.querySelectorAll('[name="addOns"]')];
 
@@ -127,9 +304,13 @@ function applyAddOnInputs(form) {
 
     const input = inputWrapper.querySelector('input, textarea');
     const isSelected = checkbox.checked;
-    inputWrapper.classList.toggle('hidden', !isSelected);
-    inputWrapper.hidden = !isSelected;
     inputWrapper.setAttribute('aria-hidden', String(!isSelected));
+    setExpandablePanelVisibility(
+      inputWrapper,
+      isSelected,
+      'add-on-input-panel--hidden',
+      addOnInputHideTimers,
+    );
 
     if (input) {
       input.disabled = !isSelected;
@@ -176,30 +357,13 @@ function applyRequiredRules(form, rules) {
 function setConditionalPanelVisibility(panel, visible) {
   if (!panel) return;
 
-  const existingTimer = conditionalPanelHideTimers.get(panel);
-  if (existingTimer) {
-    window.clearTimeout(existingTimer);
-    conditionalPanelHideTimers.delete(panel);
-  }
-
   panel.setAttribute('aria-hidden', String(!visible));
-
-  if (visible) {
-    panel.hidden = false;
-    window.requestAnimationFrame(() => {
-      panel.classList.remove('conditional-field-panel--hidden');
-    });
-    return;
-  }
-
-  panel.classList.add('conditional-field-panel--hidden');
-
-  const hideTimer = window.setTimeout(() => {
-    panel.hidden = true;
-    conditionalPanelHideTimers.delete(panel);
-  }, 250);
-
-  conditionalPanelHideTimers.set(panel, hideTimer);
+  setExpandablePanelVisibility(
+    panel,
+    visible,
+    'conditional-field-panel--hidden',
+    conditionalPanelHideTimers,
+  );
 }
 
 function fieldHasValue(form, groupId) {
@@ -219,31 +383,14 @@ function setOptionalFieldExpanded(form, groupId, expanded) {
 
   if (!panel || !toggle || !content) return;
 
-  const existingTimer = optionalPanelHideTimers.get(content);
-  if (existingTimer) {
-    window.clearTimeout(existingTimer);
-    optionalPanelHideTimers.delete(content);
-  }
-
   toggle.setAttribute('aria-expanded', String(expanded));
   panel.classList.toggle('optional-field-card--collapsed', !expanded);
-
-  if (expanded) {
-    content.hidden = false;
-    window.requestAnimationFrame(() => {
-      content.classList.remove('optional-field-content--collapsed');
-    });
-    return;
-  }
-
-  content.classList.add('optional-field-content--collapsed');
-
-  const hideTimer = window.setTimeout(() => {
-    content.hidden = true;
-    optionalPanelHideTimers.delete(content);
-  }, 250);
-
-  optionalPanelHideTimers.set(content, hideTimer);
+  setExpandablePanelVisibility(
+    content,
+    expanded,
+    'optional-field-content--collapsed',
+    optionalPanelHideTimers,
+  );
 }
 
 function initOptionalFields(form, signal) {
@@ -265,6 +412,12 @@ function initOptionalFields(form, signal) {
 
     setOptionalFieldExpanded(form, groupId, fieldHasValue(form, groupId));
   });
+}
+
+function initProductInfoDisclosures(signal) {
+  document
+    .querySelectorAll('.product-info-disclosure')
+    .forEach((disclosure) => initAnimatedDetails(disclosure, signal));
 }
 
 function applyExclusionRules(form, rules) {
@@ -538,6 +691,7 @@ function refreshFormState(form, config) {
   applyAutoSelectRules(form, config.rules);
   applyExclusionRules(form, config.rules);
   applySelectionLimits(form, config);
+  validateCollectionDate(form, config);
   applyAddOnInputs(form);
   updateEstimatedPrice(form, config);
   updateAllergens(form, config);
@@ -582,6 +736,7 @@ function initPreOrderForm() {
   const { signal } = preorderFormController;
 
   applyCollectionDateLimit(form, config);
+  initProductInfoDisclosures(signal);
   initOptionalFields(form, signal);
   refreshFormState(form, config);
 
