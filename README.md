@@ -16,6 +16,7 @@ The project is designed to show professional frontend engineering in a realistic
 - accessible forms and keyboard-friendly interactions;
 - local cart persistence with expiry;
 - manual `mailto:` and clipboard handoff instead of a backend;
+- static production deployment hardening for Vercel;
 - focused Vitest and Playwright coverage;
 - CI validation and Vercel deployment.
 
@@ -205,7 +206,7 @@ The production URL is currently:
 
 [https://earth-mamas-kitchen.vercel.app](https://earth-mamas-kitchen.vercel.app)
 
-The site is built as a static Astro application and deployed through Vercel. Canonical URLs, sitemap generation, robots policy, and social metadata use the configured production site URL.
+The site is built as a static Astro application and deployed through Vercel. Canonical URLs, sitemap generation, robots policy, social metadata, production headers and release procedures use the configured production site URL.
 
 See [Deployment](docs/DEPLOYMENT.md) for details.
 
