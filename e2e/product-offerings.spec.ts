@@ -69,6 +69,42 @@ test('Floral Cupcake Bouquets dynamically revalidates flavour limits and saves a
   await expect(page.getByText('Pink, lavender and cream')).toBeVisible();
 });
 
+test('Product Offering preorder date cannot be submitted before the configured lead time', async ({
+  page,
+}) => {
+  await page.goto(offeringRoutes.floral);
+
+  const collectionDate = page.getByLabel('Collection Date');
+  const firstAvailableDate = await collectionDate.getAttribute('min');
+  expect(firstAvailableDate).toBeTruthy();
+
+  const unavailableDate = new Date(`${firstAvailableDate}T12:00:00`);
+  unavailableDate.setDate(unavailableDate.getDate() - 1);
+  const unavailableDateValue = unavailableDate.toISOString().slice(0, 10);
+
+  await collectionDate.evaluate((element, value) => {
+    const input = element as HTMLInputElement;
+    input.value = value;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  }, unavailableDateValue);
+
+  await selectRequiredGuidedOptions(page);
+  await page.getByRole('button', { name: 'Confirm' }).click();
+
+  await expect(page).toHaveURL(new RegExp(`${offeringRoutes.floral}$`));
+  await expect(
+    page.getByText('Please choose a collection date on or after'),
+  ).toBeVisible();
+  await expect
+    .poll(() =>
+      collectionDate.evaluate(
+        (element) => (element as HTMLInputElement).validationMessage,
+      ),
+    )
+    .toContain('Please choose a collection date on or after');
+});
+
 test('Edible Blooms uses configured defaults, guided required fields, and review notes', async ({
   page,
 }) => {

@@ -145,14 +145,16 @@ const metadata = getProductOfferingMetadata(offering, selection);
             <span>{OPTION_LABELS['allergens']}</span>
             <span aria-hidden="true">&#9662;</span>
           </summary>
-          <div class="pt-4 text-sm text-slate-700">
-            <p>
-              <span id="containsAllergens" aria-live="polite">
-                <strong>
-                  Select your flavours to view the allergen information.
-                </strong>
-              </span>
-            </p>
+          <div class="product-info-disclosure-content">
+            <div class="product-info-disclosure-inner">
+              <p>
+                <span id="containsAllergens" aria-live="polite">
+                  <strong>
+                    Select your flavours to view the allergen information.
+                  </strong>
+                </span>
+              </p>
+            </div>
           </div>
         </details>
       </div>

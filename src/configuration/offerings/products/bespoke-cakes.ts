@@ -15,7 +15,7 @@ const bespokeCakeSizeOptions = [
   {
     value: '6-inch-round',
     label: '6" Round Cake',
-    description: 'Approximately 15â€“20 servings',
+    description: 'Approximately 15-20 servings',
     price: audCents(11000),
     attributes: {
       minimumServings: 15,
@@ -26,7 +26,7 @@ const bespokeCakeSizeOptions = [
   {
     value: '8-inch-round',
     label: '8" Round Cake',
-    description: 'Approximately 40â€“50 servings',
+    description: 'Approximately 40-50 servings',
     price: audCents(17000),
     attributes: {
       minimumServings: 40,
