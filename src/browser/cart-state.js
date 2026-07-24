@@ -46,6 +46,7 @@ let syncInitialized = false;
  * @property {string} product
  * @property {string=} offeringId
  * @property {string=} workflowId
+ * @property {number=} leadTimeDays
  * @property {Record<string, string|string[]>} options
  * @property {{ options?: Record<string, CartOptionLabel>, addOns?: CartAddOnLabel[] }=} labels
  * @property {{ addOnId: string, customerInput?: string }[]=} addOnInputs

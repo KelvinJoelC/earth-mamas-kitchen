@@ -69,40 +69,34 @@ test('Floral Cupcake Bouquets dynamically revalidates flavour limits and saves a
   await expect(page.getByText('Pink, lavender and cream')).toBeVisible();
 });
 
-test('Product Offering preorder date cannot be submitted before the configured lead time', async ({
+test('preorder text validation rejects whitespace and prohibited emoji', async ({
   page,
 }) => {
   await page.goto(offeringRoutes.floral);
-
-  const collectionDate = page.getByLabel('Collection Date');
-  const firstAvailableDate = await collectionDate.getAttribute('min');
-  expect(firstAvailableDate).toBeTruthy();
-
-  const unavailableDate = new Date(`${firstAvailableDate}T12:00:00`);
-  unavailableDate.setDate(unavailableDate.getDate() - 1);
-  const unavailableDateValue = unavailableDate.toISOString().slice(0, 10);
-
-  await collectionDate.evaluate((element, value) => {
-    const input = element as HTMLInputElement;
-    input.value = value;
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-    input.dispatchEvent(new Event('change', { bubbles: true }));
-  }, unavailableDateValue);
-
   await selectRequiredGuidedOptions(page);
-  await page.getByRole('button', { name: 'Confirm' }).click();
+  await page.getByLabel('Colour Palette').selectOption('custom-colours');
+  await page.getByLabel('Custom Colours').fill('   ');
 
-  await expect(page).toHaveURL(new RegExp(`${offeringRoutes.floral}$`));
-  await expect(
-    page.getByText('Please choose a collection date on or after'),
-  ).toBeVisible();
+  await page.getByRole('button', { name: 'Confirm' }).click();
   await expect
     .poll(() =>
-      collectionDate.evaluate(
-        (element) => (element as HTMLInputElement).validationMessage,
-      ),
+      page
+        .getByLabel('Custom Colours')
+        .evaluate((element) => (element as HTMLInputElement).validationMessage),
     )
-    .toContain('Please choose a collection date on or after');
+    .toContain('Please enter custom colours');
+
+  await page.getByLabel('Custom Colours').fill('Pink and cream');
+  await page.getByLabel('Personalised Ribbon').check();
+  await page.getByLabel('Ribbon Text').fill('Happy 🎉');
+  await page.getByRole('button', { name: 'Confirm' }).click();
+  await expect
+    .poll(() =>
+      page
+        .getByLabel('Ribbon Text')
+        .evaluate((element) => (element as HTMLInputElement).validationMessage),
+    )
+    .toContain('cannot contain emoji');
 });
 
 test('Edible Blooms uses configured defaults, guided required fields, and review notes', async ({

@@ -9,6 +9,7 @@ export interface TestCartItem {
   product: string;
   offeringId: string;
   workflowId: string;
+  leadTimeDays: number;
   options: Record<string, string | string[]>;
   labels: {
     options: Record<string, { label: string; value: string | string[] }>;
@@ -54,11 +55,11 @@ export function makeCartItem(
     product: 'Floral Cupcake Bouquets',
     offeringId: 'floral-cupcake-bouquets',
     workflowId: 'guided-preorder',
+    leadTimeDays: 3,
     options: {
       'bouquet-size': 'small-bouquet',
       'cupcake-flavours': ['vanilla'],
       'colour-palette': 'soft-pastels',
-      'collection-date': '2026-08-01',
       addOns: [],
     },
     labels: {
@@ -66,10 +67,6 @@ export function makeCartItem(
         'bouquet-size': { label: 'Bouquet Size', value: 'Small Bouquet' },
         'cupcake-flavours': { label: 'Cupcake Flavours', value: ['Vanilla'] },
         'colour-palette': { label: 'Colour Palette', value: 'Soft Pastels' },
-        'collection-date': {
-          label: 'Preferred Collection Date',
-          value: '2026-08-01',
-        },
       },
       addOns: [],
     },

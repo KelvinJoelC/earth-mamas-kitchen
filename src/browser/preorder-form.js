@@ -1,14 +1,12 @@
 import { addCartItem } from './cart-state.js';
+import {
+  containsEmoji,
+  hasMeaningfulText,
+} from '../domain/preorder-validation.ts';
 
 const currencyFormatter = new Intl.NumberFormat('en-AU', {
   style: 'currency',
   currency: 'AUD',
-});
-
-const dateFormatter = new Intl.DateTimeFormat('en-AU', {
-  day: 'numeric',
-  month: 'long',
-  year: 'numeric',
 });
 
 const conditionalPanelHideTimers = new WeakMap();
@@ -229,68 +227,6 @@ function setMessage(groupId, message) {
     `[data-field-message="${CSS.escape(groupId)}"]`,
   );
   if (messageElement) messageElement.textContent = message;
-}
-
-function getFirstAvailableCollectionDate(config) {
-  if (config.leadTime?.unit !== 'calendar-days') return '';
-  const minimumDate = new Date();
-  minimumDate.setDate(minimumDate.getDate() + config.leadTime.minimum);
-
-  return minimumDate.toISOString().slice(0, 10);
-}
-
-function formatCollectionDate(dateValue) {
-  const [year, month, day] = dateValue.split('-').map(Number);
-  return dateFormatter.format(new Date(year, month - 1, day));
-}
-
-function setDateMessageState(groupId, message, isError) {
-  const messageElement = document.querySelector(
-    `[data-field-message="${CSS.escape(groupId)}"]`,
-  );
-
-  if (!messageElement) return;
-
-  messageElement.textContent = message;
-  messageElement.classList.toggle('form-message--error', isError);
-  messageElement.classList.toggle('form-message--help', !isError);
-}
-
-function applyCollectionDateLimit(form, config) {
-  const collectionDate = getControl(form, 'collection-date');
-  const firstAvailableDate = getFirstAvailableCollectionDate(config);
-  if (!collectionDate || !firstAvailableDate) return;
-
-  collectionDate.min = firstAvailableDate;
-
-  if (!collectionDate.value || collectionDate.value < firstAvailableDate) {
-    collectionDate.value = firstAvailableDate;
-  }
-
-  setMessage(
-    'collection-date',
-    `Minimum notice: ${config.leadTime.minimum} calendar days.`,
-  );
-}
-
-function validateCollectionDate(form, config) {
-  const collectionDate = getControl(form, 'collection-date');
-  const firstAvailableDate =
-    collectionDate?.min || getFirstAvailableCollectionDate(config);
-
-  if (!collectionDate || !firstAvailableDate) return;
-
-  const isUnavailableDate =
-    Boolean(collectionDate.value) && collectionDate.value < firstAvailableDate;
-  const message = isUnavailableDate
-    ? `Please choose a collection date on or after ${formatCollectionDate(
-        firstAvailableDate,
-      )}.`
-    : `Minimum notice: ${config.leadTime.minimum} calendar days.`;
-
-  collectionDate.setCustomValidity(isUnavailableDate ? message : '');
-  collectionDate.toggleAttribute('aria-invalid', isUnavailableDate);
-  setDateMessageState('collection-date', message, isUnavailableDate);
 }
 
 function applyAddOnInputs(form) {
@@ -545,15 +481,71 @@ function collectSelections(form, config) {
     const control = getControl(form, group.id);
     if (!control || control.disabled) return;
 
-    selections[group.id] = control?.value ?? '';
+    const rawValue = control?.value ?? '';
+    const value =
+      group.kind === 'text' && group.trim ? rawValue.trim() : rawValue;
+    selections[group.id] = value;
     labels[group.id] = {
       label: group.label,
-      value:
-        control?.selectedOptions?.[0]?.dataset.label ?? control?.value ?? '',
+      value: control?.selectedOptions?.[0]?.dataset.label ?? value,
     };
   });
 
   return { selections, labels };
+}
+
+function applyConfiguredTextValidation(form, config) {
+  config.optionGroups
+    .filter((group) => group.kind === 'text')
+    .forEach((group) => {
+      const control = getControl(form, group.id);
+      if (!(
+        control instanceof HTMLInputElement ||
+        control instanceof HTMLTextAreaElement
+      )) {
+        return;
+      }
+
+      if (control.disabled) {
+        control.setCustomValidity('');
+        return;
+      }
+
+      control.setCustomValidity(
+        control.required && !hasMeaningfulText(control.value)
+          ? `Please enter ${group.label.toLowerCase()}.`
+          : '',
+      );
+    });
+}
+
+function applyConfiguredAddOnValidation(form, config) {
+  config.addOns.forEach(({ addOnId, customerInput }) => {
+    const control = getControl(form, `addOnInput:${addOnId}`);
+    if (!(
+      control instanceof HTMLInputElement ||
+      control instanceof HTMLTextAreaElement
+    )) {
+      return;
+    }
+
+    if (control.disabled) {
+      control.setCustomValidity('');
+      return;
+    }
+
+    let message = '';
+    if (customerInput?.required && !hasMeaningfulText(control.value)) {
+      message = `Please enter ${customerInput.label.toLowerCase()}.`;
+    } else if (
+      customerInput?.allowEmoji === false &&
+      containsEmoji(control.value)
+    ) {
+      message = `${customerInput.label} cannot contain emoji.`;
+    }
+
+    control.setCustomValidity(message);
+  });
 }
 
 function collectAddOns(form) {
@@ -691,8 +683,9 @@ function refreshFormState(form, config) {
   applyAutoSelectRules(form, config.rules);
   applyExclusionRules(form, config.rules);
   applySelectionLimits(form, config);
-  validateCollectionDate(form, config);
   applyAddOnInputs(form);
+  applyConfiguredTextValidation(form, config);
+  applyConfiguredAddOnValidation(form, config);
   updateEstimatedPrice(form, config);
   updateAllergens(form, config);
 }
@@ -706,6 +699,7 @@ function buildCartItem(form, config) {
     product: form.dataset.productTitle,
     offeringId: config.offeringId,
     workflowId: config.workflowId,
+    leadTimeDays: config.leadTime?.minimum ?? 0,
     options: {
       ...selections,
       addOns: addOns.values.map(({ addOnId }) => addOnId),
@@ -735,7 +729,6 @@ function initPreOrderForm() {
   preorderFormController = new AbortController();
   const { signal } = preorderFormController;
 
-  applyCollectionDateLimit(form, config);
   initProductInfoDisclosures(signal);
   initOptionalFields(form, signal);
   refreshFormState(form, config);

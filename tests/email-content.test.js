@@ -17,13 +17,13 @@ const cartItem = {
   product: 'Bespoke Cakes',
   offeringId: 'bespoke-cakes',
   workflowId: 'design-brief-preorder',
+  leadTimeDays: 5,
   options: {
     'cake-size': '6-inch-round',
     'sponge-flavour': 'vanilla',
     filling: 'raspberry-jam',
     frosting: 'buttercream',
     'design-description': 'Pink garden cake with soft floral details.',
-    'collection-date': '2026-02-14',
     addOns: ['gift-message', 'edible-image'],
   },
   labels: {
@@ -36,7 +36,6 @@ const cartItem = {
         label: 'Design Description',
         value: 'Pink garden cake with soft floral details.',
       },
-      'collection-date': { label: 'Collection Date', value: '2026-02-14' },
     },
     addOns: [
       { addOnId: 'gift-message', label: 'Gift Message' },
@@ -65,6 +64,8 @@ describe('email content generation', () => {
     const body = buildPreorderEnquiryBody([cartItem], {
       name: 'Alex Customer',
       phone: '0412345678',
+      collectionDate: '2026-02-16',
+      collectionTime: '09:30',
     });
 
     expect(buildPreorderEnquirySubject()).toBe(
@@ -72,6 +73,8 @@ describe('email content generation', () => {
     );
     expect(body).toContain('Name: Alex Customer');
     expect(body).toContain('Phone: 0412345678');
+    expect(body).toContain('Requested date: Monday 16 February 2026');
+    expect(body).toContain('Requested time: 9:30 am AEST');
     expect(body).toContain('1. Bespoke Cakes');
     expect(body).toContain('Size: 6" Round Cake');
     expect(body).toContain('Sponge Flavour: Vanilla');

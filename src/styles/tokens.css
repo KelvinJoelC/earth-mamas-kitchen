@@ -21,8 +21,9 @@
   --ui-color-border-soft: #e2e8f0;
   --ui-color-border-error: #dc2626;
 
-  --ui-color-action-primary: #3b82f6;
-  --ui-color-action-primary-hover: #2563eb;
+  --ui-color-action-primary: #1d4ed8;
+  --ui-color-action-primary-hover: #1e40af;
+  --ui-color-brand-strong-accessible: #4c3f5e;
   --ui-color-action-social: #f59e0b;
   --ui-color-focus-default: #3b82f6;
   --ui-color-focus-brand: var(--violeta-medio);

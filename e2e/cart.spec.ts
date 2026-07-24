@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 
+import { getEarliestCollectionDate } from '../src/domain/collection';
+
 import {
   makeCartItem,
   seedCart,
@@ -41,6 +43,49 @@ test('cart shows empty, persisted, remove, clear, corrupt, and expired states sa
   ).toBeVisible();
 
   await page.context().clearCookies();
+});
+
+test('checkout uses one weekday date and time based on the longest lead time', async ({
+  page,
+}) => {
+  await seedCart(page, [
+    makeCartItem('floral-1', { leadTimeDays: 3 }),
+    makeCartItem('cake-1', {
+      product: 'Bespoke Cakes',
+      offeringId: 'bespoke-cakes',
+      workflowId: 'design-brief-preorder',
+      leadTimeDays: 5,
+    }),
+  ]);
+  await page.goto('/order');
+  await page.getByRole('button', { name: /Email/ }).click();
+
+  const expectedEarliestDate = getEarliestCollectionDate(5);
+  await expect(page.getByLabel('Preferred collection date')).toHaveAttribute(
+    'min',
+    expectedEarliestDate,
+  );
+  await expect(page.getByLabel('Preferred collection date')).toHaveValue(
+    expectedEarliestDate,
+  );
+  await expect(
+    page.getByLabel('Preferred collection time').locator('option'),
+  ).toHaveCount(15);
+
+  const weekendDate = await page
+    .getByLabel('Preferred collection date')
+    .evaluate((element) => {
+      const input = element as HTMLInputElement;
+      const date = new Date(`${input.min}T12:00:00`);
+      while (date.getDay() !== 6) date.setDate(date.getDate() + 1);
+      return date.toISOString().slice(0, 10);
+    });
+
+  await page.getByLabel('Preferred collection date').fill(weekendDate);
+  await page.getByRole('button', { name: 'Send enquiry' }).click();
+  await expect(
+    page.getByText('Please choose a weekday on or after'),
+  ).toBeVisible();
 });
 
 test('expired cart data and corrupt localStorage recover to an empty order page', async ({

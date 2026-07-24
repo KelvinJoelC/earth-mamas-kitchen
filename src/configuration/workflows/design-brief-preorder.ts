@@ -59,12 +59,5 @@ export const designBriefPreorderWorkflow = {
       maxLength: 300,
       trim: true,
     },
-    {
-      id: 'collection-date',
-      kind: 'date',
-      label: 'Preferred Collection Date',
-      required: true,
-      displayOrder: 90,
-    },
   ],
 } as const satisfies WorkflowDefinition;

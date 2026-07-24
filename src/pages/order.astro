@@ -3,6 +3,10 @@ import Layout from '@/layouts/Layout.astro';
 import RelatedProducts from '@/sections/RelatedProducts.astro';
 import { EXPLORE } from '@/consts/explore';
 import { orderMetadata } from '@/configuration/metadata';
+import {
+  COLLECTION_TIME_SLOTS,
+  formatCollectionTime,
+} from '@/domain/collection';
 ---
 
 <Layout
@@ -159,6 +163,7 @@ import { orderMetadata } from '@/configuration/metadata';
                     name="name"
                     type="text"
                     required
+                    maxlength="100"
                     autocomplete="name"
                     placeholder="Name of the person placing the enquiry"
                     aria-describedby="order-customer-name-error"
@@ -184,8 +189,9 @@ import { orderMetadata } from '@/configuration/metadata';
                     name="phone"
                     type="tel"
                     required
+                    inputmode="numeric"
                     autocomplete="tel"
-                    placeholder="Your preferred contact number"
+                    placeholder="04XXXXXXXX"
                     aria-describedby="order-customer-phone-error"
                     class="min-h-10 w-full border-b border-slate-300 bg-transparent px-0 py-2 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 hover:border-slate-500 focus:border-pink-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700"
                   />
@@ -193,7 +199,74 @@ import { orderMetadata } from '@/configuration/metadata';
                     id="order-customer-phone-error"
                     class="hidden text-xs leading-snug text-red-700"
                   >
-                    Please enter a phone number.
+                    Please enter a valid Australian mobile number (04XXXXXXXX).
+                  </p>
+                </div>
+
+                <div class="grid gap-1.5">
+                  <label
+                    for="order-collection-date"
+                    class="text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-slate-500"
+                  >
+                    Preferred collection date
+                  </label>
+                  <input
+                    id="order-collection-date"
+                    name="collectionDate"
+                    type="date"
+                    required
+                    aria-describedby="order-collection-date-help order-collection-date-error"
+                    class="min-h-10 w-full border-b border-slate-300 bg-transparent px-0 py-2 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 hover:border-slate-500 focus:border-pink-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700"
+                  />
+                  <p
+                    id="order-collection-date-help"
+                    class="text-xs leading-snug text-slate-600"
+                  >
+                    Monday to Friday, with minimum notice based on the longest
+                    lead time in your order.
+                  </p>
+                  <p
+                    id="order-collection-date-error"
+                    class="hidden text-xs leading-snug text-red-700"
+                  >
+                    Please choose a valid weekday collection date.
+                  </p>
+                </div>
+
+                <div class="grid gap-1.5">
+                  <label
+                    for="order-collection-time"
+                    class="text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-slate-500"
+                  >
+                    Preferred collection time
+                  </label>
+                  <select
+                    id="order-collection-time"
+                    name="collectionTime"
+                    required
+                    aria-describedby="order-collection-time-help order-collection-time-error"
+                    class="min-h-10 w-full border-b border-slate-300 bg-transparent px-0 py-2 text-sm text-slate-950 outline-none transition hover:border-slate-500 focus:border-pink-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700"
+                  >
+                    {
+                      COLLECTION_TIME_SLOTS.map((slot) => (
+                        <option value={slot}>
+                          {formatCollectionTime(slot)}
+                        </option>
+                      ))
+                    }
+                  </select>
+                  <p
+                    id="order-collection-time-help"
+                    class="text-xs leading-snug text-slate-600"
+                  >
+                    Requested times are in AEST and remain provisional until
+                    bakery confirmation.
+                  </p>
+                  <p
+                    id="order-collection-time-error"
+                    class="hidden text-xs leading-snug text-red-700"
+                  >
+                    Please choose a collection time.
                   </p>
                 </div>
 

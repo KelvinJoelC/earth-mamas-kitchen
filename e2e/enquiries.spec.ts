@@ -29,13 +29,23 @@ test('preorder enquiry validates details, prepares a mailto, and supports clipbo
   await page.getByRole('button', { name: 'Send enquiry' }).click();
   await expect(page.getByText('Please enter your name.')).toBeVisible();
   await page.getByLabel('Your name').fill('Mia Carter');
+  await page.getByLabel('Phone number').fill('abc');
+  await page.getByRole('button', { name: 'Copy message' }).click();
+  await expect(
+    page.getByText('Please enter a valid Australian mobile number'),
+  ).toBeVisible();
   await page.getByLabel('Phone number').fill('0412345678');
 
   await page.getByRole('button', { name: 'Copy message' }).click();
+  const collectionDate = await page
+    .getByLabel('Preferred collection date')
+    .inputValue();
   const writes = await getClipboardWrites(page);
   expect(writes.at(-1)).toContain(
     "Subject: Order enquiry - Earth Mama's Kitchen",
   );
+  expect(writes.at(-1)).toContain(`Requested date:`);
+  expect(writes.at(-1)).toContain(`Requested time:`);
   expect(writes.at(-1)).toContain('Please attach reference images manually');
   await expect(page.getByText('Order enquiry copied.')).toBeVisible();
 
@@ -45,6 +55,8 @@ test('preorder enquiry validates details, prepares a mailto, and supports clipbo
   expect(mailto.subject).toBe("Order enquiry - Earth Mama's Kitchen");
   expect(mailto.body).toContain('Mia Carter');
   expect(mailto.body).toContain('0412345678');
+  expect(mailto.body).toContain(collectionDate.slice(0, 4));
+  expect(mailto.body).toContain('Requested time:');
   expect(mailto.body).toContain('Bespoke Cakes');
   expect(mailto.body).toContain('Reference image reminder');
   expect(mailto.body).toContain('Could you please confirm availability');

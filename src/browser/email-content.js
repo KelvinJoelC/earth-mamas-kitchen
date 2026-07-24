@@ -1,3 +1,8 @@
+import {
+  formatCollectionDate,
+  formatCollectionTime,
+} from '../domain/collection.ts';
+
 export const BAKERY_EMAIL = 'earthmamaskitchen@gmail.com';
 
 const currencyFormatter = new Intl.NumberFormat('en-AU', {
@@ -40,6 +45,19 @@ export function buildPreorderEnquiryBody(items, contactDetails) {
     `Name: ${contactDetails.name}`,
     `Phone: ${contactDetails.phone}`,
     '',
+    'Collection preference',
+    '',
+    `Requested date: ${
+      contactDetails.collectionDate
+        ? formatCollectionDate(contactDetails.collectionDate)
+        : 'Not provided'
+    }`,
+    `Requested time: ${
+      contactDetails.collectionTime
+        ? `${formatCollectionTime(contactDetails.collectionTime)} AEST`
+        : 'Not provided'
+    }`,
+    '',
     'Order',
     '',
   ];
@@ -54,7 +72,6 @@ export function buildPreorderEnquiryBody(items, contactDetails) {
     if (highlights.addOns.length)
       lines.push(`Extras: ${highlights.addOns.join(', ')}`);
     highlights.notes.forEach((value) => lines.push(value));
-    if (highlights.date) lines.push(`Requested date: ${highlights.date}`);
     if (item.estimatedPrice?.amount) {
       lines.push(`Estimated price: ${formatAud(item.estimatedPrice.amount)}`);
     }
@@ -181,7 +198,10 @@ function getHighlights(item) {
 
 function getOptionEntries(item) {
   return Object.entries(item.options ?? {})
-    .filter(([key, value]) => key !== 'addOns' && hasDisplayValue(value))
+    .filter(
+      ([key, value]) =>
+        key !== 'addOns' && key !== 'collection-date' && hasDisplayValue(value),
+    )
     .map(([key, value]) => {
       const label = item.labels?.options?.[key]?.label ?? formatLabel(key);
       const displayValue = item.labels?.options?.[key]?.value ?? value;

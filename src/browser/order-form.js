@@ -5,6 +5,17 @@ import {
   buildPreorderEnquirySubject,
 } from './email-content.js';
 import { clearCart, readCart, removeCartItem } from './cart-state.js';
+import {
+  COLLECTION_TIME_SLOTS,
+  formatCollectionDate,
+  getEarliestCollectionDate,
+  isCollectionTimeSlot,
+  isCollectionWeekday,
+} from '../domain/collection.ts';
+import {
+  isValidPreorderFullName,
+  isValidPreorderPhone,
+} from '../domain/preorder-validation.ts';
 
 const currencyFormatter = new Intl.NumberFormat('en-AU', {
   style: 'currency',
@@ -17,6 +28,8 @@ const offeringImages = {
   'bespoke-cakes': '/images/cakes/mushroomLogCake.webp',
 };
 
+const MAX_APPROVED_LEAD_TIME_DAYS = 5;
+
 let orderPageController;
 
 function renderOrderPage() {
@@ -25,6 +38,7 @@ function renderOrderPage() {
   updateOrderVisibility(items);
   renderOrderItems(items);
   updateEstimatedTotal(items);
+  updateCollectionForm(items);
 }
 
 function updateOrderVisibility(items) {
@@ -142,7 +156,10 @@ function renderDetailList(item, className = '') {
 
 function getDetailRows(item) {
   const rows = Object.entries(item.options ?? {})
-    .filter(([key, value]) => key !== 'addOns' && hasDisplayValue(value))
+    .filter(
+      ([key, value]) =>
+        key !== 'addOns' && key !== 'collection-date' && hasDisplayValue(value),
+    )
     .map(([key, value]) => {
       const label = item.labels?.options?.[key]?.label ?? formatLabel(key);
       const displayValue = item.labels?.options?.[key]?.value ?? value;
@@ -233,14 +250,106 @@ function updateEstimatedTotal(items) {
   if (amount) amount.textContent = formatAud(getEstimatedTotal(items));
 }
 
+function getLongestLeadTimeDays(items) {
+  return items.reduce((longest, item) => {
+    const leadTimeDays = Number(item.leadTimeDays);
+    const safeLeadTimeDays = Number.isFinite(leadTimeDays)
+      ? Math.max(0, leadTimeDays)
+      : MAX_APPROVED_LEAD_TIME_DAYS;
+
+    return Math.max(longest, safeLeadTimeDays);
+  }, 0);
+}
+
+function setFieldValidity(input, errorElement, isValid, message) {
+  input.setCustomValidity(isValid ? '' : message);
+  input.setAttribute('aria-invalid', String(!isValid));
+  errorElement.textContent = isValid ? '' : message;
+  errorElement.hidden = isValid;
+  errorElement.classList.toggle('hidden', isValid);
+}
+
+function validateCollectionDetails(
+  dateInput,
+  timeInput,
+  dateError,
+  timeError,
+  items,
+) {
+  const earliestDate = getEarliestCollectionDate(getLongestLeadTimeDays(items));
+  const dateIsValid =
+    Boolean(dateInput.value) &&
+    dateInput.value >= earliestDate &&
+    isCollectionWeekday(dateInput.value);
+  const timeIsValid = isCollectionTimeSlot(timeInput.value);
+
+  setFieldValidity(
+    dateInput,
+    dateError,
+    dateIsValid,
+    dateInput.value
+      ? `Please choose a weekday on or after ${formatCollectionDate(earliestDate)}.`
+      : 'Please choose a collection date.',
+  );
+  setFieldValidity(
+    timeInput,
+    timeError,
+    timeIsValid,
+    'Please choose a collection time between 9:00 am and 4:00 pm AEST.',
+  );
+
+  return dateIsValid && timeIsValid;
+}
+
+function updateCollectionForm(items) {
+  const dateInput = document.getElementById('order-collection-date');
+  const timeInput = document.getElementById('order-collection-time');
+  const dateError = document.getElementById('order-collection-date-error');
+  const timeError = document.getElementById('order-collection-time-error');
+
+  if (
+    !(dateInput instanceof HTMLInputElement) ||
+    !(timeInput instanceof HTMLSelectElement) ||
+    !(dateError instanceof HTMLElement) ||
+    !(timeError instanceof HTMLElement)
+  ) {
+    return;
+  }
+
+  const earliestDate = getEarliestCollectionDate(getLongestLeadTimeDays(items));
+  dateInput.min = earliestDate;
+
+  if (
+    !dateInput.value ||
+    dateInput.value < earliestDate ||
+    !isCollectionWeekday(dateInput.value)
+  ) {
+    dateInput.value = earliestDate;
+  }
+
+  if (!isCollectionTimeSlot(timeInput.value)) {
+    timeInput.value = COLLECTION_TIME_SLOTS[0];
+  }
+
+  validateCollectionDetails(dateInput, timeInput, dateError, timeError, items);
+}
+
 function initEmailForm() {
   const toggle = document.getElementById('orderEmailToggle');
   const toggleIcon = document.getElementById('orderEmailToggleIcon');
   const form = document.getElementById('order-email-form');
   const nameInput = document.getElementById('order-customer-name');
   const phoneInput = document.getElementById('order-customer-phone');
+  const collectionDateInput = document.getElementById('order-collection-date');
+  const collectionTimeInput = document.getElementById('order-collection-time');
   const nameError = document.getElementById('order-customer-name-error');
   const phoneError = document.getElementById('order-customer-phone-error');
+  const collectionDateError = document.getElementById(
+    'order-collection-date-error',
+  );
+  const collectionTimeError = document.getElementById(
+    'order-collection-time-error',
+  );
   const copyButton = document.getElementById('copyOrderEnquiryMessage');
 
   if (
@@ -248,8 +357,12 @@ function initEmailForm() {
     !(form instanceof HTMLFormElement) ||
     !(nameInput instanceof HTMLInputElement) ||
     !(phoneInput instanceof HTMLInputElement) ||
+    !(collectionDateInput instanceof HTMLInputElement) ||
+    !(collectionTimeInput instanceof HTMLSelectElement) ||
     !(nameError instanceof HTMLElement) ||
-    !(phoneError instanceof HTMLElement)
+    !(phoneError instanceof HTMLElement) ||
+    !(collectionDateError instanceof HTMLElement) ||
+    !(collectionTimeError instanceof HTMLElement)
   ) {
     return;
   }
@@ -268,23 +381,42 @@ function initEmailForm() {
   if (form.dataset.initialized === 'true') return;
 
   form.dataset.initialized = 'true';
+  const validateCurrentCollection = () =>
+    validateCollectionDetails(
+      collectionDateInput,
+      collectionTimeInput,
+      collectionDateError,
+      collectionTimeError,
+      readCart(),
+    );
+
+  collectionDateInput.addEventListener('change', validateCurrentCollection);
+  collectionTimeInput.addEventListener('change', validateCurrentCollection);
   form.addEventListener('submit', (event) => {
     event.preventDefault();
 
     const submit = form.querySelector('button[type="submit"]');
     if (submit instanceof HTMLButtonElement) submit.disabled = true;
 
-    const hasName = validateEmailField(nameInput, nameError);
-    const hasPhone = validateEmailField(phoneInput, phoneError);
+    const hasName = validateNameField(nameInput, nameError);
+    const hasPhone = validatePhoneField(phoneInput, phoneError);
+    const items = readCart();
+    const hasCollection = validateCollectionDetails(
+      collectionDateInput,
+      collectionTimeInput,
+      collectionDateError,
+      collectionTimeError,
+      items,
+    );
 
-    if (!hasName || !hasPhone) {
+    if (!hasName || !hasPhone || !hasCollection) {
       if (submit instanceof HTMLButtonElement) submit.disabled = false;
       if (!hasName) nameInput.focus();
-      else phoneInput.focus();
+      else if (!hasPhone) phoneInput.focus();
+      else if (!hasCollection) collectionDateInput.focus();
       return;
     }
 
-    const items = readCart();
     if (!items.length) {
       announce(
         'Please add at least one preorder configuration before sending an enquiry.',
@@ -295,7 +427,9 @@ function initEmailForm() {
 
     const contactMessage = buildPreorderEnquiryBody(items, {
       name: nameInput.value.trim(),
-      phone: phoneInput.value.trim(),
+      phone: phoneInput.value,
+      collectionDate: collectionDateInput.value,
+      collectionTime: collectionTimeInput.value,
     });
     hideManualCopyFallback();
     window.location.href = buildMailtoHref(
@@ -315,16 +449,24 @@ function initEmailForm() {
   ) {
     copyButton.dataset.initialized = 'true';
     copyButton.addEventListener('click', async () => {
-      const hasName = validateEmailField(nameInput, nameError);
-      const hasPhone = validateEmailField(phoneInput, phoneError);
+      const hasName = validateNameField(nameInput, nameError);
+      const hasPhone = validatePhoneField(phoneInput, phoneError);
+      const items = readCart();
+      const hasCollection = validateCollectionDetails(
+        collectionDateInput,
+        collectionTimeInput,
+        collectionDateError,
+        collectionTimeError,
+        items,
+      );
 
-      if (!hasName || !hasPhone) {
+      if (!hasName || !hasPhone || !hasCollection) {
         if (!hasName) nameInput.focus();
-        else phoneInput.focus();
+        else if (!hasPhone) phoneInput.focus();
+        else if (!hasCollection) collectionDateInput.focus();
         return;
       }
 
-      const items = readCart();
       if (!items.length) {
         announce(
           'Please add at least one preorder configuration before copying an enquiry.',
@@ -334,7 +476,9 @@ function initEmailForm() {
 
       const contactMessage = buildPreorderEnquiryBody(items, {
         name: nameInput.value.trim(),
-        phone: phoneInput.value.trim(),
+        phone: phoneInput.value,
+        collectionDate: collectionDateInput.value,
+        collectionTime: collectionTimeInput.value,
       });
       const copied = await copyOrderEnquiryEmail(
         buildPreorderEnquirySubject(),
@@ -426,11 +570,27 @@ function hideManualCopyFallback() {
   textarea.hidden = true;
 }
 
-function validateEmailField(input, errorElement) {
-  const isValid = input.value.trim().length > 0;
-  input.setAttribute('aria-invalid', String(!isValid));
-  errorElement.hidden = isValid;
-  errorElement.classList.toggle('hidden', isValid);
+function validateNameField(input, errorElement) {
+  const isValid = isValidPreorderFullName(input.value);
+  setFieldValidity(
+    input,
+    errorElement,
+    isValid,
+    input.value.trim().length > 100
+      ? 'Please keep your name to 100 characters or fewer.'
+      : 'Please enter your name.',
+  );
+  return isValid;
+}
+
+function validatePhoneField(input, errorElement) {
+  const isValid = isValidPreorderPhone(input.value);
+  setFieldValidity(
+    input,
+    errorElement,
+    isValid,
+    'Please enter a valid Australian mobile number (04XXXXXXXX).',
+  );
   return isValid;
 }
 

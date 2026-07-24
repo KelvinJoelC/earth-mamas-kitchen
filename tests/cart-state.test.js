@@ -30,6 +30,7 @@ function createCartItem(id) {
     product: 'Floral Cupcake Bouquets',
     offeringId: 'floral-cupcake-bouquets',
     workflowId: 'guided-preorder',
+    leadTimeDays: 3,
     options: {
       'bouquet-size': 'small-bouquet',
       'cupcake-flavours': ['vanilla'],
